@@ -100,3 +100,54 @@ df189da feat: SEO 优化 + 成都最低工资数据核实 + 元数据增强
 4. **扩展城市法援**: 目前仅上海 17 个法援中心，可按需添加北京、广州等城市
 5. **PWA 离线体验**: 完善 sw.js 的缓存策略，确保核心页面可离线访问
 6. **Lighthouse 审计**: 部署后进行性能、无障碍、SEO 的 Lighthouse 评分测试
+
+---
+
+## 第三轮改进（同日追加）
+
+### 5. SSR 水合不匹配修复
+- `CalculatorForm.tsx`: 将 `getInitialInput()` 初始化改为始终使用 `DEFAULT_INPUT`，然后在 `useEffect` 中从 `localStorage` 恢复
+- 消除了 SSR/CSR 首次渲染值不同导致的 React hydration mismatch 警告
+
+### 6. 表单输入防御性增强
+- 所有数字输入添加 `Math.max(0, ...)` 防止负数
+- 添加 `max` 属性限制输入上限（订单 9999、小时 24 等）
+- 添加 `inputMode="numeric"/"decimal"` 优化移动端键盘弹出
+- 所有 `<label>` 和 `<input>`/`<select>` 通过 `htmlFor`/`id` 正确关联
+
+### 7. 无障碍性 (A11y) 整体提升
+- `BottomNav`: 添加 `aria-label="主导航"`、`aria-current="page"`、emoji `aria-hidden="true"`
+- `ProblemCard` / `FeatureCard`: 装饰性汉字图标添加 `aria-hidden="true"`
+- `LegalAidCard`: emoji（📍📞🕐）添加 `aria-hidden="true"`
+- `DisclaimerBox`: ⚠️ emoji 添加 `aria-hidden="true"`
+- 法规页: 搜索框添加 `aria-label`，筛选按钮添加 `role="tablist"/"tab"/aria-selected`
+- 法援页: 城市筛选添加 `role="tablist"/"tab"/aria-selected`
+- 计算器: 周期选择改用 `<fieldset>` + `role="radiogroup"` + `aria-checked`
+
+### 8. 导航和体验补全
+- 首页"常用工具"新增"权益动态"卡片，链接到 `/news`（此前该页面无任何入站导航）
+- 新增自定义 404 页面 (`app/not-found.tsx`)，提供返回首页和薪资测算入口
+- 清理 5 个未使用的 Next.js 模板 SVG（file.svg、globe.svg、next.svg、vercel.svg、window.svg）
+
+### 更新后 Git 提交历史
+
+```
+7927c08 fix: 无障碍性增强 + SSR 水合修复 + 输入校验 + 404 页面
+df189da feat: SEO 优化 + 成都最低工资数据核实 + 元数据增强
+620963e docs: 添加 2026-06-05 项目审阅报告
+515c158 chore: 添加 Vercel 部署配置和更新环境变量说明
+35be53c feat: 外卖骑手劳动权益助手 MVP 初始版本
+```
+
+### 项目完成度（更新后）
+
+| 里程碑 | 内容 | 完成度 |
+|--------|------|--------|
+| M0 | 项目骨架 | 100% |
+| M1 | 薪资计算器 | 100%（含输入校验和无障碍） |
+| M2 | 法规查询 + 法援导航 | 100% |
+| M3 | AI 权益问答助手 | 100% |
+| M4 | 账号体系（MVP 简化） | 100% |
+| M5 | PWA + 新闻 + 打磨 | 98%（PWA 离线缓存可进一步优化） |
+| SEO | sitemap + robots + 元数据 | 100% |
+| A11y | 无障碍性基础 | 90%（外部链接提示可进一步完善） |
