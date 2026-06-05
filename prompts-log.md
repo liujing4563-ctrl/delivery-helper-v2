@@ -382,27 +382,6 @@
 - `pnpm typecheck` 通过。
 - `pnpm lint` 通过。
 - `pnpm build` 通过。
-
-### 第二十四轮修复
-
-目标：
-
-- 继续推进非包管理、低风险的 PWA 体验和边界校验。
-
-关键修复：
-
-- `public/sw.js`：缓存版本升级为 `delivery-helper-v2`，预缓存 `manifest.json`、192 图标和 512 图标。
-- `public/sw.js`：新增同源请求限制，避免 Service Worker 处理外部资源。
-- `app/offline/page.tsx`：离线页增加法规库和法援目录入口，匹配当前预缓存页面。
-- `tools/validate_data.py`：新增 PWA 关键资源预缓存和同源边界校验。
-
-验证：
-
-- `pnpm validate:data` 通过，仅保留成都最低工资待核实警告。
-- `python -m py_compile tools/validate_data.py` 通过。
-- `pnpm typecheck` 通过。
-- `pnpm lint` 通过。
-- `pnpm build` 通过。
 - 浏览器抽查 `/calculator`：页面可加载，成都仍显示为待核实城市，控制台无错误；Browser 自动化对原生下拉框选项切换不可靠，未作为交互失败依据。
 
 ### 第二十三轮审阅
@@ -429,4 +408,67 @@
 - `pnpm typecheck` 通过。
 - `pnpm lint` 通过。
 - `pnpm build` 通过。
+
+### 第二十四轮修复
+
+目标：
+
+- 继续推进非包管理、低风险的 PWA 体验和边界校验。
+
+关键修复：
+
+- `public/sw.js`：缓存版本升级为 `delivery-helper-v2`，预缓存 `manifest.json`、192 图标和 512 图标。
+- `public/sw.js`：新增同源请求限制，避免 Service Worker 处理外部资源。
+- `app/offline/page.tsx`：离线页增加法规库和法援目录入口，匹配当前预缓存页面。
+- `tools/validate_data.py`：新增 PWA 关键资源预缓存和同源边界校验。
+
+验证：
+
+- `pnpm validate:data` 通过，仅保留成都最低工资待核实警告。
+- `python -m py_compile tools/validate_data.py` 通过。
+- `pnpm typecheck` 通过。
+- `pnpm lint` 通过。
+- `pnpm build` 通过。
+
+### 第二十五轮修复
+
+目标：
+
+- 审阅第二十四轮后的交接记录和 PWA 注册实现，继续做非包管理、低风险收口。
+
+关键修复：
+
+- `docs/current-handoff.md`：将“最近完成的四轮”修正为“最近完成的五轮”，并更新下一步建议，明确生产构建 PWA 抽查、成都官方来源核验、模板 SVG 清理需要用户确认等边界。
+- `components/ServiceWorkerRegistrar.tsx`：移除生产环境 Service Worker 注册成功日志；注册失败按渐进增强处理，不影响核心功能。
+
+验证：
+
+- `pnpm validate:data` 通过，仅保留成都最低工资待核实警告。
+- `python -m py_compile tools/validate_data.py tools/monitor_min_wage.py` 通过。
+- `pnpm typecheck` 通过。
+- `pnpm lint` 通过。
+- `pnpm build` 首次因已有 Next build 锁提示并发构建，等待后重跑通过。
+- 生产服务抽查 `http://localhost:3002/offline`：页面可加载，manifest 存在，首页/薪资计算器/法规库/法援目录入口可见，控制台无 `log/warn/error`。
+- 生产服务抽查 `http://localhost:3002/calculator`：页面可加载，manifest 存在，城市选择可见，控制台无 `log/warn/error`。
+- Browser 只读页面作用域未暴露 `navigator`，本轮未直接读取 Service Worker registration/caches；已停止本次 3002 生产服务。
+
+### 第二十六轮审阅
+
+目标：
+
+- 按当前交接建议继续核实成都最低工资本地官方来源。
+
+关键判断：
+
+- 继续检索 `chengdu.gov.cn`、`cdhrss.chengdu.gov.cn`、`gk.chengdu.gov.cn` 等官方域名，仍未获得可直接读取的成都市政府原文页。
+- 第三方政策库和“成都发布”转载内容与既有线索一致，但只能作为线索，不能把成都数据改为已核验。
+
+关键修复：
+
+- `docs/source-and-tooling-notes.md`：补充 2026-06-05 成都来源复检记录，明确第三方政策库和转载内容不驱动 `lastVerified` 更新。
+- `data/minWage.ts`：未修改，成都继续保持 `lastVerified="待核实"`。
+
+验证：
+
+- `pnpm validate:data` 通过，仅保留成都最低工资待核实警告。
 

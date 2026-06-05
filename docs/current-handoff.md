@@ -19,7 +19,7 @@
 - PWA：已有 manifest、图标和手写 Service Worker；当前只做基础离线页，不引入 Serwist / Workbox。
 - 本地校验：`tools/validate_data.py` 已覆盖静态数据、账号边界、PWA 边界、AI 问答边界和上海法援完整性。
 
-## 最近完成的四轮
+## 最近完成的五轮
 
 ### 第二十轮
 
@@ -73,6 +73,9 @@
 - `pnpm --dir "delivery-helper" typecheck` 通过。
 - `pnpm --dir "delivery-helper" lint` 通过。
 - `pnpm --dir "delivery-helper" build` 通过。
+- 生产服务抽查 `http://localhost:3002/offline`：页面可加载，manifest 存在，首页/薪资计算器/法规库/法援目录入口可见，控制台无 `log/warn/error`。
+- 生产服务抽查 `http://localhost:3002/calculator`：页面可加载，manifest 存在，城市选择可见，控制台无 `log/warn/error`。
+- Browser 只读页面作用域未暴露 `navigator`，本轮未直接读取 Service Worker registration/caches；后续如要验证缓存命中，可用完整 Playwright CLI 或浏览器 DevTools 做专项检查。
 - 浏览器抽查 `/calculator`：页面可加载，成都仍显示为待核实城市，控制台无错误。当前 Browser 自动化对原生下拉框选项切换不可靠，未把该交互作为失败依据。
 - 浏览器抽查 `/legal-aid`：显示 17 个上海法律援助中心电话、17 个地址/接待时间；黄浦、静安、奉贤地址可见；控制台无错误。
 
@@ -110,7 +113,8 @@
 
 ## 下一步建议
 
-1. 优先做非包管理、低风险改进：复核 PWA 文案、离线页体验和正式图标设计。
-2. 如继续做数据核验，优先核实成都本地最低工资适用档；只有找到成都本地官方来源后再更新。
-3. 如要清理旧认证依赖，先让用户明确输入 `确认清理旧认证依赖`，再改 `package.json` 和锁文件。
-4. 如要提交代码，先让用户明确要求提交；提交前重新运行 `validate:data`、`typecheck`、`lint`、`build`。
+1. 优先做非包管理、低风险改进：继续核实成都本地最低工资适用档；只有找到成都本地官方来源后再更新。
+2. PWA 如需继续深化，下一步应专项验证 Service Worker registration/caches 和正式图标显示；不要在未确认前引入 Serwist / Workbox。
+3. 默认 Next.js 模板 SVG 资源疑似未使用，但删除属于文件系统变更；只有用户明确确认后再清理。
+4. 如要清理旧认证依赖，先让用户明确输入 `确认清理旧认证依赖`，再改 `package.json` 和锁文件。
+5. 如要提交代码，先让用户明确要求提交；提交前重新运行 `validate:data`、`typecheck`、`lint`、`build`。

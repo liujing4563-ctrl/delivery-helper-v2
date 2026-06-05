@@ -50,6 +50,10 @@
   - https://www.sc.gov.cn/10462/zfwjts/2025/1/2/60841bcf38d844fb80ad1ea0b2d74e24/files/%E5%B7%9D%E5%BA%9C%E8%A7%844%E5%8F%B7%E5%85%AC%E5%BC%80%E7%89%88.pdf
   - https://finance.sina.com.cn/jjxw/2025-06-06/doc-inezcrkf5452982.shtml?froms=ggmp
   - https://cdzfgjj.chengdu.gov.cn/cdgjj/c1156360/2025-07/30/content_6b795176b53d4bc6a5661330470d14a0.shtml
+- 2026-06-05 复检成都来源：继续检索 `chengdu.gov.cn`、`cdhrss.chengdu.gov.cn`、`gk.chengdu.gov.cn` 官方域名，仍未获得可直接读取的成都市政府原文页；第三方政策库和“成都发布”转载内容只作为线索，不驱动 `lastVerified` 状态更新。
+  - https://zc.51shebao.com/detail/836465
+  - https://finance.sina.com.cn/stock/estate/integration/2025-06-06/doc-inezcriy2485645.shtml
+  - https://finance.sina.com.cn/jjxw/2025-06-06/doc-inezcrkf5452982.shtml?froms=ggmp
 - 分档最低工资展示：对重庆、郑州、西安、合肥等存在区县分档的城市，计算器展示主城区或市区参考档，并附适用范围说明；不把分档标准表述为全市统一标准。
 - 上海 12348 公共法律服务：12348上海法网确认上海热线拨打方式为 `021-12348`，并列出全市 17 个法律援助中心及联系电话。
   - https://sh.12348.gov.cn/sites/12348/index/index-advice.jsp

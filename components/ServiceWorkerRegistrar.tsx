@@ -13,14 +13,9 @@ export default function ServiceWorkerRegistrar() {
       'serviceWorker' in navigator &&
       process.env.NODE_ENV === 'production'
     ) {
-      navigator.serviceWorker
-        .register('/sw.js')
-        .then((reg) => {
-          console.log('SW registered:', reg.scope);
-        })
-        .catch((err) => {
-          console.warn('SW registration failed:', err);
-        });
+      void navigator.serviceWorker.register('/sw.js').catch(() => {
+        // Service Worker 是渐进增强；注册失败不影响核心功能。
+      });
     }
   }, []);
 

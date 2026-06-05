@@ -62,11 +62,11 @@ export const minWageData: MinWage[] = [
     hourly: 23,
     effectiveDate: '2025-01-01',
     scopeNote:
-      '四川省文件已确认全省两档标准；成府规〔2025〕4号转载信息显示主城区等15个区执行第一档、简阳等8个县市执行第二档，但成都市政府原文直链仍待核准。',
-    sourceName: '四川省人民政府',
+      '成府规〔2025〕4号：主城区等15个区执行第一档（月2330元/时23元），简阳等8个县市执行第二档。',
+    sourceName: '成都市人民政府',
     sourceUrl:
-      'https://www.sc.gov.cn/10462/zfwjts/2025/1/2/60841bcf38d844fb80ad1ea0b2d74e24/files/%E5%B7%9D%E5%BA%9C%E8%A7%844%E5%8F%B7%E5%85%AC%E5%BC%80%E7%89%88.pdf',
-    lastVerified: '待核实',
+      'https://www.chengdu.gov.cn/gkml/cdsrmzfbgt/xzgfxwj/1380564429229260800.shtml',
+    lastVerified: '2026-06-05',
   },
   {
     city: '武汉',
