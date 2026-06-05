@@ -1,0 +1,29 @@
+文件,URL,状态码,是否正常,备注
+legalAidCenters.ts,https://sh.12348.gov.cn/sites/12348/service-help.jsp,412,否,HTTP 412
+legalAidCenters.ts,https://sfj.sh.gov.cn/2020zwdt_bmts/20241125/28b02378369d421e8cee0bb7bb901a0d.html,200,是,
+minWage.ts,https://rsj.sh.gov.cn/tgzfl_17732/20250714/t0035_1434097.html,200,是,
+minWage.ts,https://rsj.beijing.gov.cn/weimenhu/wmtgz/202507/t20250724_4157298.html,200,是,
+minWage.ts,https://rsj.gz.gov.cn/zwgk/zcjd/zcjd/content/post_10148528.html,404,否,HTTP 404
+minWage.ts,https://hrss.sz.gov.cn/xxgk/qtxx/tzgg/content/post_12016470.html,0,否,连接失败: HTTPSConnectionPool(host='hrss.sz.gov.cn', port=443): Max re
+minWage.ts,https://hrss.hz.gov.cn/,0,否,连接失败: ('Connection aborted.', ConnectionAbortedError(10053, '你的主机中
+minWage.ts,https://rsj.nanjing.gov.cn/,200,是,
+minWage.ts,https://cdhrss.chengdu.gov.cn/,412,否,HTTP 412
+minWage.ts,https://rsj.wuhan.gov.cn/,200,是,
+minWage.ts,https://rlsbj.cq.gov.cn/,200,是,
+minWage.ts,https://hrss.tj.gov.cn/,200,是,
+minWage.ts,https://hrss.suzhou.gov.cn/,0,否,错误: Exceeded 30 redirects.
+minWage.ts,https://rsj.changsha.gov.cn/,0,否,连接失败: HTTPSConnectionPool(host='rsj.changsha.gov.cn', port=443): M
+minWage.ts,https://zzrs.zhengzhou.gov.cn/,200,是,HEAD返回403但GET正常
+minWage.ts,https://rsj.xa.gov.cn/,0,否,连接失败: ('Connection aborted.', ConnectionAbortedError(10053, '你的主机中
+minWage.ts,https://rsj.hefei.gov.cn/,521,否,HTTP 521
+news.ts,https://www.gov.cn/zhengce/zhengceku/202402/content_6933822.htm,200,是,
+news.ts,https://jiangsu.chinatax.gov.cn/art/2025/4/22/art_23636_5882.html,200,是,
+news.ts,https://rsj.sh.gov.cn/tjypx_17728/20250819/t0035_1434960.html,200,是,
+regulations.ts,https://www.mem.gov.cn/gk/zfxxgkpt/fdzdgknr/202201/t20220119_406920.shtml,200,是,
+regulations.ts,https://www.gov.cn/zhengce/zhengceku/202402/content_6933822.htm,200,是,
+regulations.ts,https://www.npc.gov.cn/c2/c30834/201905/t20190521_296651.html,0,否,连接失败: HTTPSConnectionPool(host='www.npc.gov.cn', port=443): Max re
+regulations.ts,https://flk.npc.gov.cn/detail?fileId=&id=2c909fdd678bf17901678bf74d7106b3&title=%E4%B8%AD%E5%8D%8E%E4%BA%BA%E6%B0%91%E5%85%B1%E5%92%8C%E5%9B%BD%E5%8A%B3%E5%8A%A8%E5%90%88%E5%90%8C%E6%B3%95&type=,200,是,
+regulations.ts,https://www.gov.cn/gongbao/content/2011/content_1778064.htm,200,是,
+regulations.ts,https://www.npc.gov.cn/npc/c2/c30834/202108/t20210820_313079.html,0,否,连接失败: HTTPSConnectionPool(host='www.npc.gov.cn', port=443): Max re
+regulations.ts,https://www.npc.gov.cn/zgrdw/npc/xinwen/2019-01/07/content_2070267.htm,0,否,连接失败: HTTPSConnectionPool(host='www.npc.gov.cn', port=443): Max re
+regulations.ts,https://jiangsu.chinatax.gov.cn/art/2025/4/22/art_23636_5882.html,200,是,
