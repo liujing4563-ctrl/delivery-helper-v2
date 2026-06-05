@@ -55,6 +55,9 @@ delivery-helper/
 ├── app/
 │   ├── layout.tsx         # 全局布局+底部导航
 │   ├── page.tsx           # 问题导向首页
+│   ├── not-found.tsx      # 自定义 404 页面
+│   ├── sitemap.ts         # 自动生成 sitemap.xml
+│   ├── robots.ts          # 自动生成 robots.txt
 │   ├── calculator/        # 薪资计算器
 │   ├── regulations/       # 法规库
 │   ├── legal-aid/         # 法援目录
@@ -64,38 +67,42 @@ delivery-helper/
 │   ├── account/           # 本地数据管理
 │   ├── disclaimer/        # 免责声明
 │   ├── privacy/           # 隐私说明
+│   ├── offline/           # PWA 离线页
 │   └── api/
 │       ├── auth/[...nextauth]/  # 账号功能占位 API
 │       └── chat/                # AI 流式 API
 │
 ├── data/
 │   ├── types.ts           # 类型定义
-│   ├── regulations.ts     # 法规数据
-│   ├── legalAidCenters.ts # 法援数据
-│   ├── minWage.ts         # 最低工资数据
-│   ├── news.ts            # 新闻数据
+│   ├── regulations.ts     # 法规数据（10 条）
+│   ├── legalAidCenters.ts # 法援数据（上海 17 个）
+│   ├── minWage.ts         # 最低工资数据（15 城市）
+│   ├── news.ts            # 新闻数据（3 条）
 │   └── prompts.ts         # AI系统提示词
 │
 ├── components/            # UI组件
-│   ├── BottomNav.tsx      # 底部导航
-│   ├── CalculatorForm.tsx # 计算器表单
-│   ├── CalculatorResult.tsx # 计算结果
+│   ├── BottomNav.tsx      # 底部导航（5 项）
+│   ├── CalculatorForm.tsx # 计算器表单（含 localStorage 持久化）
+│   ├── CalculatorResult.tsx # 计算结果展示
 │   ├── RegulationCard.tsx # 法规卡片
 │   ├── LegalAidCard.tsx   # 法援卡片
 │   ├── DisclaimerBox.tsx  # 免责声明
 │   ├── ProblemCard.tsx    # 问题入口卡片
-│   └── FeatureCard.tsx    # 功能入口卡片
+│   ├── FeatureCard.tsx    # 功能入口卡片
+│   └── ServiceWorkerRegistrar.tsx # PWA Service Worker 注册
 │
 ├── lib/
-│   └── calculator.ts      # 薪资计算逻辑
+│   └── calculator.ts      # 薪资计算逻辑 + 风险等级判断
 │
 ├── public/
 │   ├── manifest.json      # PWA 配置
-│   └── icons/             # 应用图标
+│   ├── sw.js              # Service Worker（离线缓存）
+│   └── icons/             # 应用图标（8 种尺寸 SVG）
 │
-├── docs/                  # 外部资源评估与数据来源记录
-├── tools/                 # 数据校验和来源核验辅助脚本
-└── .env.local             # 环境变量
+├── docs/                  # 审阅报告与数据来源记录
+├── vercel.json            # Vercel 部署配置
+├── .env.example           # 环境变量模板
+└── .env.local             # 本地环境变量（不提交）
 ```
 
 ## 本地运行
@@ -104,30 +111,41 @@ delivery-helper/
 # 安装依赖
 pnpm install
 
-# 开发模式
+# 开发模式（默认 http://localhost:3000）
 pnpm dev
 
 # 构建
 pnpm build
 
-# 静态数据校验
-pnpm validate:data
-
 # 启动生产服务器
 pnpm start
 ```
 
+### 演示路径
+
+启动后按以下路径体验核心功能：
+
+1. **首页** → `http://localhost:3000` — 问题导向入口，6 个问题 + 5 个工具卡片
+2. **薪资测算** → `/calculator` — 选择城市、输入订单/收入/工时，测算时薪并对比最低工资参考线
+3. **法规查询** → `/regulations` — 10 条核心法规，支持分类筛选和关键词搜索
+4. **法援导航** → `/legal-aid` — 上海 17 个法律援助中心，一键拨号、地址和接待时间
+5. **AI 问答** → `/chat` — 输入劳动权益问题，AI 流式输出证据清单、法规引用和下一步建议
+6. **权益动态** → `/news` — 3 条已核验政策动态
+7. **PWA** → 在手机浏览器访问后可"添加到主屏幕"，离线时显示离线提示页
+
 ## 环境变量
 
-创建 `.env.local` 文件：
+复制 `.env.example` 为 `.env.local` 并填入配置：
 
 ```env
 # AI 配置
-AI_PROVIDER=deepseek
 AI_API_BASE_URL=https://api.deepseek.com
 AI_MODEL=deepseek-chat
-AI_API_KEY=your_deepseek_api_key
+AI_API_KEY=your_deepseek_api_key_here
 
+# 认证配置（MVP 暂不启用）
+# AUTH_SECRET=your_random_secret_here
+# AUTH_RESEND_KEY=your_resend_api_key_here
 ```
 
 - 无 DeepSeek API Key 时，AI 会使用 mock 模式返回占位回答
@@ -176,6 +194,15 @@ AI_API_KEY=your_deepseek_api_key
 | 资源 | 用途 | 来源 |
 |------|------|------|
 | Vercel AI SDK | AI 流式输出 | https://sdk.vercel.ai |
+
+## 部署
+
+项目已配置好 `vercel.json`，可直接部署到 Vercel：
+
+1. 推送代码到 GitHub
+2. 在 [vercel.com](https://vercel.com) 导入仓库
+3. 在 Vercel 项目设置中添加环境变量 `AI_API_KEY`（可选，不配置则 AI 使用 mock 模式）
+4. 部署完成后，如有自定义域名，更新 `app/sitemap.ts` 和 `app/robots.ts` 中的 `BASE_URL`
 
 ## 待完成
 
