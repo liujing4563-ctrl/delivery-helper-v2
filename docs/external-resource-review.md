@@ -17,8 +17,8 @@
 
 ### Model Context Protocol
 
-- 来源：https://modelcontextprotocol.io/docs/concepts/architecture
-- 判断：MCP 适合把 tools、resources、prompts 暴露给 AI 客户端或 agent。
+- 来源：https://modelcontextprotocol.io/docs/getting-started/intro
+- 判断：MCP 适合把外部系统、数据源和工具连接到 AI 应用。
 - 当前决策：暂不接入。等项目需要“让 AI 主动调用官方数据核验工具或内部后台”时再评估。
 
 ### Agent Skills
@@ -29,14 +29,14 @@
 
 ### OpenAI Agents / Tools
 
-- 来源：https://platform.openai.com/docs/guides/agents
-- 判断：Agents 适合复杂多步工具调用和任务编排。
+- 来源：https://openai.github.io/openai-agents-python/
+- 判断：Agents SDK 适合 agent loop、工具调用、guardrails、handoff、MCP、sessions 和 human-in-the-loop 等复杂编排。
 - 当前决策：不引入。本站 AI 问答必须受控、可解释、低权限，当前只需要服务端文本生成。
 
 ### Vercel AI SDK
 
-- 来源：https://sdk.vercel.ai/docs/ai-sdk-core/generating-text
-- 判断：已符合当前服务端流式输出、模型供应商切换和 TypeScript 集成需求。
+- 来源：https://ai-sdk.dev/docs/introduction
+- 判断：已符合当前服务端流式输出、模型供应商切换和 TypeScript 集成需求；AI SDK 6 还提供工具和 MCP 能力，但当前不使用。
 - 当前决策：保留，不新增替代 SDK。
 
 ### Next.js 环境变量
@@ -73,8 +73,7 @@
 
 当前更有价值的是官方资料核验，而不是引入工具框架：
 
-- 成都最低工资存在成府规〔2025〕4号转载原文和成都住房公积金管理中心对该文件的官方引用，但成都市政府原通知页面仍未能直接读取。
-- 在未取得可直接读取的成都市政府原文前，数据只补充分档说明，继续保持 `lastVerified="待核实"`，不参与薪资风险判断。
+- 成都最低工资当前已使用成都市人民政府官方直链作为 `sourceUrl` 并通过结构校验；本环境直接抓取该 URL 返回 `412 Precondition Failed`，后续如需更强证据链，应人工浏览器复核原文并留痕。
 - 外部 agent / MCP 若直接写入法律数据，会降低数据可信度；后续如需自动化，只考虑只读、可审计、限速的官方链接核验工具。
 
 ## 安全红线

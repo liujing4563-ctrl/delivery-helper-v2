@@ -44,6 +44,7 @@ export default function RegulationsPage() {
       <div className="mt-4">
         <input
           type="text"
+          aria-label="搜索法规名称、摘要或标签"
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
           placeholder="搜索法规名称、摘要或标签…"
@@ -52,8 +53,10 @@ export default function RegulationsPage() {
       </div>
 
       {/* 分类筛选 */}
-      <div className="mt-3 flex gap-1.5 overflow-x-auto pb-1 scrollbar-hide">
+      <div className="mt-3 flex gap-1.5 overflow-x-auto pb-1 scrollbar-hide" role="tablist" aria-label="法规分类">
         <button
+          role="tab"
+          aria-selected={selectedCategory === 'all'}
           onClick={() => setSelectedCategory('all')}
           className={`shrink-0 rounded-full px-3 py-1.5 text-xs font-medium transition-colors ${
             selectedCategory === 'all'
@@ -66,6 +69,8 @@ export default function RegulationsPage() {
         {ALL_CATEGORIES.map((cat) => (
           <button
             key={cat}
+            role="tab"
+            aria-selected={selectedCategory === cat}
             onClick={() => setSelectedCategory(cat)}
             className={`shrink-0 rounded-full px-3 py-1.5 text-xs font-medium transition-colors ${
               selectedCategory === cat

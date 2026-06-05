@@ -472,3 +472,34 @@
 
 - `pnpm validate:data` 通过，仅保留成都最低工资待核实警告。
 
+### 第二十七轮修复
+
+目标：
+
+- 按用户要求继续评估网上 agent、skill、MCP、来源项目和资料，并在每轮后审阅当前项目状态。
+- 修复最新代码状态和交接文档之间的不一致。
+
+关键判断：
+
+- 重新查看 MCP、OpenAI Agents SDK、Vercel AI SDK 6 和 Next.js PWA 官方资料；当前仍不下载第三方 agent / skill / MCP 代码。
+- MCP / Agents SDK 适合工具调用、多步骤编排、guardrails、handoff 或 human-in-the-loop；当前 MVP 只需要可信静态数据、薪资测算、法援目录和受控服务端问答。
+- 成都最低工资当前代码已切到成都市人民政府官方直链并通过结构校验；但本环境直接抓取该 URL 返回 `412 Precondition Failed`，更强证据链仍需要人工浏览器复核留痕。
+
+关键修复：
+
+- `README.md`：同步最低工资核验状态为 15 城市已核验、0 城市待核实，并补充 SEO 模块。
+- `docs/current-handoff.md`：同步最新 SEO、成都来源、PWA 抽查和下一步边界。
+- `docs/source-and-tooling-notes.md`：更新 MCP、OpenAI Agents SDK、Vercel AI SDK 6 官方资料结论，并修正成都来源记录。
+- `docs/external-resource-review.md`：同步本轮外部资源复评结论。
+- `docs/review-2026-06-05-round2.md`：补充说明该文件是审阅快照，当前状态以实时 `git status` 和交接文档为准。
+- `components/CalculatorForm.tsx`：审阅到已有 localStorage 水合修复后，补上 `storageReady` 保存闸门，避免恢复前把默认值写回本地存储；lint 发现 effect 内同步 setState 后，改为挂载后异步恢复。
+- `components/BottomNav.tsx`、`components/FeatureCard.tsx`、`components/ProblemCard.tsx`：审阅到已有可访问性改动后，保留 `aria-label`、`aria-current`、`aria-hidden`，并整理 JSX 换行。
+
+验证：
+
+- `pnpm validate:data` 通过，无警告。
+- `python -m py_compile tools/validate_data.py tools/monitor_min_wage.py` 通过。
+- `pnpm typecheck` 通过。
+- `pnpm lint` 通过。
+- `pnpm build` 通过，19 条路由生成成功，包含 `/robots.txt` 和 `/sitemap.xml`。
+

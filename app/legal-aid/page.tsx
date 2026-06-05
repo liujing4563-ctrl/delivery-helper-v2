@@ -65,8 +65,10 @@ export default function LegalAidPage() {
       </div>
 
       {/* 城市筛选 */}
-      <div className="mt-4 flex gap-1.5 overflow-x-auto pb-1 scrollbar-hide">
+      <div className="mt-4 flex gap-1.5 overflow-x-auto pb-1 scrollbar-hide" role="tablist" aria-label="城市筛选">
         <button
+          role="tab"
+          aria-selected={selectedCity === 'all'}
           onClick={() => setSelectedCity('all')}
           className={`shrink-0 rounded-full px-3 py-1.5 text-xs font-medium transition-colors ${
             selectedCity === 'all'
@@ -79,6 +81,8 @@ export default function LegalAidPage() {
         {cities.map((city) => (
           <button
             key={city}
+            role="tab"
+            aria-selected={selectedCity === city}
             onClick={() => setSelectedCity(city)}
             className={`shrink-0 rounded-full px-3 py-1.5 text-xs font-medium transition-colors ${
               selectedCity === city

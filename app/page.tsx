@@ -78,6 +78,13 @@ const features: FeatureEntry[] = [
     icon: '问',
     href: '/chat',
   },
+  {
+    id: 'news',
+    title: '权益动态',
+    description: '查看外卖骑手相关的最新政策、法规和行业资讯',
+    icon: '新',
+    href: '/news',
+  },
 ];
 
 export default function Home() {

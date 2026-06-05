@@ -35,13 +35,13 @@ export default function LegalAidCard({ center }: { center: LegalAidCenter }) {
       <div className="mt-3 space-y-1.5 text-sm">
         {center.address && (
           <p className="flex items-center gap-1.5 text-gray-600">
-            <span className="text-base">📍</span>
+            <span className="text-base" aria-hidden="true">📍</span>
             <span>{center.city} {center.district} {center.address}</span>
           </p>
         )}
         {center.phone && (
           <p className="flex items-center gap-1.5">
-            <span className="text-base">📞</span>
+            <span className="text-base" aria-hidden="true">📞</span>
             <a
               href={`tel:${telHref}`}
               className="font-medium text-blue-600 hover:underline"
@@ -53,7 +53,7 @@ export default function LegalAidCard({ center }: { center: LegalAidCenter }) {
         )}
         {center.hours && (
           <p className="flex items-center gap-1.5 text-gray-600">
-            <span className="text-base">🕐</span>
+            <span className="text-base" aria-hidden="true">🕐</span>
             <span>{center.hours}</span>
           </p>
         )}

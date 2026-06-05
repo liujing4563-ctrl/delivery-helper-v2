@@ -30,11 +30,11 @@ const DEFAULT_INPUT: CalculatorInput = {
   onlineHours: 10,
 };
 
-function getInitialInput(): CalculatorInput {
-  if (typeof window === 'undefined') {
-    return DEFAULT_INPUT;
-  }
-
+/**
+ * 从 localStorage 恢复上次输入。仅在客户端挂载后调用，
+ * 避免 SSR/CSR 水合不匹配。
+ */
+function restoreFromStorage(): CalculatorInput {
   try {
     const saved = localStorage.getItem('calculator-input');
     if (!saved) {
@@ -49,7 +49,19 @@ function getInitialInput(): CalculatorInput {
 }
 
 export default function CalculatorForm() {
-  const [input, setInput] = useState<CalculatorInput>(() => getInitialInput());
+  // 初始化始终使用默认值，确保 SSR 和 CSR 首次渲染一致
+  const [input, setInput] = useState<CalculatorInput>(DEFAULT_INPUT);
+  const [storageReady, setStorageReady] = useState(false);
+
+  // 客户端挂载后从 localStorage 恢复，避免水合不匹配
+  useEffect(() => {
+    const timer = window.setTimeout(() => {
+      setInput(restoreFromStorage());
+      setStorageReady(true);
+    }, 0);
+
+    return () => window.clearTimeout(timer);
+  }, []);
 
   const [result, setResult] = useState<CalculatorResult | null>(null);
   const [showResult, setShowResult] = useState(false);
@@ -66,12 +78,16 @@ export default function CalculatorForm() {
 
   // 保存到 localStorage（可选）
   useEffect(() => {
+    if (!storageReady) {
+      return;
+    }
+
     try {
       localStorage.setItem('calculator-input', JSON.stringify(input));
     } catch {
       // 忽略
     }
-  }, [input]);
+  }, [input, storageReady]);
 
   const handleCalculate = () => {
     const r = calculateSalary(input, minWageData);
@@ -121,10 +137,14 @@ export default function CalculatorForm() {
         <div className="space-y-4">
           {/* 城市 */}
           <div>
-            <label className="mb-1 block text-sm font-medium text-gray-700">
+            <label
+              htmlFor="calc-city"
+              className="mb-1 block text-sm font-medium text-gray-700"
+            >
               所在城市 <span className="text-red-500">*</span>
             </label>
             <select
+              id="calc-city"
               value={input.city}
               onChange={(e) => updateField('city', e.target.value)}
               className="w-full rounded-lg border border-gray-300 bg-white px-3 py-2.5 text-base text-gray-900 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
@@ -174,15 +194,17 @@ export default function CalculatorForm() {
           </div>
 
           {/* 统计周期 */}
-          <div>
-            <label className="mb-1 block text-sm font-medium text-gray-700">
+          <fieldset>
+            <legend className="mb-1 block text-sm font-medium text-gray-700">
               统计周期 <span className="text-red-500">*</span>
-            </label>
-            <div className="flex gap-2">
+            </legend>
+            <div className="flex gap-2" role="radiogroup" aria-label="统计周期">
               {PERIOD_OPTIONS.map((opt) => (
                 <button
                   key={opt.value}
                   type="button"
+                  role="radio"
+                  aria-checked={input.period === opt.value}
                   onClick={() => updateField('period', opt.value)}
                   className={`flex-1 rounded-lg border px-3 py-2.5 text-sm font-medium transition-colors ${
                     input.period === opt.value
@@ -194,33 +216,50 @@ export default function CalculatorForm() {
                 </button>
               ))}
             </div>
-          </div>
+          </fieldset>
 
           {/* 核心输入 */}
           <div className="grid grid-cols-2 gap-3">
             <div>
-              <label className="mb-1 block text-sm font-medium text-gray-700">
+              <label
+                htmlFor="calc-orders"
+                className="mb-1 block text-sm font-medium text-gray-700"
+              >
                 订单数 <span className="text-red-500">*</span>
               </label>
               <input
+                id="calc-orders"
                 type="number"
+                inputMode="numeric"
                 min="0"
+                max="9999"
                 value={input.orders}
-                onChange={(e) => updateField('orders', Number(e.target.value))}
+                onChange={(e) =>
+                  updateField('orders', Math.max(0, Number(e.target.value)))
+                }
                 className="w-full rounded-lg border border-gray-300 px-3 py-2.5 text-base text-gray-900 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
               />
             </div>
             <div>
-              <label className="mb-1 block text-sm font-medium text-gray-700">
+              <label
+                htmlFor="calc-avg-income"
+                className="mb-1 block text-sm font-medium text-gray-700"
+              >
                 平均每单收入 <span className="text-red-500">*</span>
               </label>
               <input
+                id="calc-avg-income"
                 type="number"
+                inputMode="decimal"
                 min="0"
                 step="0.1"
+                max="9999"
                 value={input.avgIncomePerOrder}
                 onChange={(e) =>
-                  updateField('avgIncomePerOrder', Number(e.target.value))
+                  updateField(
+                    'avgIncomePerOrder',
+                    Math.max(0, Number(e.target.value))
+                  )
                 }
                 className="w-full rounded-lg border border-gray-300 px-3 py-2.5 text-base text-gray-900 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
               />
@@ -228,16 +267,25 @@ export default function CalculatorForm() {
           </div>
 
           <div>
-            <label className="mb-1 block text-sm font-medium text-gray-700">
+            <label
+              htmlFor="calc-hours"
+              className="mb-1 block text-sm font-medium text-gray-700"
+            >
               在线接单小时数 <span className="text-red-500">*</span>
             </label>
             <input
+              id="calc-hours"
               type="number"
+              inputMode="decimal"
               min="0"
               step="0.5"
+              max="24"
               value={input.onlineHours}
               onChange={(e) =>
-                updateField('onlineHours', Number(e.target.value))
+                updateField(
+                  'onlineHours',
+                  Math.max(0, Number(e.target.value))
+                )
               }
               className="w-full rounded-lg border border-gray-300 px-3 py-2.5 text-base text-gray-900 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
             />
@@ -250,61 +298,90 @@ export default function CalculatorForm() {
             </p>
             <div className="mt-2 grid grid-cols-2 gap-3">
               <div>
-                <label className="mb-0.5 block text-xs text-gray-500">
+                <label
+                  htmlFor="calc-subsidies"
+                  className="mb-0.5 block text-xs text-gray-500"
+                >
                   补贴总额
                 </label>
                 <input
+                  id="calc-subsidies"
                   type="number"
+                  inputMode="decimal"
                   min="0"
                   step="0.1"
                   value={input.subsidies}
                   onChange={(e) =>
-                    updateField('subsidies', Number(e.target.value))
+                    updateField(
+                      'subsidies',
+                      Math.max(0, Number(e.target.value))
+                    )
                   }
                   className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm text-gray-900 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
                 />
               </div>
               <div>
-                <label className="mb-0.5 block text-xs text-gray-500">
+                <label
+                  htmlFor="calc-rewards"
+                  className="mb-0.5 block text-xs text-gray-500"
+                >
                   奖励总额
                 </label>
                 <input
+                  id="calc-rewards"
                   type="number"
+                  inputMode="decimal"
                   min="0"
                   step="0.1"
                   value={input.rewards}
                   onChange={(e) =>
-                    updateField('rewards', Number(e.target.value))
+                    updateField(
+                      'rewards',
+                      Math.max(0, Number(e.target.value))
+                    )
                   }
                   className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm text-gray-900 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
                 />
               </div>
               <div>
-                <label className="mb-0.5 block text-xs text-gray-500">
+                <label
+                  htmlFor="calc-deductions"
+                  className="mb-0.5 block text-xs text-gray-500"
+                >
                   扣款/罚款
                 </label>
                 <input
+                  id="calc-deductions"
                   type="number"
+                  inputMode="decimal"
                   min="0"
                   step="0.1"
                   value={input.deductions}
                   onChange={(e) =>
-                    updateField('deductions', Number(e.target.value))
+                    updateField(
+                      'deductions',
+                      Math.max(0, Number(e.target.value))
+                    )
                   }
                   className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm text-gray-900 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
                 />
               </div>
               <div>
-                <label className="mb-0.5 block text-xs text-gray-500">
+                <label
+                  htmlFor="calc-costs"
+                  className="mb-0.5 block text-xs text-gray-500"
+                >
                   成本（油费/电费等）
                 </label>
                 <input
+                  id="calc-costs"
                   type="number"
+                  inputMode="decimal"
                   min="0"
                   step="0.1"
                   value={input.costs}
                   onChange={(e) =>
-                    updateField('costs', Number(e.target.value))
+                    updateField('costs', Math.max(0, Number(e.target.value)))
                   }
                   className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm text-gray-900 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
                 />

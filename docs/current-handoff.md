@@ -17,9 +17,10 @@
 - AI 权益助手：服务端流式问答已接入，定位为“AI 骑手权益信息助手”，不是律师；已限制请求体、角色、历史长度、输出长度和敏感信息边界。
 - 账号系统：MVP 阶段不启用真实账号；登录、账户和删除账户页面均为占位/本地数据管理说明。
 - PWA：已有 manifest、图标和手写 Service Worker；当前只做基础离线页，不引入 Serwist / Workbox。
+- SEO：已有 `app/sitemap.ts`、`app/robots.ts`、`metadataBase`、站点标题/描述/关键词和 OpenGraph 基础元数据。
 - 本地校验：`tools/validate_data.py` 已覆盖静态数据、账号边界、PWA 边界、AI 问答边界和上海法援完整性。
 
-## 最近完成的五轮
+## 最近完成的七轮
 
 ### 第二十轮
 
@@ -55,7 +56,7 @@
 
 - 继续联网评估外部 agent、skill、MCP、来源项目和资料；结论仍是不下载第三方 agent / MCP 代码，当前收益不如官方资料核验。
 - 重新检索成都最低工资来源，查到成府规〔2025〕4号转载原文和成都住房公积金管理中心对该文件的官方引用。
-- 因成都市政府原通知页面仍未能直接读取，成都继续保持 `lastVerified="待核实"`，但 `scopeNote` 补充了第一档/第二档区县范围线索。
+- 当时因成都市政府原通知页面仍未能直接读取，成都保持 `lastVerified="待核实"`，但 `scopeNote` 补充了第一档/第二档区县范围线索；当前状态见第二十六轮。
 
 ### 第二十四轮
 
@@ -64,11 +65,23 @@
 - `/offline` 离线页增加法规库、法援目录入口，和当前预缓存页面保持一致。
 - `tools/validate_data.py` 增加 PWA 关键资源预缓存和同源边界校验。
 
+### 第二十五轮
+
+- `docs/current-handoff.md` 修正最近完成轮次数量，并更新 PWA/成都来源/模板 SVG 清理边界。
+- `components/ServiceWorkerRegistrar.tsx` 移除生产环境注册成功日志，注册失败按渐进增强静默处理。
+- 生产服务抽查 `/offline` 和 `/calculator`：页面可加载，manifest 存在，控制台无 `log/warn/error`。
+
+### 第二十六轮
+
+- `data/minWage.ts` 已将成都切换为成都市人民政府官方直链，`lastVerified` 更新为 `2026-06-05`，15 个最低工资城市均通过结构校验。
+- 新增 `app/sitemap.ts`、`app/robots.ts`，并增强 `app/layout.tsx` 元数据。
+- 注意：本环境直接请求成都政府 URL 返回 `412 Precondition Failed`，建议后续用人工浏览器复核留痕；当前自动校验只做结构和域名边界检查，不做联网内容判断。
+
 ## 已通过验证
 
 最近一次完整验证结果：
 
-- `pnpm --dir "delivery-helper" validate:data` 通过，仅保留成都最低工资待核实警告。
+- `pnpm --dir "delivery-helper" validate:data` 通过。
 - `python -m py_compile "tools/validate_data.py"` 通过。
 - `pnpm --dir "delivery-helper" typecheck` 通过。
 - `pnpm --dir "delivery-helper" lint` 通过。
@@ -76,7 +89,7 @@
 - 生产服务抽查 `http://localhost:3002/offline`：页面可加载，manifest 存在，首页/薪资计算器/法规库/法援目录入口可见，控制台无 `log/warn/error`。
 - 生产服务抽查 `http://localhost:3002/calculator`：页面可加载，manifest 存在，城市选择可见，控制台无 `log/warn/error`。
 - Browser 只读页面作用域未暴露 `navigator`，本轮未直接读取 Service Worker registration/caches；后续如要验证缓存命中，可用完整 Playwright CLI 或浏览器 DevTools 做专项检查。
-- 浏览器抽查 `/calculator`：页面可加载，成都仍显示为待核实城市，控制台无错误。当前 Browser 自动化对原生下拉框选项切换不可靠，未把该交互作为失败依据。
+- 浏览器抽查 `/calculator`：页面可加载，城市选择可见，控制台无错误。当前 Browser 自动化对原生下拉框选项切换不可靠，未把该交互作为失败依据。
 - 浏览器抽查 `/legal-aid`：显示 17 个上海法律援助中心电话、17 个地址/接待时间；黄浦、静安、奉贤地址可见；控制台无错误。
 
 ## 重要边界和不要做的事
@@ -90,7 +103,7 @@
 - 清理旧认证依赖属于包管理变更，只有用户明确说 `确认清理旧认证依赖` 后才执行。
 - 不要引入额外 agent、skill、MCP 或来源项目；当前判断是 MVP 不需要，且会增加权限和维护成本。
 - 法规、最低工资、法援数据只允许使用可核验官方来源；不得用未核验资料驱动风险判断。
-- 成都最低工资仍保持 `待核实`，不参与薪资风险判断。
+- 成都最低工资当前使用成都市人民政府官方直链并已通过结构校验；但本环境直接抓取该链接返回 `412 Precondition Failed`，如要做更严格证据链，需人工浏览器复核原文并留痕。
 
 ## 当前工作区注意事项
 
@@ -106,6 +119,9 @@
   - `.gitignore`
   - `data/types.ts`
   - `data/minWage.ts`
+  - `app/layout.tsx`
+  - `app/sitemap.ts`
+  - `app/robots.ts`
   - `components/CalculatorForm.tsx`
   - `docs/external-resource-review.md`
   - `public/sw.js`
@@ -113,8 +129,9 @@
 
 ## 下一步建议
 
-1. 优先做非包管理、低风险改进：继续核实成都本地最低工资适用档；只有找到成都本地官方来源后再更新。
+1. 优先做非包管理、低风险改进：同步文档和真实代码状态后，继续跑 `validate:data`、`typecheck`、`lint`、`build`。
 2. PWA 如需继续深化，下一步应专项验证 Service Worker registration/caches 和正式图标显示；不要在未确认前引入 Serwist / Workbox。
-3. 默认 Next.js 模板 SVG 资源疑似未使用，但删除属于文件系统变更；只有用户明确确认后再清理。
-4. 如要清理旧认证依赖，先让用户明确输入 `确认清理旧认证依赖`，再改 `package.json` 和锁文件。
-5. 如要提交代码，先让用户明确要求提交；提交前重新运行 `validate:data`、`typecheck`、`lint`、`build`。
+3. 成都最低工资如要形成更强证据链，建议人工浏览器打开成都市政府原文并保存核验留痕。
+4. 默认 Next.js 模板 SVG 资源疑似未使用，但删除属于文件系统变更；只有用户明确确认后再清理。
+5. 如要清理旧认证依赖，先让用户明确输入 `确认清理旧认证依赖`，再改 `package.json` 和锁文件。
+6. 如要提交代码，先让用户明确要求提交；提交前重新运行 `validate:data`、`typecheck`、`lint`、`build`。

@@ -8,7 +8,10 @@ export default function ProblemCard({ problem }: { problem: ProblemEntry }) {
       className="block rounded-lg border border-gray-200 bg-white p-4 shadow-sm transition-shadow hover:shadow-md focus-visible:outline focus-visible:outline-2 focus-visible:outline-blue-500 active:scale-[0.98]"
     >
       <div className="flex items-center gap-3">
-        <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-amber-50 text-base font-bold text-amber-700">
+        <span
+          aria-hidden="true"
+          className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-amber-50 text-base font-bold text-amber-700"
+        >
           {problem.icon}
         </span>
         <div className="min-w-0">

@@ -19,10 +19,10 @@
 
 - Next.js 环境变量文档：服务端环境变量不加 `NEXT_PUBLIC_` 时不会暴露到浏览器。AI API Key 应只在服务端读取。
   - https://nextjs.org/docs/15/app/guides/environment-variables
-- Vercel AI SDK：统一 TypeScript SDK，支持文本生成、流式输出和多模型供应商。
-  - https://vercel.com/ai-sdk
-- Model Context Protocol SDK：MCP 官方 SDK 支持暴露 tools/resources/prompts，但当前不需要接入。
-  - https://modelcontextprotocol.io/docs/sdk
+- Vercel AI SDK 6：统一 TypeScript SDK，支持文本生成、流式输出、工具调用、MCP 和多模型供应商；当前继续只使用服务端文本生成/流式能力。
+  - https://ai-sdk.dev/docs/introduction
+- Model Context Protocol：MCP 是连接 AI 应用与外部系统、数据源和工具的开放标准；当前不需要把项目工具暴露给 AI。
+  - https://modelcontextprotocol.io/docs/getting-started/intro
 - Next.js / NextAuth 学习文档：NextAuth 可用于 App Router 认证，但真实邮件登录需要完整认证方案和环境配置。
   - https://nextjs.org/learn/dashboard-app/adding-authentication
 - Next.js PWA 指南：Next.js App Router 可通过 manifest、metadata 和 public service worker 支持 PWA。
@@ -31,8 +31,8 @@
   - https://web.dev/learn/pwa/service-workers
 - OWASP LLM 应用安全资料：提示注入、敏感信息泄露和过度代理权限是 AI 应用重点风险；当前通过低权限 API、输入长度限制和边界校验处理。
   - https://owasp.org/www-project-top-10-for-large-language-model-applications/
-- OpenAI Agents SDK / Guardrails：适合多工具、多步骤 agent 编排；当前项目没有工具调用和外部动作，不引入 agent 框架。
-  - https://openai.github.io/openai-agents-python/guardrails/
+- OpenAI Agents SDK：适合需要 agent loop、工具调用、guardrails、handoff、MCP 和 human-in-the-loop 的多步骤工作流；当前项目没有工具调用和外部动作，不引入 agent 框架。
+  - https://openai.github.io/openai-agents-python/
 
 ## 数据来源核验记录
 
@@ -46,11 +46,12 @@
   - https://www.sz.gov.cn/szzt2010/wgkzl/jcgk/jcygk/zdzcjc/content/post_12014799.html
 - 武汉最低工资：武汉市人民政府门户网站转载湖北省政府办公厅通知，确认 2025-12-01 起全省月最低工资按 2400 元、2130 元、1970 元三档执行，小时最低工资按 24 元、21.5 元、20 元三档执行；当前武汉按一档参考展示。
   - https://www.wuhan.gov.cn/zwgk/tzgg/202512/t20251227_2703389.shtml
-- 成都最低工资：四川省人民政府文件确认 2025-01-01 起全省月最低工资两档为 2330 元、2200 元，小时最低工资两档为 23 元、22 元；但该文件要求各市州重新选择本地档次，并不直接确认成都区县适用档。多处转载的成府规〔2025〕4号信息一致显示：四川天府新区、成都东部新区、成都高新区、锦江、青羊、金牛、武侯、成华、龙泉驿、青白江、新都、温江、双流、郫都、新津执行第一档，简阳、都江堰、彭州、邛崃、崇州、金堂、大邑、蒲江执行第二档。成都市政府原文直链当前仍无法直接读取，因此成都数据继续保持 `待核实`，不参与风险判断。
+- 成都最低工资：四川省人民政府文件确认 2025-01-01 起全省月最低工资两档为 2330 元、2200 元，小时最低工资两档为 23 元、22 元；成都市人民政府直链已记录为当前 `sourceUrl`，项目数据已按成府规〔2025〕4号更新为第一档参考展示并通过结构校验。多处转载信息一致显示：四川天府新区、成都东部新区、成都高新区、锦江、青羊、金牛、武侯、成华、龙泉驿、青白江、新都、温江、双流、郫都、新津执行第一档，简阳、都江堰、彭州、邛崃、崇州、金堂、大邑、蒲江执行第二档。本环境直接抓取成都市政府 URL 返回 `412 Precondition Failed`，后续如需更强证据链，应人工浏览器复核原文并留痕。
+  - https://www.chengdu.gov.cn/gkml/cdsrmzfbgt/xzgfxwj/1380564429229260800.shtml
   - https://www.sc.gov.cn/10462/zfwjts/2025/1/2/60841bcf38d844fb80ad1ea0b2d74e24/files/%E5%B7%9D%E5%BA%9C%E8%A7%844%E5%8F%B7%E5%85%AC%E5%BC%80%E7%89%88.pdf
   - https://finance.sina.com.cn/jjxw/2025-06-06/doc-inezcrkf5452982.shtml?froms=ggmp
   - https://cdzfgjj.chengdu.gov.cn/cdgjj/c1156360/2025-07/30/content_6b795176b53d4bc6a5661330470d14a0.shtml
-- 2026-06-05 复检成都来源：继续检索 `chengdu.gov.cn`、`cdhrss.chengdu.gov.cn`、`gk.chengdu.gov.cn` 官方域名，仍未获得可直接读取的成都市政府原文页；第三方政策库和“成都发布”转载内容只作为线索，不驱动 `lastVerified` 状态更新。
+- 2026-06-05 复检成都来源：继续检索 `chengdu.gov.cn`、`cdhrss.chengdu.gov.cn`、`gk.chengdu.gov.cn` 官方域名，并用本机请求复查成都市政府 URL；官方 URL 存在但本环境返回 `412 Precondition Failed`。第三方政策库和“成都发布”转载内容只作为一致性线索，不作为自动联网校验依据。
   - https://zc.51shebao.com/detail/836465
   - https://finance.sina.com.cn/stock/estate/integration/2025-06-06/doc-inezcriy2485645.shtml
   - https://finance.sina.com.cn/jjxw/2025-06-06/doc-inezcrkf5452982.shtml?froms=ggmp

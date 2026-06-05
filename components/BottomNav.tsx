@@ -16,7 +16,10 @@ export default function BottomNav() {
   const pathname = usePathname();
 
   return (
-    <nav className="fixed bottom-0 left-0 right-0 z-50 border-t border-gray-200 bg-white safe-area-bottom">
+    <nav
+      aria-label="主导航"
+      className="fixed bottom-0 left-0 right-0 z-50 border-t border-gray-200 bg-white safe-area-bottom"
+    >
       <div className="mx-auto flex max-w-lg items-center justify-around">
         {navItems.map((item) => {
           const isActive =
@@ -28,13 +31,16 @@ export default function BottomNav() {
             <Link
               key={item.href}
               href={item.href}
+              aria-current={isActive ? 'page' : undefined}
               className={`flex flex-col items-center gap-0.5 px-3 py-2 text-xs transition-colors ${
                 isActive
                   ? 'text-blue-600 font-semibold'
                   : 'text-gray-500 hover:text-gray-700'
               }`}
             >
-              <span className="text-xl">{item.icon}</span>
+              <span className="text-xl" aria-hidden="true">
+                {item.icon}
+              </span>
               <span>{item.label}</span>
             </Link>
           );
