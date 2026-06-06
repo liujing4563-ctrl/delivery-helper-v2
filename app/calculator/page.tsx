@@ -1,4 +1,10 @@
+import type { Metadata } from 'next';
 import CalculatorForm from '@/components/CalculatorForm';
+
+export const metadata: Metadata = {
+  title: '薪资计算器',
+  description: '算算你的时薪，对比当地最低工资参考线，了解你的收入是否达标',
+};
 
 export default function CalculatorPage() {
   return (

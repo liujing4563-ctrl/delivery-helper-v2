@@ -47,7 +47,7 @@ export default function CalculatorResultDisplay({ result, input }: Props) {
       {/* 风险等级大卡片 */}
       <div className={`rounded-xl border p-4 ${risk.bg} ${risk.border}`}>
         <div className="flex items-center gap-2">
-          <span className="text-2xl">{risk.icon}</span>
+          <span className="text-2xl" aria-hidden="true">{risk.icon}</span>
           <h2 className={`text-lg font-bold ${risk.titleColor}`}>
             {risk.title}
           </h2>
@@ -64,7 +64,7 @@ export default function CalculatorResultDisplay({ result, input }: Props) {
           <p className="mt-1 text-xl font-bold text-gray-900">
             ¥{result.grossIncome.toFixed(2)}
           </p>
-          <p className="text-xs text-gray-400">
+          <p className="text-xs text-gray-500">
             app 到账金额 + 补贴 + 奖励
           </p>
         </div>
@@ -73,7 +73,7 @@ export default function CalculatorResultDisplay({ result, input }: Props) {
           <p className="mt-1 text-xl font-bold text-gray-900">
             ¥{result.netIncome.toFixed(2)}
           </p>
-          <p className="text-xs text-gray-400">
+          <p className="text-xs text-gray-500">
             毛收入 − 扣款 − 成本
           </p>
         </div>
@@ -115,7 +115,7 @@ export default function CalculatorResultDisplay({ result, input }: Props) {
         <p className="mt-1 text-xl font-bold text-gray-900">
           ¥{result.monthlyEquivalent.toFixed(2)}
         </p>
-        <p className="text-xs text-gray-400">
+        <p className="text-xs text-gray-500">
           按{periodLabel}收入折算（{input.period === 'day' ? '×26天' : input.period === 'week' ? '×4.33周' : '当月实际'}）
         </p>
       </div>

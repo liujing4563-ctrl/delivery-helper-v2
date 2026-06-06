@@ -258,7 +258,7 @@ export default function CalculatorForm() {
               总收入 <span className="text-red-500">*</span>
             </label>
             <div className="relative">
-              <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-lg">¥</span>
+              <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500 text-lg">¥</span>
               <input
                 id="calc-total-earnings"
                 type="number"
@@ -277,7 +277,7 @@ export default function CalculatorForm() {
                 placeholder="从骑手 app 看到的到账金额"
               />
             </div>
-            <p className="mt-1 text-xs text-gray-400">
+            <p className="mt-1 text-xs text-gray-500">
               填写骑手 app 里显示的到账金额（{input.period === 'day' ? '今天' : input.period === 'week' ? '本周' : '本月'}）
             </p>
           </div>

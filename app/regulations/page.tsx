@@ -64,7 +64,7 @@ export default function RegulationsPage() {
             <RegulationCard key={reg.id} reg={reg} />
           ))
         ) : (
-          <div className="rounded-xl border border-gray-200 bg-white p-6 text-center text-sm text-gray-400">
+          <div className="rounded-xl border border-gray-200 bg-white p-6 text-center text-sm text-gray-500">
             没有找到匹配的法规
           </div>
         )}

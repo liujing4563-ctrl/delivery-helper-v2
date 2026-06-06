@@ -48,7 +48,7 @@ export default function LegalAidCard({ center }: { center: LegalAidCenter }) {
             >
               {center.phone}
             </a>
-            <span className="text-xs text-gray-400">（点击拨号）</span>
+            <span className="text-xs text-gray-500">（点击拨号）</span>
           </p>
         )}
         {center.hours && (
@@ -88,7 +88,7 @@ export default function LegalAidCard({ center }: { center: LegalAidCenter }) {
               </svg>
             </a>
           ) : (
-            <span className="text-sm font-medium text-gray-400">
+            <span className="text-sm font-medium text-gray-500">
               来源待核实
             </span>
           )}

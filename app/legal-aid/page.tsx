@@ -34,9 +34,10 @@ export default function LegalAidPage() {
         <p className="text-sm font-semibold text-blue-800">全国法律援助热线</p>
         <a
           href="tel:12348"
+          aria-label="拨打全国法律援助热线 12348"
           className="mt-1 inline-flex items-baseline gap-1 text-2xl font-bold text-blue-900 hover:underline"
         >
-          📞 12348
+          <span aria-hidden="true">📞</span> 12348
         </a>
         <p className="mt-1 text-xs text-blue-600">
           全国统一法律援助咨询热线，按语音提示选择当地服务。
@@ -59,7 +60,7 @@ export default function LegalAidPage() {
 
       {/* 数据范围说明 */}
       <div className="mt-3 rounded-lg border border-amber-200 bg-amber-50 p-3 text-xs text-amber-800">
-        <p className="font-medium">⚠️ 数据范围说明</p>
+        <p className="font-medium"><span aria-hidden="true">⚠️</span> 数据范围说明</p>
         <p className="mt-1">
           当前仅收录上海地区法律援助中心信息（{verifiedCount} 个已核验）。
           其他城市法援中心请拨打 12348 查询。
@@ -87,7 +88,7 @@ export default function LegalAidPage() {
         <h2 className="mb-2 text-sm font-semibold text-gray-500">
           正规律所查询入口
         </h2>
-        <p className="mb-2 text-xs text-gray-400">
+        <p className="mb-2 text-xs text-gray-500">
           本站不推荐具体律所，请通过以下官方渠道查询正规律师和律师事务所
         </p>
         <div className="space-y-3">

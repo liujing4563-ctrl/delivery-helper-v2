@@ -8,9 +8,26 @@ import ServiceWorkerRegistrar from '@/components/ServiceWorkerRegistrar';
 import { SITE_URL } from '@/lib/site';
 import './globals.css';
 
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'Organization',
+  name: '骑手权益助手',
+  url: SITE_URL,
+  description: '面向外卖骑手的工时薪资测算、法规查询、法援导航和AI权益信息问答平台',
+  contactPoint: {
+    '@type': 'ContactPoint',
+    telephone: '+86-12348',
+    contactType: 'legal aid hotline',
+    availableLanguage: 'Chinese',
+  },
+};
+
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
-  title: '骑手权益助手 — 外卖骑手劳动权益保障平台',
+  title: {
+    default: '骑手权益助手',
+    template: '%s - 骑手权益助手',
+  },
   description: '面向外卖骑手的工时薪资测算、法规查询、法援导航和 AI 权益信息问答平台，帮助骑手了解自己的劳动权益。',
   keywords: ['外卖骑手', '劳动权益', '工资计算', '法律援助', '最低工资', '骑手保障'],
   manifest: '/manifest.json',
@@ -46,6 +63,10 @@ export default function RootLayout({
         <link rel="icon" href="/icons/icon-32x32.png" type="image/png" />
         <link rel="icon" href="/icons/icon-96x96.svg" type="image/svg+xml" />
         <link rel="apple-touch-icon" href="/icons/icon-180x180.png" />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        />
       </head>
       <body className="min-h-screen bg-gray-50 text-gray-900 antialiased">
         <a

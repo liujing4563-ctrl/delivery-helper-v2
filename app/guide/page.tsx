@@ -1,4 +1,10 @@
+import type { Metadata } from 'next';
 import Link from 'next/link';
+
+export const metadata: Metadata = {
+  title: '维权路径指引',
+  description: '遇到劳动纠纷不知道怎么办？五步维权路径：收集证据→平台沟通→调解→监察投诉→仲裁诉讼',
+};
 
 const steps = [
   {
@@ -76,6 +82,7 @@ export default function GuidePage() {
       <div className="mt-4 grid grid-cols-2 gap-2">
         <a
           href="tel:12333"
+          aria-label="拨打人社服务热线 12333"
           className="rounded-xl border border-blue-200 bg-blue-50 p-3 text-center"
         >
           <p className="text-lg font-bold text-blue-900">12333</p>
@@ -98,9 +105,9 @@ export default function GuidePage() {
             className="rounded-xl border border-gray-200 bg-white p-4 shadow-sm"
           >
             <div className="flex items-center gap-2">
-              <span className="text-xl">{step.icon}</span>
+              <span className="text-xl" aria-hidden="true">{step.icon}</span>
               <div>
-                <p className="text-xs font-medium text-gray-400">
+                <p className="text-xs font-medium text-gray-500">
                   第{step.id}步
                 </p>
                 <h2 className="text-base font-bold text-gray-900">
@@ -117,7 +124,7 @@ export default function GuidePage() {
                   key={i}
                   className="flex items-start gap-2 text-sm text-gray-700"
                 >
-                  <span className="mt-0.5 block h-1.5 w-1.5 shrink-0 rounded-full bg-gray-300" />
+                  <span className="mt-0.5 block h-1.5 w-1.5 shrink-0 rounded-full bg-gray-300" aria-hidden="true" />
                   {item}
                 </li>
               ))}
@@ -128,22 +135,22 @@ export default function GuidePage() {
 
       {/* 重要提醒 */}
       <div className="mt-5 rounded-xl border border-amber-200 bg-amber-50 p-4">
-        <p className="text-sm font-semibold text-amber-900">几点提醒</p>
+        <h2 className="text-sm font-semibold text-amber-900">几点提醒</h2>
         <ul className="mt-2 space-y-1.5 text-sm leading-relaxed text-amber-800">
           <li className="flex items-start gap-2">
-            <span className="mt-0.5 block h-1.5 w-1.5 shrink-0 rounded-full bg-amber-400" />
+            <span className="mt-0.5 block h-1.5 w-1.5 shrink-0 rounded-full bg-amber-400" aria-hidden="true" />
             每一步都记得留好证据（截图、录音、书面材料）
           </li>
           <li className="flex items-start gap-2">
-            <span className="mt-0.5 block h-1.5 w-1.5 shrink-0 rounded-full bg-amber-400" />
+            <span className="mt-0.5 block h-1.5 w-1.5 shrink-0 rounded-full bg-amber-400" aria-hidden="true" />
             仲裁时效是一年，从你知道权利被侵害之日起算
           </li>
           <li className="flex items-start gap-2">
-            <span className="mt-0.5 block h-1.5 w-1.5 shrink-0 rounded-full bg-amber-400" />
+            <span className="mt-0.5 block h-1.5 w-1.5 shrink-0 rounded-full bg-amber-400" aria-hidden="true" />
             平台不能以"你是外包/众包"为由拒绝承担责任
           </li>
           <li className="flex items-start gap-2">
-            <span className="mt-0.5 block h-1.5 w-1.5 shrink-0 rounded-full bg-amber-400" />
+            <span className="mt-0.5 block h-1.5 w-1.5 shrink-0 rounded-full bg-amber-400" aria-hidden="true" />
             经济困难可以申请免费法律援助（12348 按 2 转法援查询）
           </li>
         </ul>
@@ -166,7 +173,7 @@ export default function GuidePage() {
       </div>
 
       {/* 来源说明 */}
-      <p className="mt-4 text-center text-xs text-gray-400">
+      <p className="mt-4 text-center text-xs text-gray-500">
         维权流程参考中工网、人社部和 12348 法网公开信息，仅供参考，具体以当地政策为准。
       </p>
     </div>

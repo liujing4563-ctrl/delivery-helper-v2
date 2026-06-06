@@ -36,7 +36,7 @@ export default function ChatPage() {
       fallback={
         <div className="px-4 pb-4 pt-6">
           <h1 className="text-xl font-bold text-gray-900">AI 骑手权益信息助手</h1>
-          <p className="mt-2 text-sm text-gray-400">加载中…</p>
+          <p className="mt-2 text-sm text-gray-500">加载中…</p>
         </div>
       }
     >
@@ -274,7 +274,7 @@ function ChatContent() {
           className="mt-2 w-full resize-none rounded-lg border border-gray-300 px-3 py-2 text-sm leading-6 text-gray-900 placeholder-gray-400 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
         />
         <div className="mt-2 flex items-center justify-between gap-3">
-          <span className="text-xs text-gray-400">{input.length}/1000</span>
+          <span className="text-xs text-gray-500">{input.length}/1000</span>
           <div className="flex gap-2">
             {isLoading && (
               <button

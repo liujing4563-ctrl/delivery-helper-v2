@@ -64,7 +64,7 @@ export default function RegulationCard({ reg }: { reg: Regulation }) {
             </svg>
           </a>
         ) : (
-          <span className="text-sm font-medium text-gray-400">
+          <span className="text-sm font-medium text-gray-500">
             官方链接待核实
           </span>
         )}
