@@ -7,9 +7,9 @@ import type { NavItem } from '@/data/types';
 const navItems: NavItem[] = [
   { label: '首页', href: '/', icon: '🏠' },
   { label: '算薪', href: '/calculator', icon: '🧮' },
+  { label: '法规', href: '/regulations', icon: '📖' },
   { label: 'AI', href: '/chat', icon: '🤖' },
   { label: '法援', href: '/legal-aid', icon: '☎️' },
-  { label: '我的', href: '/account', icon: '👤' },
 ];
 
 export default function BottomNav() {

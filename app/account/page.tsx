@@ -56,12 +56,6 @@ export default function AccountPage() {
 
       <div className="mt-4 grid grid-cols-1 gap-3">
         <Link
-          href="/login"
-          className="rounded-lg border border-gray-200 bg-white px-4 py-3 text-center text-sm font-medium text-gray-700"
-        >
-          账号功能说明
-        </Link>
-        <Link
           href="/privacy"
           className="rounded-lg border border-gray-200 bg-white px-4 py-3 text-center text-sm font-medium text-gray-700"
         >

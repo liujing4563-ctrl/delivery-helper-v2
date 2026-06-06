@@ -81,15 +81,6 @@ export interface ProblemEntry {
   href: string;
 }
 
-// 功能入口
-export interface FeatureEntry {
-  id: string;
-  title: string;
-  description: string;
-  icon: string;
-  href: string;
-}
-
 // 底部导航项
 export interface NavItem {
   label: string;

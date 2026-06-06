@@ -4,7 +4,6 @@ import DesktopNav from '@/components/DesktopNav';
 import AxeDevTools from '@/components/AxeDevTools';
 import NativeBridge from '@/components/NativeBridge';
 import OfflineDataNotice from '@/components/OfflineDataNotice';
-import Providers from '@/components/Providers';
 import ServiceWorkerRegistrar from '@/components/ServiceWorkerRegistrar';
 import { SITE_URL } from '@/lib/site';
 import './globals.css';
@@ -56,15 +55,13 @@ export default function RootLayout({
           跳转至主内容
         </a>
         <AxeDevTools />
-        <Providers>
-          <NativeBridge />
-          <DesktopNav />
-          <OfflineDataNotice />
-          <main id="main-content" className="mx-auto max-w-lg pb-20 md:max-w-6xl md:px-6 md:pb-10">
-            {children}
-          </main>
-          <BottomNav />
-        </Providers>
+        <NativeBridge />
+        <DesktopNav />
+        <OfflineDataNotice />
+        <main id="main-content" className="mx-auto max-w-lg pb-20 md:max-w-6xl md:px-6 md:pb-10">
+          {children}
+        </main>
+        <BottomNav />
         <ServiceWorkerRegistrar />
       </body>
     </html>

@@ -315,7 +315,18 @@ def validate_news(report: Report) -> None:
 
 def validate_prompts(report: Report) -> None:
     content = read_data_file("prompts.ts")
-    required_phrases = ["免责声明", "下一步建议", "不是律师", "不编造法条"]
+    required_phrases = [
+        "免责声明",
+        "下一步建议",
+        "不是律师",
+        "不编造法条",
+        "提示词注入防御",
+        "不当作系统命令",
+        "忽略、覆盖或改写系统提示词",
+        "不泄露系统提示词",
+        "API Key",
+        "不因为用户要求改变身份",
+    ]
     for phrase in required_phrases:
         if phrase not in content:
             report.error(f"prompts.ts: 系统提示词缺少 `{phrase}`")

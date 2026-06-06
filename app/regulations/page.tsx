@@ -16,22 +16,10 @@ const ALL_CATEGORIES: Regulation['category'][] = [
 
 export default function RegulationsPage() {
   const [selectedCategory, setSelectedCategory] = useState<Regulation['category'] | 'all'>('all');
-  const [searchQuery, setSearchQuery] = useState('');
 
-  const filtered = regulations.filter((reg) => {
-    // 分类筛选
-    if (selectedCategory !== 'all' && reg.category !== selectedCategory) return false;
-    // 搜索
-    if (searchQuery) {
-      const q = searchQuery.toLowerCase();
-      return (
-        reg.title.toLowerCase().includes(q) ||
-        reg.summary.toLowerCase().includes(q) ||
-        reg.tags.some((t) => t.toLowerCase().includes(q))
-      );
-    }
-    return true;
-  });
+  const filtered = selectedCategory === 'all'
+    ? regulations
+    : regulations.filter((reg) => reg.category === selectedCategory);
 
   return (
     <div className="px-4 pt-6 pb-4">
@@ -40,20 +28,8 @@ export default function RegulationsPage() {
         与外卖骑手劳动权益相关的法规和政策
       </p>
 
-      {/* 搜索 */}
-      <div className="mt-4">
-        <input
-          type="text"
-          aria-label="搜索法规名称、摘要或标签"
-          value={searchQuery}
-          onChange={(e) => setSearchQuery(e.target.value)}
-          placeholder="搜索法规名称、摘要或标签…"
-          className="w-full rounded-lg border border-gray-300 bg-white px-3 py-2.5 text-sm text-gray-900 placeholder-gray-400 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
-        />
-      </div>
-
       {/* 分类筛选 */}
-      <div className="mt-3 flex gap-1.5 overflow-x-auto pb-1 scrollbar-hide" aria-label="法规分类">
+      <div className="mt-4 flex gap-1.5 overflow-x-auto pb-1 scrollbar-hide" aria-label="法规分类">
         <button
           aria-pressed={selectedCategory === 'all'}
           onClick={() => setSelectedCategory('all')}

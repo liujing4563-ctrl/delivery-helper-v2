@@ -46,8 +46,8 @@ AI 只做解释和路径引导
 
 - **框架**: Next.js 16 App Router + TypeScript
 - **样式**: Tailwind CSS 4
-- **AI**: Vercel AI SDK + DeepSeek API（OpenAI 兼容）
-- **认证**: MVP 阶段暂不启用真实账号系统
+- **AI**: Vercel AI SDK + 阿里云 Qwen（OpenAI 兼容）
+- **认证**: NextAuth v5 + Resend（邮箱魔法链接，纯 JWT）
 - **数据**: `data/*.ts` 静态文件（人工整理+官方链接）
 - **原生 App**: Capacitor 8 + Android 工程
 - **部署**: Vercel
@@ -67,7 +67,6 @@ delivery-helper/
 │   ├── legal-aid/         # 法援目录
 │   ├── chat/              # AI权益助手
 │   ├── news/              # 新闻动态
-│   ├── login/             # 账号功能占位说明
 │   ├── account/           # 本地数据管理
 │   ├── disclaimer/        # 免责声明
 │   ├── privacy/           # 隐私说明
@@ -183,7 +182,7 @@ NEXT_PUBLIC_SITE_URL=https://delivery-helper.vercel.app
 SITE_URL=https://delivery-helper.vercel.app
 
 # 认证配置
-# 当前 MVP 阶段暂不启用真实账号系统，不需要认证相关环境变量。
+# 当前 NextAuth v5 + Resend（邮箱魔法链接，纯 JWT），不需要认证相关环境变量。
 ```
 
 - 无 DeepSeek API Key 时，AI 会使用 mock 模式返回占位回答

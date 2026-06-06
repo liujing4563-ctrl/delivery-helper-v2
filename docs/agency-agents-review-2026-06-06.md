@@ -86,6 +86,8 @@
 | 12 | Hero 区域副标题 `text-blue-100` → `text-white/90`（对比度提升） | `app/page.tsx` | ✅ |
 | 13 | AI 聊天 API 增加 Origin 来源校验，跨站 POST 返回 403 | `app/api/chat/route.ts`, `tools/validate_data.py` | ✅ |
 | 14 | 聊天流式输出增加 30 秒超时兜底 | `app/api/chat/route.ts`, `tools/validate_data.py` | ✅ |
+| P2-14 | AI 提示词注入防御：用户粘贴内容只当材料，不执行覆盖系统提示/泄露隐藏规则/改变身份等指令 | `data/prompts.ts`, `tools/validate_data.py` | ✅ |
+| 16 | Service Worker 离线数据过期提示：缓存页面和离线页均提示数据可能过期 | `components/OfflineDataNotice.tsx`, `app/offline/page.tsx`, `tools/validate_data.py` | ✅ |
 | 附 | `text-gray-400` → `text-gray-500` 提升辅助文本对比度 | `news/page.tsx`, `regulations/page.tsx`, `legal-aid/page.tsx`, `RegulationCard.tsx` | ✅ |
 | 附 | 新增生产服务/PWA 烟测入口 `pnpm web:smoke`，并支持端口占用时自动避让 | `tools/smoke_web.ps1`, `package.json`, `tools/validate_data.py` | ✅ |
 
@@ -94,16 +96,17 @@
 | # | 问题 | 建议 |
 |---|------|------|
 | 13 | 速率限制迁 Upstash/Vercel KV | 流量增长前处理 |
-| 14 | AI 提示词注入防御 | 正式版本前处理 |
+| 14 | AI 提示词注入防御 | 已修复 |
 | 15 | 聊天流式读取超时保护 | 已修复 |
-| 16 | Service Worker 离线数据过期提示 | 下一迭代 |
+| 16 | Service Worker 离线数据过期提示 | 已修复 |
 | 17 | CSP 头（需 Next.js nonce 方案） | 第二阶段安全加固 |
 | 18 | CSRF Origin 校验 | 已修复 |
 | 19 | 外部链接 sr-only "新窗口打开" 提示 | 低优先级 |
 
 ### 构建验证
 
-- `next build`: ✅ 编译成功，TypeScript 无错误，18 条路由生成
+- `next build`: ✅ 编译成功，TypeScript 无错误，17 条路由生成
 - `vitest run`: ✅ 31 个测试全部通过（12 新增 + 19 已有）
 - `pnpm web:smoke`: ✅ 生产服务启动成功，核心页面和 PWA 关键资源响应正常
 - 跨站 POST `/api/chat`: ✅ `Origin: https://evil.example` 返回 403
+- PWA 离线提示边界：✅ 静态校验确认全局离线提示和 `/offline` 均包含缓存过期与来源复核提示

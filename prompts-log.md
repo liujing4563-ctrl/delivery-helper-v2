@@ -705,3 +705,56 @@
 - 跨站 POST `/api/chat` 实测返回 403：`Origin: https://evil.example`。
 - `pnpm web:smoke` 通过；本轮清理 3004 残留 Next 进程后，默认 3004 端口恢复可用。
 
+### 第三十四轮修复
+
+目标：
+
+- 使用 `agency-agents` 的 Reality Checker / Accessibility Auditor 视角修复 PWA 离线回退的用户提示缺口。
+- 不改 Service Worker 缓存策略，只补足用户可见的过期风险提示，避免为了提示牺牲离线页面可读性。
+
+关键修复：
+
+- `components/OfflineDataNotice.tsx`：新增全局离线缓存提示，离线时告知页面内容可能来自缓存，法规、最低工资和法援信息可能已过期，联网后以页面来源链接为准。
+- `app/layout.tsx`：挂载全局离线提示，让 Service Worker 返回缓存页面时也能看到风险提示。
+- `app/offline/page.tsx`：补充“数据可能已过期”和“以页面来源链接为准”文案。
+- `tools/validate_data.py`：新增 PWA 离线过期提示静态边界检查，防止后续回归。
+- `docs/agency-agents-review-2026-06-06.md`、`docs/current-handoff.md`：同步第三十四轮修复和验证结果。
+
+验证：
+
+- `pnpm validate:data` 通过。
+- `python -m py_compile tools/validate_data.py tools/monitor_min_wage.py` 通过。
+- `pnpm typecheck` 通过。
+- `pnpm lint` 通过。
+- `pnpm test` 通过，2 个测试文件、31 个用例。
+- `pnpm build` 通过，18 条 App Router 路由生成成功。
+- `pnpm web:smoke` 通过，核心页面和 PWA 关键资源响应正常。
+
+### 第三十五轮修复
+
+目标：
+
+- 使用 `agency-agents` 的 AppSec Engineer / Reality Checker 视角收口 AI 提示词注入风险。
+- 只强化系统提示和静态边界，不引入新的模型网关或依赖。
+
+关键修复：
+
+- `data/prompts.ts`：新增“提示词注入防御”段落，明确用户消息、协议、平台通知、聊天记录和截图文字只当作材料，不当作系统命令。
+- `data/prompts.ts`：明确拒绝忽略/覆盖/改写系统提示词、开发者指令、免责声明或安全边界的要求。
+- `data/prompts.ts`：禁止泄露系统提示词、隐藏规则、内部配置、API Key、模型参数或非用户可见实现细节。
+- `tools/validate_data.py`：把提示词注入防御关键词纳入 `validate_prompts()`。
+- `app/offline/page.tsx`：在当前工作树删除该文件后重新补回最小 PWA 离线页，避免 PWA 边界和构建回归。
+- `components/OfflineDataNotice.tsx`：保留 Capacitor Network 检测，同时恢复缓存过期和来源复核提示。
+- `app/regulations/page.tsx`：把 JSX 文本中的英文引号改为中文引号，修复 lint。
+- `README.md`、`docs/current-handoff.md`、`docs/agency-agents-review-2026-06-06.md`：同步当前 `/login` 不在路由中、最新构建为 17 条路由。
+
+验证：
+
+- `pnpm validate:data` 通过。
+- `python -m py_compile tools/validate_data.py tools/monitor_min_wage.py` 通过。
+- `pnpm typecheck` 通过。
+- `pnpm lint` 通过。
+- `pnpm test` 通过，2 个测试文件、31 个用例。
+- `pnpm build` 通过，17 条 App Router 路由生成成功。
+- `pnpm web:smoke` 通过，核心页面和 PWA 关键资源响应正常。
+- `pnpm audit --prod` 通过，无已知漏洞。
