@@ -137,9 +137,14 @@ export default function EvidencePage() {
       <p className="mt-1 text-sm text-gray-500">
         维权第一步：把证据准备好
       </p>
+      {problem && (
+        <p className="mt-1 hidden print:block text-sm text-gray-700">
+          问题类型：{PROBLEM_LABELS[problem]} | 生成日期：{new Date().toLocaleDateString('zh-CN')}
+        </p>
+      )}
 
       {/* 问题类型选择 */}
-      <div className="mt-4">
+      <div className="mt-4 no-print">
         <p className="mb-2 text-sm font-medium text-gray-700">你遇到了什么问题？</p>
         <div className="flex flex-wrap gap-2">
           {(Object.keys(PROBLEM_LABELS) as ProblemType[]).map((key) => (
@@ -170,7 +175,7 @@ export default function EvidencePage() {
       {problem && (
         <>
           {/* 进度条 */}
-          <div className="mt-4">
+          <div className="mt-4 no-print">
             <div className="flex items-center justify-between text-sm">
               <span className="font-medium text-gray-700">收集进度</span>
               <span className="text-gray-500">{checkedCount}/{totalCount} 项</span>
@@ -220,7 +225,7 @@ export default function EvidencePage() {
           </div>
 
           {/* 操作按钮 */}
-          <div className="mt-5 grid grid-cols-2 gap-2">
+          <div className="mt-5 grid grid-cols-3 gap-2">
             <button
               type="button"
               onClick={handleExport}
@@ -230,11 +235,18 @@ export default function EvidencePage() {
             </button>
             <button
               type="button"
+              onClick={() => window.print()}
+              className="rounded-xl border border-blue-300 bg-white px-4 py-3 text-sm font-semibold text-blue-700 hover:bg-blue-50 no-print"
+            >
+              打印/PDF
+            </button>
+            <button
+              type="button"
               onClick={() => {
                 setChecks({});
                 setNotes({});
               }}
-              className="rounded-xl border border-gray-300 px-4 py-3 text-sm font-medium text-gray-600 hover:bg-gray-50"
+              className="rounded-xl border border-gray-300 px-4 py-3 text-sm font-medium text-gray-600 hover:bg-gray-50 no-print"
             >
               重置
             </button>
@@ -291,7 +303,7 @@ function EvidenceCheckItem({
 
   return (
     <div
-      className={`rounded-lg border p-3 transition-colors ${
+      className={`rounded-lg border p-3 transition-colors print-avoid-break ${
         checked ? 'border-green-200 bg-green-50' : 'border-gray-200 bg-white'
       }`}
     >

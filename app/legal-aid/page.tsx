@@ -11,15 +11,22 @@ export default function LegalAidPage() {
     []
   );
 
-  // 按区分组
-  const grouped = useMemo(() => {
-    const map = new Map<string, LegalAidCenter[]>();
+  const cityCount = useMemo(
+    () => new Set(legalAidCenters.map((c) => c.city)).size,
+    []
+  );
+
+  // 按城市分组，城市内按区分组
+  const groupedByCity = useMemo(() => {
+    const cityMap = new Map<string, Map<string, LegalAidCenter[]>>();
     legalAidCenters.forEach((c) => {
-      const key = c.district || c.city;
-      if (!map.has(key)) map.set(key, []);
-      map.get(key)!.push(c);
+      if (!cityMap.has(c.city)) cityMap.set(c.city, new Map());
+      const districtMap = cityMap.get(c.city)!;
+      const key = c.district || '市级';
+      if (!districtMap.has(key)) districtMap.set(key, []);
+      districtMap.get(key)!.push(c);
     });
-    return map;
+    return cityMap;
   }, []);
 
   return (
@@ -44,39 +51,39 @@ export default function LegalAidPage() {
         </p>
       </div>
 
-      {/* 上海专线 */}
-      <div className="mt-3 rounded-xl border border-blue-100 bg-blue-50 p-3">
-        <p className="text-sm font-medium text-blue-700">上海地区专线</p>
-        <a
-          href="tel:02112348"
-          className="mt-0.5 inline-flex items-baseline gap-1 text-lg font-bold text-blue-800 hover:underline"
-        >
-          021-12348
-        </a>
-        <p className="mt-0.5 text-xs text-blue-600">
-          上海 12348 官方提示：法律援助机构查询按 2。
-        </p>
-      </div>
-
       {/* 数据范围说明 */}
       <div className="mt-3 rounded-lg border border-amber-200 bg-amber-50 p-3 text-xs text-amber-800">
         <p className="font-medium"><span aria-hidden="true">⚠️</span> 数据范围说明</p>
         <p className="mt-1">
-          当前仅收录上海地区法律援助中心信息（{verifiedCount} 个已核验）。
-          其他城市法援中心请拨打 12348 查询。
+          当前收录 {cityCount} 个城市共 {legalAidCenters.length} 个法援中心（{verifiedCount} 个已核验）。
+          未覆盖城市请拨打 12348 或访问
+          {' '}
+          <a href="https://www.12348.gov.cn/" target="_blank" rel="noopener noreferrer" className="underline">
+            12348中国法网
+          </a>
+          查询。
         </p>
       </div>
 
-      {/* 法援列表（按区分组） */}
-      <div className="mt-4 space-y-4">
-        {Array.from(grouped.entries()).map(([district, centers]) => (
-          <div key={district}>
-            <h2 className="mb-2 text-sm font-semibold text-gray-500">
-              {district}
+      {/* 法援列表（按城市分组） */}
+      <div className="mt-4 space-y-6">
+        {Array.from(groupedByCity.entries()).map(([city, districtMap]) => (
+          <div key={city}>
+            <h2 className="mb-3 text-base font-bold text-gray-900">
+              {city}
             </h2>
-            <div className="space-y-3">
-              {centers.map((center) => (
-                <LegalAidCard key={center.id} center={center} />
+            <div className="space-y-4">
+              {Array.from(districtMap.entries()).map(([district, centers]) => (
+                <div key={district}>
+                  <h3 className="mb-2 text-sm font-semibold text-gray-500">
+                    {district}
+                  </h3>
+                  <div className="space-y-3">
+                    {centers.map((center) => (
+                      <LegalAidCard key={center.id} center={center} />
+                    ))}
+                  </div>
+                </div>
               ))}
             </div>
           </div>

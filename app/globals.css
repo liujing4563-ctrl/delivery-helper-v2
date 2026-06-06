@@ -50,3 +50,50 @@ body {
     scroll-behavior: auto !important;
   }
 }
+
+/* 打印样式 — 证据清单、维权指引等页面可打印为纸质材料或 PDF */
+@media print {
+  /* 隐藏不需要打印的元素 */
+  nav, header, footer,
+  .no-print,
+  button,
+  a[href^="tel:"],
+  input[type="text"] {
+    display: none !important;
+  }
+
+  body {
+    font-size: 12pt;
+    line-height: 1.5;
+    color: #000;
+    background: #fff;
+  }
+
+  /* 保留重要背景色（如重要性标签） */
+  * {
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+
+  /* 避免关键内容被分页切断 */
+  .print-avoid-break {
+    page-break-inside: avoid;
+    break-inside: avoid;
+  }
+
+  /* 链接显示 URL */
+  a[href^="http"]::after {
+    content: " (" attr(href) ")";
+    font-size: 0.8em;
+    color: #555;
+  }
+
+  /* 内容区占满页面 */
+  .content-with-nav {
+    padding-bottom: 0 !important;
+  }
+
+  @page {
+    margin: 1.5cm;
+  }
+}

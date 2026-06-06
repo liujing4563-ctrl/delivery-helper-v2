@@ -96,6 +96,15 @@ export default function GuidePage() {
           <p className="text-xs text-green-600">法律援助热线</p>
         </Link>
       </div>
+      <a
+        href="http://tiaojie.12333.gov.cn/portal/"
+        target="_blank"
+        rel="noopener noreferrer"
+        className="mt-2 block rounded-xl border border-orange-200 bg-orange-50 p-3 text-center"
+      >
+        <p className="text-sm font-bold text-orange-900">在线申请劳动调解</p>
+        <p className="text-xs text-orange-600">人社部官方调解平台 · 免费 · 在线提交</p>
+      </a>
 
       {/* 五步流程 */}
       <div className="mt-5 space-y-4">
