@@ -13,6 +13,11 @@ export default function robots(): MetadataRoute.Robots {
         allow: '/',
         disallow: ['/api/', '/offline'],
       },
+      {
+        userAgent: 'Baiduspider',
+        allow: '/',
+        disallow: ['/api/', '/offline'],
+      },
     ],
     sitemap: `${BASE_URL}/sitemap.xml`,
   };

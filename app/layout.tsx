@@ -110,6 +110,10 @@ export default function RootLayout({
         <link rel="icon" href="/icons/icon-32x32.png" type="image/png" />
         <link rel="icon" href="/icons/icon-96x96.svg" type="image/svg+xml" />
         <link rel="apple-touch-icon" href="/icons/icon-180x180.png" />
+        {/* 百度/国内浏览器兼容：强制使用 webkit 内核渲染 */}
+        <meta name="renderer" content="webkit" />
+        <meta name="force-rendering" content="webkit" />
+        <meta name="applicable-device" content="pc,mobile" />
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
