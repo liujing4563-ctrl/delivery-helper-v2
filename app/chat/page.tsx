@@ -2,7 +2,6 @@
 
 import { useState, useRef, useCallback, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
-import DisclaimerBox from '@/components/DisclaimerBox';
 
 const EXAMPLES = [
   '平台扣了我超时罚款，我应该先保留哪些材料？',
@@ -124,7 +123,6 @@ function ChatContent() {
         // 流式响应
         const reader = response.body?.getReader();
         const decoder = new TextDecoder();
-        let assistantContent = '';
         assistantId = generateId();
 
         setMessages((prev) => [
@@ -132,28 +130,37 @@ function ChatContent() {
           { id: assistantId, role: 'assistant', content: '' },
         ]);
 
+        // 使用 requestAnimationFrame 节流状态更新，减少低端设备渲染卡顿
+        let pendingContent = '';
+        let rafId = 0;
+
+        const flushToState = () => {
+          setMessages((prev) =>
+            prev.map((m) =>
+              m.id === assistantId ? { ...m, content: pendingContent } : m
+            )
+          );
+        };
+
         while (reader) {
           const { done, value } = await reader.read();
           if (done) break;
 
           const chunk = decoder.decode(value, { stream: true });
-          assistantContent += chunk;
+          pendingContent += chunk;
 
-          setMessages((prev) =>
-            prev.map((m) =>
-              m.id === assistantId ? { ...m, content: assistantContent } : m
-            )
-          );
+          // 每帧最多更新一次 state
+          if (!rafId) {
+            rafId = requestAnimationFrame(() => {
+              flushToState();
+              rafId = 0;
+            });
+          }
         }
-      } else {
-        // JSON 响应（mock 模式）
-        const data = await response.json();
-        const assistantMessage: Message = {
-          id: generateId(),
-          role: 'assistant',
-          content: data.answer || '无法获取回答',
-        };
-        setMessages((prev) => [...prev, assistantMessage]);
+
+        // 流结束后确保最终内容已同步
+        if (rafId) cancelAnimationFrame(rafId);
+        flushToState();
       }
     } catch (err) {
       if (err instanceof DOMException && err.name === 'AbortError') {
@@ -193,13 +200,8 @@ function ChatContent() {
         只做劳动权益信息和路径引导，不替代律师。
       </p>
 
-      <div className="mt-4">
-        <DisclaimerBox />
-      </div>
-
-      <div className="mt-4 rounded-lg border border-blue-100 bg-blue-50 p-3 text-sm leading-6 text-blue-800">
-        当前版本支持流式响应，AI 会逐步输出回答。
-        请不要输入个人敏感信息（身份证、银行卡等）。
+      <div className="mt-3 rounded-lg border border-blue-100 bg-blue-50 p-3 text-xs leading-5 text-blue-800">
+        只提供劳动权益信息参考，不替代律师意见。请勿输入身份证、银行卡等个人敏感信息。
       </div>
 
       <div className="mt-4 space-y-3" aria-live="polite" aria-label="对话消息">

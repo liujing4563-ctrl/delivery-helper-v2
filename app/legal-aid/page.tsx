@@ -1,40 +1,26 @@
 'use client';
 
-import { useState, useMemo } from 'react';
+import { useMemo } from 'react';
 import { legalAidCenters } from '@/data/legalAidCenters';
 import type { LegalAidCenter } from '@/data/types';
 import LegalAidCard from '@/components/LegalAidCard';
 
 export default function LegalAidPage() {
-  const [selectedCity, setSelectedCity] = useState<string>('all');
-
-  // 提取城市列表
-  const cities = useMemo(() => {
-    const citySet = new Set(legalAidCenters.map((c) => c.city));
-    return Array.from(citySet).sort();
-  }, []);
-
-  // 按城市筛选
-  const filtered = useMemo(() => {
-    if (selectedCity === 'all') return legalAidCenters;
-    return legalAidCenters.filter((c) => c.city === selectedCity);
-  }, [selectedCity]);
+  const verifiedCount = useMemo(
+    () => legalAidCenters.filter((center) => center.lastVerified !== '待核实').length,
+    []
+  );
 
   // 按区分组
   const grouped = useMemo(() => {
     const map = new Map<string, LegalAidCenter[]>();
-    filtered.forEach((c) => {
+    legalAidCenters.forEach((c) => {
       const key = c.district || c.city;
       if (!map.has(key)) map.set(key, []);
       map.get(key)!.push(c);
     });
     return map;
-  }, [filtered]);
-
-  const verifiedCount = useMemo(
-    () => legalAidCenters.filter((center) => center.lastVerified !== '待核实').length,
-    []
-  );
+  }, []);
 
   return (
     <div className="px-4 pt-6 pb-4">
@@ -50,24 +36,10 @@ export default function LegalAidPage() {
           href="tel:12348"
           className="mt-1 inline-flex items-baseline gap-1 text-2xl font-bold text-blue-900 hover:underline"
         >
-          📞 12348
+          12348
         </a>
         <p className="mt-1 text-xs text-blue-600">
           全国统一法律援助咨询热线，按语音提示选择当地服务。
-        </p>
-      </div>
-
-      {/* 上海专线 */}
-      <div className="mt-3 rounded-xl border border-blue-100 bg-blue-50 p-3">
-        <p className="text-sm font-medium text-blue-700">上海地区专线</p>
-        <a
-          href="tel:02112348"
-          className="mt-0.5 inline-flex items-baseline gap-1 text-lg font-bold text-blue-800 hover:underline"
-        >
-          021-12348
-        </a>
-        <p className="mt-0.5 text-xs text-blue-600">
-          上海 12348 官方提示：法律援助机构查询按 2。
         </p>
       </div>
 
@@ -78,35 +50,6 @@ export default function LegalAidPage() {
           当前仅收录上海地区法律援助中心信息（{verifiedCount} 个已核验）。
           其他城市法援中心请拨打 12348 查询。
         </p>
-      </div>
-
-      {/* 城市筛选 */}
-      <div className="mt-4 flex gap-1.5 overflow-x-auto pb-1 scrollbar-hide" aria-label="城市筛选">
-        <button
-          aria-pressed={selectedCity === 'all'}
-          onClick={() => setSelectedCity('all')}
-          className={`shrink-0 rounded-full px-3 py-1.5 text-xs font-medium transition-colors ${
-            selectedCity === 'all'
-              ? 'bg-blue-600 text-white'
-              : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
-          }`}
-        >
-          全部
-        </button>
-        {cities.map((city) => (
-          <button
-            key={city}
-            aria-pressed={selectedCity === city}
-            onClick={() => setSelectedCity(city)}
-            className={`shrink-0 rounded-full px-3 py-1.5 text-xs font-medium transition-colors ${
-              selectedCity === city
-                ? 'bg-blue-600 text-white'
-                : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
-            }`}
-          >
-            {city}
-          </button>
-        ))}
       </div>
 
       {/* 法援列表（按区分组） */}

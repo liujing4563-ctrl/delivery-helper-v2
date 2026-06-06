@@ -363,10 +363,8 @@ def validate_account_boundary(report: Report) -> None:
 
 
 def validate_accessibility_boundary(report: Report) -> None:
-    filter_pages = [
-        (APP_DIR / "legal-aid" / "page.tsx", "城市筛选"),
-        (APP_DIR / "regulations" / "page.tsx", "法规分类"),
-    ]
+    legal_aid_path = APP_DIR / "legal-aid" / "page.tsx"
+    regulations_path = APP_DIR / "regulations" / "page.tsx"
     forbidden_tokens = [
         'role="tablist"',
         "role='tablist'",
@@ -375,11 +373,11 @@ def validate_accessibility_boundary(report: Report) -> None:
         "aria-selected",
     ]
 
-    for path, aria_label in filter_pages:
+    def validate_filter_page(path: Path, aria_label: str, require_filter: bool) -> None:
         label = path.relative_to(ROOT).as_posix()
         if not path.exists():
             report.error(f"{label}: 缺少筛选页面")
-            continue
+            return
 
         content = path.read_text(encoding="utf-8")
         for token in forbidden_tokens:
@@ -387,10 +385,26 @@ def validate_accessibility_boundary(report: Report) -> None:
                 report.error(
                     f"{label}: 筛选按钮不应使用不完整 tab 语义，发现 `{token}`"
                 )
+        has_filter = f'aria-label="{aria_label}"' in content or "aria-pressed=" in content
+        if not require_filter and not has_filter:
+            return
         if "aria-pressed=" not in content:
             report.error(f"{label}: 筛选按钮必须使用 aria-pressed 表达当前筛选状态")
         if f'aria-label="{aria_label}"' not in content:
             report.error(f"{label}: 筛选容器必须提供 aria-label `{aria_label}`")
+
+    legal_aid_items = [
+        obj
+        for obj in extract_array_objects(read_data_file("legalAidCenters.ts"))
+        if obj.get("city")
+    ]
+    legal_aid_cities = {str(item.get("city", "")) for item in legal_aid_items}
+    validate_filter_page(
+        legal_aid_path,
+        "城市筛选",
+        require_filter=len(legal_aid_cities) > 1,
+    )
+    validate_filter_page(regulations_path, "法规分类", require_filter=True)
 
 
 def validate_pwa_boundary(report: Report) -> None:
@@ -553,12 +567,15 @@ def validate_chat_boundary(report: Report) -> None:
         page_content = CHAT_PAGE.read_text(encoding="utf-8")
         required_page_tokens = [
             ("maxLength={1000}", "前端输入长度上限"),
-            ("请不要输入个人敏感信息", "敏感信息提醒"),
             ("readErrorMessage", "读取服务端边界错误"),
         ]
         for token, description in required_page_tokens:
             if token not in page_content:
                 report.error(f"app/chat/page.tsx: 缺少 `{token}`，无法保证{description}")
+        if "个人敏感信息" not in page_content or not (
+            "请勿输入" in page_content or "请不要输入" in page_content
+        ):
+            report.error("app/chat/page.tsx: 缺少敏感信息输入提醒")
 
 
 def validate_seo_boundary(report: Report) -> None:

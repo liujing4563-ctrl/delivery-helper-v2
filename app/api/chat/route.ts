@@ -170,13 +170,9 @@ export async function POST(request: Request) {
       return jsonError('对话内容过长，请开启新的咨询。', 413);
     }
 
-    // 如果没有配置 API key，回退到 mock 模式
+    // 如果没有配置 API key，返回不可用提示
     if (!process.env.AI_API_KEY) {
-      const mockAnswer = generateMockAnswer(latestMessage.content);
-      return new Response(
-        JSON.stringify({ answer: mockAnswer, model: 'mock' }),
-        { headers: { 'Content-Type': 'application/json; charset=utf-8' } }
-      );
+      return jsonError('AI 功能暂未启用，请稍后再试或拨打 12348 咨询。', 503);
     }
 
     // 使用 Vercel AI SDK 流式输出
@@ -209,91 +205,6 @@ export async function POST(request: Request) {
 
     return jsonError(message, status);
   }
-}
-
-/**
- * Mock 回答 — 无 API key 时使用
- */
-function generateMockAnswer(question: string): string {
-  const questionType = inferQuestionType(question);
-  const relatedRegulations = selectRelatedRegulations(question);
-
-  return `问题类型识别：${questionType}
-
-可先保留的证据清单：
-1. 订单记录、派单记录、超时或取消记录
-2. 收入流水、扣款通知、奖惩明细
-3. 平台规则、协议、站点或平台通知
-4. 与站长、平台客服、商家或用户的沟通记录
-5. 如涉及受伤，保留事故经过、报警或平台报备记录、医疗票据
-
-可能相关的规则：
-${relatedRegulations}
-
-下一步建议：
-1. 先把上述材料按时间顺序整理成清单。
-2. 拨打 12348，说明城市、平台、扣款或受伤经过，并询问当地处理入口。
-3. 到法律援助目录查询当地法律援助中心；必要时再咨询劳动监察、调解仲裁窗口或正规律师。
-4. 如果材料不足，先补齐截图、流水、通知和沟通记录，不要只依赖口头描述。
-
-免责声明：本回答只提供法律信息，不构成律师法律意见。具体维权请咨询 12348 或当地法律援助中心。`;
-}
-
-function selectRelatedRegulations(question: string): string {
-  const relatedIds = getRelatedRegulationIds(question);
-  const relatedRegs = relatedIds
-    .map((id) => regulations.find((reg) => reg.id === id))
-    .filter((reg): reg is (typeof regulations)[number] => Boolean(reg));
-
-  return relatedRegs
-    .map((reg) => {
-      const officialUrl = reg.officialUrl
-        ? `\n  官方链接：${reg.officialUrl}`
-        : '';
-
-      return `- 《${reg.title}》：${reg.summary}${officialUrl}`;
-    })
-    .join('\n');
-}
-
-function getRelatedRegulationIds(question: string): string[] {
-  if (/扣|罚|超时|差评|工资|收入|报酬/.test(question)) {
-    return ['reg-001', 'reg-002', 'reg-003'];
-  }
-  if (/伤|事故|摔|撞|医疗|医院|职业伤害|工伤/.test(question)) {
-    return ['reg-010', 'reg-007', 'reg-001'];
-  }
-  if (/合同|劳动关系|社保|保险/.test(question)) {
-    return ['reg-006', 'reg-009', 'reg-001'];
-  }
-  if (/封号|停用|退出|申诉|规则/.test(question)) {
-    return ['reg-003', 'reg-001', 'reg-004'];
-  }
-  if (/法援|援助|律师|12348/.test(question)) {
-    return ['reg-008', 'reg-004', 'reg-001'];
-  }
-
-  return ['reg-001', 'reg-004', 'reg-008'];
-}
-
-function inferQuestionType(question: string) {
-  if (/扣|罚|超时|差评/.test(question)) {
-    return '平台扣罚 / 劳动报酬';
-  }
-  if (/伤|事故|摔|撞|医疗|医院/.test(question)) {
-    return '送餐受伤 / 职业伤害';
-  }
-  if (/合同|劳动关系|社保/.test(question)) {
-    return '劳动关系认定';
-  }
-  if (/封号|停用|退出|申诉/.test(question)) {
-    return '平台规则 / 账号申诉';
-  }
-  if (/法援|援助|律师|12348/.test(question)) {
-    return '法律援助路径';
-  }
-
-  return '劳动权益咨询';
 }
 
 function sanitizeMessages(rawMessages: unknown): ChatMessage[] {
