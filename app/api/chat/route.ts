@@ -1,7 +1,8 @@
 import { createOpenAI } from '@ai-sdk/openai';
-import { streamText } from 'ai';
+import { streamText, stepCountIs } from 'ai';
 import { SYSTEM_PROMPT } from '@/data/prompts';
 import { regulations } from '@/data/regulations';
+import { searchRegulations, getMinimumWage, findLegalAid, calculateHourlyRate } from '@/lib/chat-tools';
 
 type ChatMessage = {
   role: 'user' | 'assistant';
@@ -175,11 +176,18 @@ export async function POST(request: Request) {
       return jsonError('AI 功能暂未启用，请稍后再试或拨打 12348 咨询。', 503);
     }
 
-    // 使用 Vercel AI SDK 流式输出
+    // 使用 Vercel AI SDK 流式输出 + 工具调用
     const result = streamText({
       model: deepseek(process.env.AI_MODEL || 'qwen-plus'),
       system: SYSTEM_PROMPT + '\n\n' + REGULATION_CONTEXT,
       messages,
+      tools: {
+        searchRegulations,
+        getMinimumWage,
+        findLegalAid,
+        calculateHourlyRate,
+      },
+      stopWhen: stepCountIs(4),
       maxOutputTokens: 800,
       temperature: 0.3,
     });
