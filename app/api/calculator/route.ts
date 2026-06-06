@@ -8,9 +8,9 @@ export async function POST(request: Request) {
     const body = await request.json() as Partial<CalculatorInput>;
 
     // 必填字段校验
-    if (!body.city || !body.period || typeof body.orders !== 'number') {
+    if (!body.city || !body.period || typeof body.totalEarnings !== 'number') {
       return NextResponse.json(
-        { error: '缺少必填字段：city, period, orders' },
+        { error: '缺少必填字段：city, period, totalEarnings' },
         { status: 400 }
       );
     }
@@ -18,8 +18,7 @@ export async function POST(request: Request) {
     const input: CalculatorInput = {
       city: body.city,
       period: body.period,
-      orders: Math.max(0, body.orders),
-      avgIncomePerOrder: Math.max(0, body.avgIncomePerOrder ?? 0),
+      totalEarnings: Math.max(0, body.totalEarnings),
       subsidies: Math.max(0, body.subsidies ?? 0),
       rewards: Math.max(0, body.rewards ?? 0),
       deductions: Math.max(0, body.deductions ?? 0),

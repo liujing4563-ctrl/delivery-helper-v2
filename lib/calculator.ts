@@ -8,16 +8,15 @@ export function calculateSalary(
   minWageData: MinWage[]
 ): CalculatorResult {
   // 0. 非负校验：防止负数输入导致计算结果失真
-  const orders = Math.max(0, input.orders);
-  const avgIncomePerOrder = Math.max(0, input.avgIncomePerOrder);
+  const totalEarnings = Math.max(0, input.totalEarnings);
   const subsidies = Math.max(0, input.subsidies);
   const rewards = Math.max(0, input.rewards);
   const deductions = Math.max(0, input.deductions);
   const costs = Math.max(0, input.costs);
   const onlineHours = Math.max(0, input.onlineHours);
 
-  // 1. 毛收入 = 订单数 × 平均每单收入 + 补贴 + 奖励
-  const grossIncome = orders * avgIncomePerOrder + subsidies + rewards;
+  // 1. 毛收入 = 总收入（骑手从 app 看到的到账金额）+ 补贴 + 奖励
+  const grossIncome = totalEarnings + subsidies + rewards;
 
   // 2. 净收入 = 毛收入 − 扣款 − 成本
   const netIncome = grossIncome - deductions - costs;

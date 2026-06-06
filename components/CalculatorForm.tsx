@@ -21,8 +21,7 @@ const PERIOD_OPTIONS: { value: CalculatorInput['period']; label: string }[] = [
 const DEFAULT_INPUT: CalculatorInput = {
   city: '上海',
   period: 'day',
-  orders: 30,
-  avgIncomePerOrder: 7,
+  totalEarnings: 210,
   subsidies: 0,
   rewards: 0,
   deductions: 0,
@@ -47,7 +46,7 @@ function restoreFromStorage(): CalculatorInput {
 
     // 校验数字字段：非 number 或 NaN 时回退到默认值
     const numericKeys: (keyof CalculatorInput)[] = [
-      'orders', 'avgIncomePerOrder', 'subsidies',
+      'totalEarnings', 'subsidies',
       'rewards', 'deductions', 'costs', 'onlineHours',
     ];
     for (const key of numericKeys) {
@@ -250,52 +249,37 @@ export default function CalculatorForm() {
             </div>
           </fieldset>
 
-          {/* 核心输入 */}
-          <div className="grid grid-cols-2 gap-3">
-            <div>
-              <label
-                htmlFor="calc-orders"
-                className="mb-1 block text-sm font-medium text-gray-700"
-              >
-                订单数 <span className="text-red-500">*</span>
-              </label>
+          {/* 核心输入：总收入 */}
+          <div>
+            <label
+              htmlFor="calc-total-earnings"
+              className="mb-1 block text-sm font-medium text-gray-700"
+            >
+              总收入 <span className="text-red-500">*</span>
+            </label>
+            <div className="relative">
+              <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-lg">¥</span>
               <input
-                id="calc-orders"
-                type="number"
-                inputMode="numeric"
-                min="0"
-                max="9999"
-                value={input.orders}
-                onChange={(e) =>
-                  updateField('orders', Math.max(0, Number(e.target.value)))
-                }
-                className="w-full rounded-lg border border-gray-300 px-3 py-2.5 text-base text-gray-900 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
-              />
-            </div>
-            <div>
-              <label
-                htmlFor="calc-avg-income"
-                className="mb-1 block text-sm font-medium text-gray-700"
-              >
-                平均每单收入 <span className="text-red-500">*</span>
-              </label>
-              <input
-                id="calc-avg-income"
+                id="calc-total-earnings"
                 type="number"
                 inputMode="decimal"
                 min="0"
                 step="0.1"
-                max="9999"
-                value={input.avgIncomePerOrder}
+                max="99999"
+                value={input.totalEarnings}
                 onChange={(e) =>
                   updateField(
-                    'avgIncomePerOrder',
+                    'totalEarnings',
                     Math.max(0, Number(e.target.value))
                   )
                 }
-                className="w-full rounded-lg border border-gray-300 px-3 py-2.5 text-base text-gray-900 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+                className="w-full rounded-lg border border-gray-300 bg-white py-3 pl-8 pr-3 text-lg font-semibold text-gray-900 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+                placeholder="从骑手 app 看到的到账金额"
               />
             </div>
+            <p className="mt-1 text-xs text-gray-400">
+              填写骑手 app 里显示的到账金额（{input.period === 'day' ? '今天' : input.period === 'week' ? '本周' : '本月'}）
+            </p>
           </div>
 
           <div>
@@ -520,8 +504,9 @@ function formatResultForCopy(
 城市：${input.city}
 统计周期：按${periodLabel}
 
-毛收入：${result.grossIncome.toFixed(2)} 元
-净收入：${result.netIncome.toFixed(2)} 元
+总收入：${input.totalEarnings.toFixed(2)} 元
+毛收入（含补贴奖励）：${result.grossIncome.toFixed(2)} 元
+净收入（扣成本扣款后）：${result.netIncome.toFixed(2)} 元
 时薪：${result.hourlyRate.toFixed(2)} 元/小时
 折算月收入：${result.monthlyEquivalent.toFixed(2)} 元（粗略估算，仅供参考）
 

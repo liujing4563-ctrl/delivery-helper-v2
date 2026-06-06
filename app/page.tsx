@@ -5,6 +5,13 @@ import type { ProblemEntry } from '@/data/types';
 
 const entries: ProblemEntry[] = [
   {
+    id: 'guide',
+    title: '不知道怎么办',
+    description: '五步维权路径指引，从证据收集到仲裁',
+    icon: '路',
+    href: '/guide',
+  },
+  {
     id: 'deduction',
     title: '被扣钱',
     description: '整理扣款通知、订单记录和平台规则',

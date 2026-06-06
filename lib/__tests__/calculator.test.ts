@@ -27,8 +27,7 @@ function makeInput(overrides: Partial<CalculatorInput> = {}): CalculatorInput {
   return {
     city: '上海',
     period: 'day',
-    orders: 30,
-    avgIncomePerOrder: 7,
+    totalEarnings: 210,
     subsidies: 0,
     rewards: 0,
     deductions: 0,
@@ -79,9 +78,9 @@ describe('calculateSalary', () => {
     expect(result.riskLevel).toBe('red'); // 0 < 24
   });
 
-  it('零订单', () => {
+  it('零收入', () => {
     const result = calculateSalary(
-      makeInput({ orders: 0 }),
+      makeInput({ totalEarnings: 0 }),
       mockMinWageData
     );
     expect(result.grossIncome).toBe(0);
@@ -134,10 +133,10 @@ describe('calculateSalary', () => {
 
   it('恰好等于最低工资返回 green', () => {
     const result = calculateSalary(
-      makeInput({ orders: 40, avgIncomePerOrder: 6, onlineHours: 10 }),
+      makeInput({ totalEarnings: 240, onlineHours: 10 }),
       mockMinWageData
     );
-    // 40*6 = 240, 240/10 = 24, == minWage
+    // 240/10 = 24, == minWage
     expect(result.hourlyRate).toBe(24);
     expect(result.riskLevel).toBe('green');
   });

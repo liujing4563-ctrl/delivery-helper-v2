@@ -27,8 +27,7 @@ const mockMinWageData: MinWage[] = [
 const defaultInput: CalculatorInput = {
   city: '测试城市A',
   period: 'day',
-  orders: 30,
-  avgIncomePerOrder: 7,
+  totalEarnings: 210,
   subsidies: 0,
   rewards: 0,
   deductions: 0,
@@ -40,7 +39,7 @@ describe('calculateSalary', () => {
   describe('基础计算', () => {
     it('应正确计算毛收入', () => {
       const result = calculateSalary(defaultInput, mockMinWageData);
-      // 30 单 × 7 元 = 210 元
+      // 总收入 210 元
       expect(result.grossIncome).toBe(210);
     });
 
@@ -82,8 +81,7 @@ describe('calculateSalary', () => {
       const input: CalculatorInput = {
         ...defaultInput,
         period: 'week',
-        orders: 210, // 周收入 210 元
-        avgIncomePerOrder: 1,
+        totalEarnings: 210,
       };
       const result = calculateSalary(input, mockMinWageData);
       // 210 元 × 4.33 周 ≈ 909.3 元
@@ -94,11 +92,10 @@ describe('calculateSalary', () => {
       const input: CalculatorInput = {
         ...defaultInput,
         period: 'month',
-        orders: 300,
-        avgIncomePerOrder: 7,
+        totalEarnings: 2100,
       };
       const result = calculateSalary(input, mockMinWageData);
-      expect(result.monthlyEquivalent).toBe(300 * 7);
+      expect(result.monthlyEquivalent).toBe(2100);
     });
   });
 
@@ -112,8 +109,7 @@ describe('calculateSalary', () => {
     it('时薪等于最低工资应为绿色', () => {
       const input: CalculatorInput = {
         ...defaultInput,
-        orders: 25,
-        avgIncomePerOrder: 10, // 250 元 / 10 小时 = 25 元/小时
+        totalEarnings: 250, // 250 元 / 10 小时 = 25 元/小时
       };
       const result = calculateSalary(input, mockMinWageData);
       expect(result.riskLevel).toBe('green');
@@ -122,8 +118,7 @@ describe('calculateSalary', () => {
     it('时薪明显高于最低工资应为绿色', () => {
       const input: CalculatorInput = {
         ...defaultInput,
-        orders: 50,
-        avgIncomePerOrder: 10, // 500 元 / 10 小时 = 50 元/小时
+        totalEarnings: 500, // 500 元 / 10 小时 = 50 元/小时
       };
       const result = calculateSalary(input, mockMinWageData);
       expect(result.riskLevel).toBe('green');
@@ -138,8 +133,7 @@ describe('calculateSalary', () => {
     it('时薪明显低于最低工资应为红色', () => {
       const input: CalculatorInput = {
         ...defaultInput,
-        orders: 10,
-        avgIncomePerOrder: 5, // 50 元 / 10 小时 = 5 元/小时，远低于 25
+        totalEarnings: 50, // 50 元 / 10 小时 = 5 元/小时，远低于 25
       };
       const result = calculateSalary(input, mockMinWageData);
       expect(result.riskLevel).toBe('red');
@@ -190,8 +184,7 @@ describe('calculateSalary', () => {
       const input: CalculatorInput = {
         city: '测试城市A',
         period: 'day',
-        orders: 0,
-        avgIncomePerOrder: 0,
+        totalEarnings: 0,
         subsidies: 0,
         rewards: 0,
         deductions: 0,

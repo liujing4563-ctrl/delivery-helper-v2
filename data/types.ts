@@ -53,8 +53,7 @@ export interface NewsItem {
 export interface CalculatorInput {
   city: string;
   period: 'day' | 'week' | 'month';
-  orders: number;
-  avgIncomePerOrder: number;
+  totalEarnings: number;
   subsidies: number;
   rewards: number;
   deductions: number;

@@ -65,7 +65,7 @@ export default function CalculatorResultDisplay({ result, input }: Props) {
             ¥{result.grossIncome.toFixed(2)}
           </p>
           <p className="text-xs text-gray-400">
-            {input.orders}单 × ¥{input.avgIncomePerOrder} + 补贴奖励
+            app 到账金额 + 补贴 + 奖励
           </p>
         </div>
         <div className="rounded-xl border border-gray-200 bg-white p-3 shadow-sm">
