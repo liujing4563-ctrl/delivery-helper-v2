@@ -1,3 +1,5 @@
+'use cache';
+
 import type { Metadata } from 'next';
 import Link from 'next/link';
 
@@ -70,7 +72,7 @@ const steps = [
   },
 ];
 
-export default function GuidePage() {
+export default async function GuidePage() {
   return (
     <div className="px-4 pt-6 pb-4">
       <h1 className="text-xl font-bold text-gray-900">维权路径指引</h1>
@@ -79,22 +81,30 @@ export default function GuidePage() {
       </p>
 
       {/* 快速通道 */}
-      <div className="mt-4 grid grid-cols-2 gap-2">
+      <div className="mt-4 grid grid-cols-3 gap-2">
         <a
           href="tel:12333"
           aria-label="拨打人社服务热线 12333"
           className="rounded-xl border border-blue-200 bg-blue-50 p-3 text-center"
         >
           <p className="text-lg font-bold text-blue-900">12333</p>
-          <p className="text-xs text-blue-600">人社服务热线</p>
+          <p className="text-xs text-blue-600">人社热线</p>
         </a>
         <Link
           href="/legal-aid"
           className="rounded-xl border border-green-200 bg-green-50 p-3 text-center"
         >
           <p className="text-lg font-bold text-green-900">12348</p>
-          <p className="text-xs text-green-600">法律援助热线</p>
+          <p className="text-xs text-green-600">法律援助</p>
         </Link>
+        <a
+          href="tel:12351"
+          aria-label="拨打工会服务热线 12351"
+          className="rounded-xl border border-purple-200 bg-purple-50 p-3 text-center"
+        >
+          <p className="text-lg font-bold text-purple-900">12351</p>
+          <p className="text-xs text-purple-600">工会热线</p>
+        </a>
       </div>
       <a
         href="http://tiaojie.12333.gov.cn/portal/"
@@ -140,6 +150,42 @@ export default function GuidePage() {
             </ul>
           </div>
         ))}
+      </div>
+
+      {/* 仲裁详细流程 */}
+      <div className="mt-5 rounded-xl border border-blue-200 bg-blue-50 p-4">
+        <h2 className="text-sm font-semibold text-blue-900">申请仲裁，你需要准备什么？</h2>
+        <div className="mt-2 space-y-2 text-sm text-blue-800">
+          <p>
+            <strong>材料清单：</strong>仲裁申请书（一式两份）、身份证复印件、劳动关系证明（合同/工牌/工资流水/社保记录/平台接单记录）、支持你主张的证据。
+          </p>
+          <p>
+            <strong>提交地点：</strong>劳动合同履行地或单位所在地的劳动争议仲裁委员会。
+          </p>
+          <p>
+            <strong>时间线：</strong>提交后 5 日内决定是否受理 → 受理后 45 日内裁决 → 不服可 15 日内向法院起诉。仲裁免费。
+          </p>
+          <p>
+            <strong>骑手特别注意：</strong>即使没有劳动合同，平台接单记录、APP 截图、与站长聊天记录、统一工服照片都可以作为事实劳动关系的证据。
+          </p>
+        </div>
+      </div>
+
+      {/* 工会入会指引 */}
+      <div className="mt-4 rounded-xl border border-purple-200 bg-purple-50 p-4">
+        <h2 className="text-sm font-semibold text-purple-900">加入工会，多一层保护</h2>
+        <div className="mt-2 space-y-2 text-sm text-purple-800">
+          <p>
+            工会有权代表骑手与平台协商劳动条件、参与调解纠纷、提供法律援助。拨打{' '}
+            <a href="tel:12351" className="font-bold underline" aria-label="拨打工会服务热线 12351">
+              12351
+            </a>{' '}
+            查询当地工会入会渠道。
+          </p>
+          <p>
+            <strong>三种入会方式：</strong>单位已建工会 → 直接向单位工会申请；单位未建工会 → 加入工作所在地的街道/社区工会；部分地区支持线上申请入会。
+          </p>
+        </div>
       </div>
 
       {/* 重要提醒 */}

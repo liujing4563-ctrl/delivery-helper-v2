@@ -12,6 +12,7 @@ const securityHeaders = [
 
 const nextConfig: NextConfig = {
   ...(isStaticExport ? { output: 'export' } : {}),
+  cacheComponents: true,
   turbopack: {
     root: process.cwd(),
   },

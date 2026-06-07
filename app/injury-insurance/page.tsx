@@ -1,3 +1,5 @@
+'use cache';
+
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import {
@@ -12,7 +14,7 @@ export const metadata: Metadata = {
     '2026年7月1日起全国推行，查看你的平台是否已纳入职业伤害保障范围。无需个人缴费，平台按单缴纳。',
 };
 
-export default function InjuryInsurancePage() {
+export default async function InjuryInsurancePage() {
   return (
     <div className="pb-4 md:pb-8">
       <section className="rounded-none bg-orange-600 px-4 pb-5 pt-6 text-white md:mt-6 md:rounded-2xl md:px-8 md:py-8">
