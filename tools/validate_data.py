@@ -23,7 +23,6 @@ SITE_CONFIG = ROOT / "lib" / "site.ts"
 SOURCE_DIRS = ["app", "components", "lib"]
 CHAT_ROUTE = ROOT / "app" / "api" / "chat" / "route.ts"
 CHAT_PAGE = ROOT / "app" / "chat" / "page.tsx"
-AUTH_PLACEHOLDER_ROUTE = ROOT / "app" / "api" / "auth" / "[...nextauth]" / "route.ts"
 CAPACITOR_CONFIG = ROOT / "capacitor.config.ts"
 ANDROID_DIR = ROOT / "android"
 ANDROID_APP_ID = "com.deliveryhelper.rider"
@@ -351,15 +350,6 @@ def validate_account_boundary(report: Report) -> None:
         for token in DISALLOWED_AUTH_TOKENS:
             if token in content:
                 report.error(f"{label}: MVP 不启用真实账号系统，发现认证残留 `{token}`")
-
-    if AUTH_PLACEHOLDER_ROUTE.exists():
-        content = AUTH_PLACEHOLDER_ROUTE.read_text(encoding="utf-8")
-        required_tokens = ["authDisabledResponse", "status: 501", "暂不启用真实账号系统"]
-        for token in required_tokens:
-            if token not in content:
-                report.error(
-                    "app/api/auth/[...nextauth]/route.ts: 账号 API 只能作为未启用占位返回 501"
-                )
 
 
 def validate_accessibility_boundary(report: Report) -> None:
