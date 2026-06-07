@@ -247,6 +247,24 @@ export default async function GuidePage() {
         </div>
       </div>
 
+      {/* 高温津贴 */}
+      <div className="mt-4 rounded-xl border border-amber-200 bg-amber-50 p-4">
+        <h2 className="text-sm font-semibold text-amber-900">6-9 月高温津贴：你的法定权益</h2>
+        <div className="mt-2 space-y-2 text-sm text-amber-800">
+          <p>
+            依据《防暑降温措施管理办法》，外卖骑手属于室外作业人员，依法享有高温津贴。多数省份标准为每月 200～300 元，6-9 月发放（部分地区延长至 10 月）。
+          </p>
+          <p>
+            <strong>上海/江苏/广东/山东：</strong>每月 300 元，6-9 月共发 4 个月（合计 1200 元）。高温津贴计入劳动报酬，不能用防暑饮料或物品替代。
+          </p>
+          <p>
+            如果平台或站点不发高温津贴，可拨打{' '}
+            <a href="tel:12333" className="font-bold underline" aria-label="拨打 12333">12333</a>{' '}
+            向劳动监察部门投诉。
+          </p>
+        </div>
+      </div>
+
       {/* 仲裁详细流程 */}
       <div className="mt-5 rounded-xl border border-blue-200 bg-blue-50 p-4">
         <h2 className="text-sm font-semibold text-blue-900">申请仲裁，你需要准备什么？</h2>
