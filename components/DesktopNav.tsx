@@ -2,18 +2,15 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import type { NavItem } from '@/data/types';
 
-type DesktopNavItem = Pick<NavItem, 'label' | 'href'>;
-
-const navItems: DesktopNavItem[] = [
+const navItems = [
   { label: '首页', href: '/' },
   { label: '薪资测算', href: '/calculator' },
   { label: '法规库', href: '/regulations' },
   { label: '法援目录', href: '/legal-aid' },
   { label: 'AI 助手', href: '/chat' },
   { label: '权益动态', href: '/news' },
-];
+] as const;
 
 export default function DesktopNav() {
   const pathname = usePathname();

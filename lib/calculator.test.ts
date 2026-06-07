@@ -209,5 +209,17 @@ describe('calculateSalary', () => {
       // 净收入 = 210 - 0 - 0 = 210（后端钳位负数到 0，防止异常输入）
       expect(result.netIncome).toBe(210);
     });
+
+    it('大额扣款导致负净收入仍为红色', () => {
+      const input: CalculatorInput = {
+        ...defaultInput,
+        deductions: 500,
+      };
+      const result = calculateSalary(input, mockMinWageData);
+      // grossIncome = 210, netIncome = 210 - 500 = -290
+      expect(result.netIncome).toBe(-290);
+      expect(result.hourlyRate).toBe(-29);
+      expect(result.riskLevel).toBe('red');
+    });
   });
 });

@@ -55,6 +55,8 @@ DISALLOWED_AUTH_TOKENS = [
 MIN_WAGE_SCOPE_REQUIRED_CITIES = {"成都", "武汉", "重庆", "郑州", "西安", "合肥"}
 SEO_PUBLIC_ROUTES = [
     "/",
+    "/guide",
+    "/evidence",
     "/calculator",
     "/regulations",
     "/legal-aid",
