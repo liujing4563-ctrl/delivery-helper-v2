@@ -52,4 +52,14 @@ export const newsItems: NewsItem[] = [
     tags: ['职业伤害保障', '全国推行', '即时配送', '外卖骑手'],
     lastVerified: '2026-06-07',
   },
+  {
+    id: 'news-006',
+    title: '中办国办印发《关于加强新就业群体服务管理的意见》',
+    source: '新华社',
+    sourceUrl: 'http://www.gd.gov.cn/zwgk/zcjd/gnzcsd/content/post_4889562.html',
+    date: '2026-04-26',
+    summary: '中办、国办联合发布，目标到2027年完善新就业群体服务管理工作机制。要求规范平台用工、推广合同文本、督促合理确定报酬、保障休息权益、治理算法规则、保障劳动者知情权、扩大职业伤害保障试点、解决食宿行难等问题。',
+    tags: ['新就业群体', '平台用工', '算法治理', '职业伤害保障'],
+    lastVerified: '2026-06-07',
+  },
 ];
