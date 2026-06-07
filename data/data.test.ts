@@ -125,8 +125,8 @@ describe('legalAidCenters', () => {
 
 // ========== 政策动态 ==========
 describe('newsItems', () => {
-  it('至少有5条新闻', () => {
-    expect(newsItems.length).toBeGreaterThanOrEqual(5);
+  it('至少有12条新闻', () => {
+    expect(newsItems.length).toBeGreaterThanOrEqual(12);
   });
 
   it('每条新闻有必填字段', () => {
