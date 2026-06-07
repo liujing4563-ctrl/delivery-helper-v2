@@ -223,6 +223,30 @@ export default async function GuidePage() {
         </div>
       </div>
 
+      {/* 算法权益 */}
+      <div className="mt-4 rounded-xl border border-indigo-200 bg-indigo-50 p-4">
+        <h2 className="text-sm font-semibold text-indigo-900">你的算法权益：2026 年平台整改要点</h2>
+        <div className="mt-2 space-y-2 text-sm text-indigo-800">
+          <p>
+            <strong>超时不扣款：</strong>2026 年新规要求平台不得因配送超时直接扣款。美团已取消超时罚款机制。
+          </p>
+          <p>
+            <strong>抽成透明化：</strong>平台向商户收费统一为 3 项（技术服务费、配送服务费、推广服务费），不得巧立名目。滴滴抽成上限从 29% 降至 27%。
+          </p>
+          <p>
+            <strong>防疲劳机制：</strong>美团累计在线 12 小时强制下线；滴滴连续服务 10 小时强制下线 6 小时。
+          </p>
+          <p>
+            <strong>拒单权利：</strong>骑手每日有 4 次无条件拒单机会，不影响评分和派单权重。
+          </p>
+          <p>
+            <strong>算法可协商：</strong>工会或劳动者代表可与平台就派单规则、抽成比例、考核标准进行协商。拨打{' '}
+            <a href="tel:12351" className="font-bold underline" aria-label="拨打工会热线 12351">12351</a>{' '}
+            了解当地协商渠道。
+          </p>
+        </div>
+      </div>
+
       {/* 仲裁详细流程 */}
       <div className="mt-5 rounded-xl border border-blue-200 bg-blue-50 p-4">
         <h2 className="text-sm font-semibold text-blue-900">申请仲裁，你需要准备什么？</h2>
