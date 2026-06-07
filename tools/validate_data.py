@@ -400,6 +400,19 @@ def validate_accessibility_boundary(report: Report) -> None:
     )
     validate_filter_page(regulations_path, "法规分类", require_filter=True)
 
+    # 交叉校验：最低工资城市应有法援覆盖
+    min_wage_content = read_data_file("minWage.ts")
+    min_wage_items = [
+        parse_object(obj, {})
+        for obj in extract_array_objects(min_wage_content, "minWageData")
+    ]
+    min_wage_cities = {str(item.get("city", "")) for item in min_wage_items}
+    uncovered = min_wage_cities - legal_aid_cities
+    if uncovered:
+        report.warn(
+            f"最低工资城市无法援覆盖：{', '.join(sorted(uncovered))}"
+        )
+
 
 def validate_pwa_boundary(report: Report) -> None:
     manifest_path = PUBLIC_DIR / "manifest.json"
