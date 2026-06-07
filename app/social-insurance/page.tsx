@@ -52,7 +52,7 @@ const howToJsonLd = {
     {
       '@type': 'HowToStep',
       name: '办理灵活就业参保',
-      text: '携带身份证到户籍地或常住地的社保经办机构办理。2026年起凭居住证即可在常住地参保，不再受户籍限制。',
+      text: '2026年3月1日起户籍限制全面取消，携带身份证、居住证或就业证明即可在常住地社保经办机构办理灵活就业参保。',
     },
     {
       '@type': 'HowToStep',
@@ -155,7 +155,7 @@ export default async function SocialInsurancePage() {
           <div className="mt-2 space-y-3 text-sm text-green-800">
             <div>
               <p className="font-semibold">第一步：在当地社保局办理灵活就业参保</p>
-              <p>携带身份证到户籍地或常住地的社保经办机构办理。2026 年起，凭居住证即可在常住地参保，不再受户籍限制。</p>
+              <p>2026 年 3 月 1 日起户籍限制全面取消，携带身份证、居住证或就业证明即可在常住地的社保经办机构办理灵活就业参保，不受户籍限制。</p>
             </div>
             <div>
               <p className="font-semibold">第二步：选择缴费基数</p>
@@ -176,10 +176,13 @@ export default async function SocialInsurancePage() {
       {/* 国务院新政 */}
       <section className="px-4 pt-5 md:px-0 md:pt-8">
         <div className="rounded-xl border border-blue-200 bg-blue-50 p-4">
-          <p className="text-sm font-semibold text-blue-900">2026 年新政：凭居住证享受同城待遇</p>
+          <p className="text-sm font-semibold text-blue-900">2026 年重磅：户籍限制全面取消，凭居住证享受同城待遇</p>
           <div className="mt-2 space-y-2 text-sm text-blue-800">
             <p>
-              国务院 2026 年 5 月 22 日印发《关于推行常住地提供基本公共服务的实施意见》，打破户籍限制：
+              <strong>2026 年 3 月 1 日起</strong>，全国全面放开灵活就业人员在就业地参加职工社保的户籍限制，凭身份证、居住证或就业证明即可在工作地直接参保（国发〔2026〕11 号配套细则）。
+            </p>
+            <p>
+              国务院 2026 年 5 月 22 日进一步印发《关于推行常住地提供基本公共服务的实施意见》，扩大覆盖范围：
             </p>
             <ul className="list-inside list-disc space-y-1">
               <li>灵活就业人员可自主缴存住房公积金</li>
@@ -236,7 +239,7 @@ export default async function SocialInsurancePage() {
       </section>
 
       <p className="mt-6 px-4 text-center text-xs text-gray-400">
-        数据来源：新华视点、国务院政策文件、各平台官方公告 · 最后核实：2026-06-07
+        数据来源：新华视点、国务院国发〔2026〕11号、各平台官方公告 · 最后核实：2026-06-08
       </p>
     </div>
   );
