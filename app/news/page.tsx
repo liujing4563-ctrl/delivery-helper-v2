@@ -1,10 +1,36 @@
 'use cache';
+import type { Metadata } from 'next';
 import { newsItems } from '@/data/news';
 import DisclaimerBox from '@/components/DisclaimerBox';
+
+export const metadata: Metadata = {
+  title: '权益动态',
+  description: '外卖骑手劳动权益相关的最新政策动态和新闻，包括职业伤害保障、社保参保、算法整改、最低工资等。',
+};
+
+const newsArticleJsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'ItemList',
+  itemListElement: newsItems.slice(0, 5).map((item, index) => ({
+    '@type': 'ListItem',
+    position: index + 1,
+    item: {
+      '@type': 'NewsArticle',
+      headline: item.title,
+      datePublished: item.date,
+      description: item.summary.slice(0, 100),
+      publisher: { '@type': 'Organization', name: item.source },
+    },
+  })),
+};
 
 export default async function NewsPage() {
   return (
     <div className="px-4 pt-6 pb-4">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(newsArticleJsonLd) }}
+      />
       <h1 className="text-xl font-bold text-gray-900">权益动态</h1>
       <p className="mt-1 text-sm text-gray-500">
         与外卖骑手劳动权益相关的新闻和政策动态
@@ -27,6 +53,18 @@ export default async function NewsPage() {
                 {item.title}
               </h2>
               <p className="mt-1 text-sm text-gray-600">{item.summary}</p>
+              {item.tags.length > 0 && (
+                <div className="mt-1.5 flex flex-wrap gap-1">
+                  {item.tags.map((tag) => (
+                    <span
+                      key={tag}
+                      className="rounded-full bg-gray-100 px-2 py-0.5 text-xs text-gray-600"
+                    >
+                      {tag}
+                    </span>
+                  ))}
+                </div>
+              )}
               <div className="mt-2 flex items-center gap-2 text-xs text-gray-500">
                 <span>{item.source}</span>
                 <span>·</span>
