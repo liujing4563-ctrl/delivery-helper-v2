@@ -3,6 +3,7 @@ import Link from 'next/link';
 import DisclaimerBox from '@/components/DisclaimerBox';
 import ProblemCard from '@/components/ProblemCard';
 import type { ProblemEntry } from '@/data/types';
+import { newsItems } from '@/data/news';
 
 const entries: ProblemEntry[] = [
   {
@@ -119,6 +120,34 @@ export default async function Home() {
         <div className="mt-3 grid grid-cols-1 gap-3 md:grid-cols-2 xl:grid-cols-3">
           {entries.map((entry) => (
             <ProblemCard key={entry.id} problem={entry} />
+          ))}
+        </div>
+      </section>
+
+      {/* 最新动态 */}
+      <section className="px-4 pt-5 md:px-0 md:pt-8">
+        <div className="flex items-center justify-between">
+          <h2 className="text-lg font-bold text-gray-900">最新动态</h2>
+          <Link
+            href="/news"
+            className="text-sm font-medium text-blue-600 hover:underline"
+          >
+            查看全部 →
+          </Link>
+        </div>
+        <div className="mt-3 space-y-2">
+          {newsItems.slice(0, 3).map((item) => (
+            <div
+              key={item.id}
+              className="rounded-xl border border-gray-200 bg-white p-3 shadow-sm"
+            >
+              <p className="text-sm font-semibold text-gray-900 line-clamp-1">
+                {item.title}
+              </p>
+              <p className="mt-0.5 text-xs text-gray-500">
+                {item.source} · {item.date}
+              </p>
+            </div>
           ))}
         </div>
       </section>
