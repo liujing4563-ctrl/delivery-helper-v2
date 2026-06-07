@@ -54,6 +54,13 @@ const entries: ProblemEntry[] = [
     href: '/chat?topic=contract',
   },
   {
+    id: 'injury-insurance',
+    title: '职业伤害保障',
+    description: '查看你的平台是否在保障名单中',
+    icon: '保',
+    href: '/injury-insurance',
+  },
+  {
     id: 'legal-aid',
     title: '想申请法援',
     description: '查 12348 和当地法律援助中心入口',

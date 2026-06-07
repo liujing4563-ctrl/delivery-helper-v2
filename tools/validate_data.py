@@ -60,6 +60,7 @@ SEO_PUBLIC_ROUTES = [
     "/calculator",
     "/regulations",
     "/legal-aid",
+    "/injury-insurance",
     "/chat",
     "/news",
     "/disclaimer",
