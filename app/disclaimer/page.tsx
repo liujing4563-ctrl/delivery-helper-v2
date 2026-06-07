@@ -1,4 +1,6 @@
-export default function DisclaimerPage() {
+'use cache';
+
+export default async function DisclaimerPage() {
   return (
     <div className="px-4 pt-6 pb-4">
       <h1 className="text-xl font-bold text-gray-900">免责声明</h1>

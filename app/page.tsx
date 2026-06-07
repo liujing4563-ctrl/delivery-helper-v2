@@ -1,3 +1,4 @@
+'use cache';
 import Link from 'next/link';
 import DisclaimerBox from '@/components/DisclaimerBox';
 import ProblemCard from '@/components/ProblemCard';
@@ -76,7 +77,7 @@ const entries: ProblemEntry[] = [
   },
 ];
 
-export default function Home() {
+export default async function Home() {
   return (
     <div className="pb-4 md:pb-8">
       <section className="bg-blue-700 px-4 pb-5 pt-6 text-white md:mt-6 md:rounded-2xl md:px-8 md:py-8">

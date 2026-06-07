@@ -1,7 +1,8 @@
+'use cache';
 import { newsItems } from '@/data/news';
 import DisclaimerBox from '@/components/DisclaimerBox';
 
-export default function NewsPage() {
+export default async function NewsPage() {
   return (
     <div className="px-4 pt-6 pb-4">
       <h1 className="text-xl font-bold text-gray-900">权益动态</h1>
