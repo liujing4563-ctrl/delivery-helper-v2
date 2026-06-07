@@ -188,6 +188,37 @@ export default async function GuidePage() {
         ))}
       </div>
 
+      {/* 平台申诉实操 */}
+      <div className="mt-5 rounded-xl border border-teal-200 bg-teal-50 p-4">
+        <h2 className="text-sm font-semibold text-teal-900">各平台申诉入口和技巧</h2>
+        <div className="mt-2 space-y-2 text-sm text-teal-800">
+          <p>
+            <strong>美团骑手：</strong>骑手 APP → 我的 → 申诉中心。超时、取消等异常场景可"一键举证"，非骑手原因（暴雨、高温、商家出餐慢等）可报备免责。申诉时务必截图保存平台回复。
+          </p>
+          <p>
+            <strong>饿了么/蜂鸟众包：</strong>骑手 APP → 消息中心 → 申诉。注意：部分类型仅允许一次申诉机会，提交前确保材料齐全。
+          </p>
+          <p>
+            <strong>通用建议：</strong>每次申诉都截图保存工单号和平台回复。如果 APP 内申诉被驳回或超时未回复，可进入下一步正式渠道。
+          </p>
+        </div>
+      </div>
+
+      {/* 外部投诉渠道 */}
+      <div className="mt-4 rounded-xl border border-gray-200 bg-white p-4 shadow-sm">
+        <h2 className="text-sm font-semibold text-gray-900">平台内部解决不了？试试外部渠道</h2>
+        <div className="mt-2 space-y-2 text-sm text-gray-700">
+          <p>
+            <a href="https://tousu.sina.cn/" target="_blank" rel="noopener noreferrer" className="font-medium text-blue-600 hover:underline" aria-label="访问黑猫投诉平台">
+              黑猫投诉
+            </a>（新浪旗下消费投诉平台）：骑手被不合理扣款、封号等问题可在线提交投诉，平台通常 72 小时内回复。
+          </p>
+          <p>
+            <strong>12345 市民热线：</strong>拨打 <a href="tel:12345" className="text-blue-600 underline" aria-label="拨打 12345 市民热线">12345</a>，可转接劳动监察部门。投诉后政府部门会跟进处理。
+          </p>
+        </div>
+      </div>
+
       {/* 仲裁详细流程 */}
       <div className="mt-5 rounded-xl border border-blue-200 bg-blue-50 p-4">
         <h2 className="text-sm font-semibold text-blue-900">申请仲裁，你需要准备什么？</h2>
