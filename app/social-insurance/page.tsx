@@ -43,9 +43,77 @@ const colorMap = {
   orange: { bg: 'bg-orange-50', border: 'border-orange-200', text: 'text-orange-800', title: 'text-orange-900' },
 };
 
+const howToJsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'HowTo',
+  name: '外卖骑手灵活就业社保参保流程',
+  description: '外卖骑手以灵活就业身份参加养老保险和医疗保险的四个步骤，含平台补贴申请。',
+  step: [
+    {
+      '@type': 'HowToStep',
+      name: '办理灵活就业参保',
+      text: '携带身份证到户籍地或常住地的社保经办机构办理。2026年起凭居住证即可在常住地参保，不再受户籍限制。',
+    },
+    {
+      '@type': 'HowToStep',
+      name: '选择缴费基数',
+      text: '灵活就业养老保险可在当地社保缴费基数下限和上限之间选择。多数骑手选择下限即可，平台补贴按下限计算。',
+    },
+    {
+      '@type': 'HowToStep',
+      name: '申请平台补贴',
+      text: '参保后在骑手APP内提交社保参保证明，平台审核后按月发放补贴。京东全额承担，美团饿了么补贴50%，淘宝闪购补贴50%-100%。',
+    },
+    {
+      '@type': 'HowToStep',
+      name: '享受政府额外补贴',
+      text: '部分地区对灵活就业参保人员额外补贴10%，直接打入个人社保账户。',
+    },
+  ],
+};
+
+const faqJsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: [
+    {
+      '@type': 'Question',
+      name: '众包/兼职骑手也能参保社保吗？',
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: '可以。灵活就业参保不区分全职还是兼职，只要你在当地以灵活就业身份办理了社保，就可以申请平台补贴。',
+      },
+    },
+    {
+      '@type': 'Question',
+      name: '同时在多个外卖平台跑单怎么缴社保？',
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: '社保只能在一个地方缴纳，但可以在各平台分别申请补贴。以缴费基数下限为例，美团补贴50%，饿了么也补贴50%。',
+      },
+    },
+    {
+      '@type': 'Question',
+      name: '养老保险缴多少年才能领退休金？',
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: '累计缴费满15年（180个月），达到法定退休年龄后可按月领取养老金。中途断缴不影响已累计的年限。',
+      },
+    },
+  ],
+};
+
 export default async function SocialInsurancePage() {
   return (
     <div className="pb-4 md:pb-8">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(howToJsonLd) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }}
+      />
       <section className="rounded-none bg-green-700 px-4 pb-5 pt-6 text-white md:mt-6 md:rounded-2xl md:px-8 md:py-8">
         <p className="text-sm font-medium text-white/90">社保参保指南</p>
         <h1 className="mt-2 text-2xl font-bold leading-8 md:text-3xl">

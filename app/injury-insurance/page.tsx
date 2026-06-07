@@ -14,9 +14,42 @@ export const metadata: Metadata = {
     '2026年7月1日起全国31省推行，覆盖外卖、出行、货运三大行业约8400万劳动者。无需个人缴费，平台按单缴纳。',
 };
 
+const howToJsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'HowTo',
+  name: '外卖骑手职业伤害保障理赔流程',
+  description: '骑手在执行平台订单期间受伤后，如何通过职业伤害保障申请理赔的四个步骤。',
+  step: [
+    {
+      '@type': 'HowToStep',
+      name: '一键报案',
+      text: '在执行平台订单任务期间受伤后，立即通过平台APP的一键报案功能发送事故报案信息。同时保留好事故现场照片、医院病历和当时的订单截图。',
+    },
+    {
+      '@type': 'HowToStep',
+      name: '平台申请待遇',
+      text: '平台企业在收到报案后30日内向人社部门申请职业伤害待遇。如果平台未按时申请，本人或近亲属可在事故发生之日起90日内直接向人社部门申请。',
+    },
+    {
+      '@type': 'HowToStep',
+      name: '人社部门确认',
+      text: '人社部门在30个工作日内完成职业伤害确认。如需劳动能力鉴定，由劳动能力鉴定委员会参照工伤标准进行。',
+    },
+    {
+      '@type': 'HowToStep',
+      name: '待遇支付',
+      text: '确认后直接核定待遇，赔偿金支付至社保卡金融账户。待遇涵盖医疗费用、伤残补助、死亡抚恤和生活保障。',
+    },
+  ],
+};
+
 export default async function InjuryInsurancePage() {
   return (
     <div className="pb-4 md:pb-8">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(howToJsonLd) }}
+      />
       <section className="rounded-none bg-orange-600 px-4 pb-5 pt-6 text-white md:mt-6 md:rounded-2xl md:px-8 md:py-8">
         <p className="text-sm font-medium text-white/90">职业伤害保障</p>
         <h1 className="mt-2 text-2xl font-bold leading-8 md:text-3xl">
