@@ -4,7 +4,6 @@ import type { MinWage } from './types';
 export const minWageData: MinWage[] = [
   {
     city: '上海',
-    monthly: 2740,
     hourly: 25,
     effectiveDate: '2025-07-01',
     sourceName: '上海市人力资源和社会保障局',
@@ -13,7 +12,6 @@ export const minWageData: MinWage[] = [
   },
   {
     city: '北京',
-    monthly: 2540,
     hourly: 27.7,
     effectiveDate: '2025-09-01',
     sourceName: '北京市人力资源和社会保障局',
@@ -22,7 +20,6 @@ export const minWageData: MinWage[] = [
   },
   {
     city: '广州',
-    monthly: 2500,
     hourly: 23.7,
     effectiveDate: '2025-03-01',
     sourceName: '广州市人力资源和社会保障局',
@@ -31,7 +28,6 @@ export const minWageData: MinWage[] = [
   },
   {
     city: '深圳',
-    monthly: 2520,
     hourly: 23.7,
     effectiveDate: '2025-03-01',
     sourceName: '深圳市人力资源和社会保障局',
@@ -40,7 +36,6 @@ export const minWageData: MinWage[] = [
   },
   {
     city: '杭州',
-    monthly: 2660,
     hourly: 25,
     effectiveDate: '2026-01-01',
     sourceName: '杭州市人民政府',
@@ -49,7 +44,6 @@ export const minWageData: MinWage[] = [
   },
   {
     city: '南京',
-    monthly: 2660,
     hourly: 25,
     effectiveDate: '2026-01-01',
     sourceName: '南京市人力资源和社会保障局',
@@ -58,7 +52,6 @@ export const minWageData: MinWage[] = [
   },
   {
     city: '成都',
-    monthly: 2330,
     hourly: 23,
     effectiveDate: '2025-01-01',
     scopeNote:
@@ -70,7 +63,6 @@ export const minWageData: MinWage[] = [
   },
   {
     city: '武汉',
-    monthly: 2400,
     hourly: 24,
     effectiveDate: '2025-12-01',
     scopeNote: '武汉市区按湖北省第一档标准展示，湖北省其他地区分档不同。',
@@ -80,7 +72,6 @@ export const minWageData: MinWage[] = [
   },
   {
     city: '重庆',
-    monthly: 2330,
     hourly: 23,
     effectiveDate: '2025-01-01',
     scopeNote: '中心城区等第一档地区参考标准，部分区县执行第二档。',
@@ -90,7 +81,6 @@ export const minWageData: MinWage[] = [
   },
   {
     city: '天津',
-    monthly: 2510,
     hourly: 26.6,
     effectiveDate: '2025-09-01',
     sourceName: '天津政务网',
@@ -99,7 +89,6 @@ export const minWageData: MinWage[] = [
   },
   {
     city: '苏州',
-    monthly: 2660,
     hourly: 25,
     effectiveDate: '2026-01-01',
     sourceName: '苏州市人力资源和社会保障局',
@@ -108,7 +97,6 @@ export const minWageData: MinWage[] = [
   },
   {
     city: '长沙',
-    monthly: 2200,
     hourly: 22,
     effectiveDate: '2025-09-01',
     sourceName: '长沙市人力资源和社会保障局',
@@ -117,7 +105,6 @@ export const minWageData: MinWage[] = [
   },
   {
     city: '郑州',
-    monthly: 2350,
     hourly: 23,
     effectiveDate: '2025-12-01',
     scopeNote: '郑州市市区等一类行政区域参考标准，河南省其他县市区分档不同。',
@@ -127,7 +114,6 @@ export const minWageData: MinWage[] = [
   },
   {
     city: '西安',
-    monthly: 2376,
     hourly: 23,
     effectiveDate: '2026-01-01',
     scopeNote: '西安市主城区等一类区参考标准，鄠邑区、蓝田县、周至县等执行二类区。',
@@ -137,7 +123,6 @@ export const minWageData: MinWage[] = [
   },
   {
     city: '合肥',
-    monthly: 2320,
     hourly: 23,
     effectiveDate: '2025-09-01',
     scopeNote: '合肥市区执行第一档，肥东县、肥西县、长丰县、庐江县、巢湖市执行第三档。',

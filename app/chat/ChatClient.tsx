@@ -4,9 +4,9 @@ import { useState, useRef, useCallback, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
 
 const EXAMPLES = [
-  '平台扣了我超时罚款，我应该先保留哪些材料？',
-  '我送餐受伤了，想知道可以先咨询哪些渠道。',
-  '我没有签劳动合同，怎么梳理劳动关系线索？',
+  { icon: '💰', text: '平台扣了我超时罚款，我应该先保留哪些材料？' },
+  { icon: '🩹', text: '我送餐受伤了，想知道可以先咨询哪些渠道。' },
+  { icon: '📄', text: '我没有签劳动合同，怎么梳理劳动关系线索？' },
 ];
 
 const TOPIC_QUESTIONS: Record<string, string> = {
@@ -22,7 +22,6 @@ type Message = {
   content: string;
 };
 
-/** 生成唯一 ID，避免 Date.now() 在快速操作时冲突 */
 function generateId(): string {
   if (typeof crypto !== 'undefined' && crypto.randomUUID) {
     return crypto.randomUUID();
@@ -35,8 +34,8 @@ export default function ChatClient() {
     <Suspense
       fallback={
         <div className="px-4 pb-4 pt-6">
-          <h1 className="text-xl font-bold text-gray-900">AI 骑手权益信息助手</h1>
-          <p className="mt-2 text-sm text-gray-500">加载中…</p>
+          <h1 className="text-xl font-bold text-[#1A1A1A]">权益问答</h1>
+          <p className="mt-2 text-sm text-[#6B6560]">加载中…</p>
         </div>
       }
     >
@@ -52,9 +51,8 @@ async function readErrorMessage(response: Response): Promise<string> {
       return data.error;
     }
   } catch {
-    // 使用兜底文案，避免异常细节暴露给用户。
+    // 使用兜底文案
   }
-
   return '请求失败，请稍后重试。';
 }
 
@@ -68,7 +66,6 @@ function ChatContent() {
   const [error, setError] = useState<string | null>(null);
   const abortControllerRef = useRef<AbortController | null>(null);
 
-  /** 取消正在进行的流式请求 */
   const cancelRequest = useCallback(() => {
     if (abortControllerRef.current) {
       abortControllerRef.current.abort();
@@ -80,7 +77,6 @@ function ChatContent() {
     e.preventDefault();
     if (!input.trim() || isLoading) return;
 
-    // 取消上一次请求（如果还在进行）
     cancelRequest();
 
     const userMessage: Message = {
@@ -99,6 +95,7 @@ function ChatContent() {
     let assistantId = '';
 
     try {
+      // Capacitor APK WebView 需要完整 URL，网页版使用相对路径
       const apiBaseUrl = process.env.NEXT_PUBLIC_API_BASE_URL || '';
       const response = await fetch(`${apiBaseUrl}/api/chat`, {
         method: 'POST',
@@ -116,11 +113,9 @@ function ChatContent() {
         throw new Error(await readErrorMessage(response));
       }
 
-      // 检查是否是流式响应
       const contentType = response.headers.get('content-type') || '';
 
       if (contentType.includes('text/plain') || contentType.includes('text/event-stream')) {
-        // 流式响应
         const reader = response.body?.getReader();
         const decoder = new TextDecoder();
         assistantId = generateId();
@@ -130,7 +125,6 @@ function ChatContent() {
           { id: assistantId, role: 'assistant', content: '' },
         ]);
 
-        // 使用 requestAnimationFrame 节流状态更新，减少低端设备渲染卡顿
         let pendingContent = '';
         let rafId = 0;
 
@@ -149,7 +143,6 @@ function ChatContent() {
           const chunk = decoder.decode(value, { stream: true });
           pendingContent += chunk;
 
-          // 每帧最多更新一次 state
           if (!rafId) {
             rafId = requestAnimationFrame(() => {
               flushToState();
@@ -158,15 +151,13 @@ function ChatContent() {
           }
         }
 
-        // 流结束后确保最终内容已同步
-        if (rafId) cancelAnimationFrame(rafId);
+        if (rafId > 0) cancelAnimationFrame(rafId);
         flushToState();
       }
     } catch (err) {
       if (err instanceof DOMException && err.name === 'AbortError') {
-        // 用户主动取消：如果助手消息为空则移除占位符
         setMessages((prev) =>
-          prev.filter((m) => m.id !== assistantId || m.content.length > 0)
+          prev.filter((m) => m.id === assistantId || m.content.length > 0)
         );
         return;
       }
@@ -179,7 +170,6 @@ function ChatContent() {
 
   const handleRetry = () => {
     if (messages.length > 0) {
-      // 找到最后一条用户消息的位置，删除它之后的所有消息
       const lastUserIndex = messages.map((m) => m.role).lastIndexOf('user');
       if (lastUserIndex >= 0) {
         setInput(messages[lastUserIndex].content);
@@ -195,28 +185,33 @@ function ChatContent() {
 
   return (
     <div className="px-4 pb-4 pt-6">
-      <h1 className="text-xl font-bold text-gray-900">AI 骑手权益信息助手</h1>
-      <p className="mt-1 text-sm text-gray-500">
-        只做劳动权益信息和路径引导，不替代律师。
+      <h1 className="text-xl font-bold text-[#1A1A1A]">权益问答</h1>
+      <p className="mt-1 text-sm text-[#6B6560]">
+        提供劳动权益信息和路径引导，不替代律师。
       </p>
 
-      <div className="mt-3 rounded-lg border border-blue-100 bg-blue-50 p-3 text-xs leading-5 text-blue-800">
+      <div className="mt-3 rounded-lg border border-[#F5E6C8] bg-[#FEF9EE] p-3 text-xs leading-5 text-[#92650A]">
         只提供劳动权益信息参考，不替代律师意见。请勿输入身份证、银行卡等个人敏感信息。
       </div>
 
-      <div className="mt-4 space-y-3" aria-live="polite" aria-label="对话消息">
+      <div className="mt-4 space-y-3" role="list" aria-label="对话消息">
         {messages.length === 0 ? (
-          <div className="rounded-lg border border-gray-200 bg-white p-4">
-            <p className="text-sm font-semibold text-gray-900">可以这样问</p>
+          <div className="rounded-xl border border-[#EDE9E3] bg-white p-4">
+            <p className="text-sm font-semibold text-[#1A1A1A]">可以这样问</p>
+            <p className="mt-1 text-xs text-[#6B6560]">点击下方问题快速开始</p>
             <div className="mt-3 space-y-2">
               {EXAMPLES.map((example) => (
                 <button
-                  key={example}
+                  key={example.text}
                   type="button"
-                  onClick={() => setInput(example)}
-                  className="block w-full rounded-lg border border-gray-200 bg-gray-50 px-3 py-2 text-left text-sm leading-5 text-gray-700 hover:bg-gray-100"
+                  onClick={() => setInput(example.text)}
+                  className="flex w-full items-center gap-3 rounded-lg border border-[#EDE9E3] bg-[#F5F3F0] px-3 py-3 text-left text-sm text-[#374151] hover:bg-[#EDE9E3]"
                 >
-                  {example}
+                  <span className="text-base">{example.icon}</span>
+                  <span className="flex-1">{example.text}</span>
+                  <svg className="h-4 w-4 text-[#D1CDC7]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                  </svg>
                 </button>
               ))}
             </div>
@@ -225,34 +220,41 @@ function ChatContent() {
           messages.map((message) => (
             <div
               key={message.id}
-              className={`rounded-lg border p-3 text-sm leading-6 ${
+              className={`rounded-xl border p-4 text-sm leading-6 ${
                 message.role === 'user'
-                  ? 'border-blue-200 bg-blue-50 text-blue-900'
-                  : 'border-gray-200 bg-white text-gray-700'
+                  ? 'border-[#E5E1DB] bg-[#F5F3F0] text-[#1A1A1A]'
+                  : 'border-[#EDE9E3] bg-white text-[#374151]'
               }`}
             >
-              <p className="mb-1 text-xs font-semibold text-gray-500">
-                {message.role === 'user' ? '我的问题' : '助手回答'}
-              </p>
+              <div className="mb-2 flex items-center gap-2">
+                <span className={`inline-flex h-6 w-6 items-center justify-center rounded-md text-xs ${
+                  message.role === 'user' ? 'bg-[#E0F2FE] text-[#0284C7]' : 'bg-[#F5F3F0] text-[#6B6560]'
+                }`}>
+                  {message.role === 'user' ? '👤' : '💬'}
+                </span>
+                <p className="text-xs font-medium text-[#6B6560]">
+                  {message.role === 'user' ? '我的问题' : '回答'}
+                </p>
+              </div>
               <p className="whitespace-pre-line">{message.content}</p>
             </div>
           ))
         )}
 
         {isLoading && (
-          <div className="flex items-center gap-2 rounded-lg border border-gray-200 bg-white p-3 text-sm text-gray-500" role="status">
-            <span className="inline-block h-2 w-2 animate-pulse rounded-full bg-blue-400" />
+          <div className="flex items-center gap-2 rounded-xl border border-[#EDE9E3] bg-white p-4 text-sm text-[#6B6560]" role="status">
+            <span className="inline-block h-2 w-2 animate-pulse rounded-full bg-[#D97706]" />
             正在整理信息…
           </div>
         )}
 
         {error && (
-          <div className="rounded-lg border border-red-200 bg-red-50 p-3 text-sm text-red-700" role="alert">
+          <div className="rounded-xl border border-[#FECACA] bg-[#FEE2E2] p-4 text-sm text-[#B91C1C]" role="alert">
             <p>{error}</p>
             <button
               type="button"
               onClick={handleRetry}
-              className="mt-2 text-sm font-medium text-red-600 underline"
+              className="mt-2 text-sm font-medium text-[#DC2626] underline"
             >
               重试
             </button>
@@ -260,8 +262,8 @@ function ChatContent() {
         )}
       </div>
 
-      <form onSubmit={handleSubmit} className="mt-4 rounded-lg border border-gray-200 bg-white p-3">
-        <label className="block text-sm font-medium text-gray-700" htmlFor="chat-input">
+      <form onSubmit={handleSubmit} className="mt-4 rounded-xl border border-[#EDE9E3] bg-white p-4">
+        <label className="block text-sm font-medium text-[#374151]" htmlFor="chat-input">
           描述你遇到的问题
         </label>
         <textarea
@@ -271,16 +273,16 @@ function ChatContent() {
           rows={4}
           onChange={(e) => setInput(e.target.value)}
           placeholder="例如：平台扣款、工资太低、送餐受伤、没签合同、被封号…"
-          className="mt-2 w-full resize-none rounded-lg border border-gray-300 px-3 py-2 text-sm leading-6 text-gray-900 placeholder-gray-400 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+          className="mt-2 w-full resize-none rounded-lg border border-[#EDE9E3] bg-[#F5F3F0] px-3 py-2 text-sm leading-6 text-[#1A1A1A] placeholder-[#B0AAA3] focus:border-[#2563EB] focus:outline-none focus:ring-1 focus:ring-[#2563EB]"
         />
         <div className="mt-2 flex items-center justify-between gap-3">
-          <span className="text-xs text-gray-500">{input.length}/1000</span>
+          <span className="text-xs text-[#B0AAA3]">{input.length}/1000</span>
           <div className="flex gap-2">
             {isLoading && (
               <button
                 type="button"
                 onClick={handleStop}
-                className="rounded-lg border border-gray-300 px-3 py-2 text-sm font-medium text-gray-600 hover:bg-gray-50"
+                className="rounded-lg border border-[#EDE9E3] px-3 py-2 text-sm font-medium text-[#6B6560] hover:bg-[#F5F3F0]"
               >
                 停止
               </button>
@@ -288,7 +290,7 @@ function ChatContent() {
             <button
               type="submit"
               disabled={!input.trim() || isLoading}
-              className="rounded-lg bg-blue-600 px-4 py-2 text-sm font-semibold text-white disabled:cursor-not-allowed disabled:bg-gray-300"
+              className="rounded-lg bg-[#2563EB] px-4 py-2 text-sm font-semibold text-white disabled:cursor-not-allowed disabled:bg-[#D1CDC7]"
             >
               {isLoading ? '发送中' : '发送'}
             </button>

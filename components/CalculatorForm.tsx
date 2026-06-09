@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import type { CalculatorInput, CalculatorResult } from '@/data/types';
 import { minWageData } from '@/data/minWage';
 import { calculateSalary } from '@/lib/calculator';
+import { DISCLAIMER_CALCULATOR } from '@/data/legal';
 import CalculatorResultDisplay from './CalculatorResult';
 import DisclaimerBox from './DisclaimerBox';
 
@@ -519,7 +520,7 @@ function formatResultForCopy(
 
 ${result.riskMessage}
 
-免责声明：本测算结果仅供参考，不构成法律意见。最低工资参考线不代表法律判决或对平台是否违法的认定。具体维权请咨询 12348 或当地法律援助中心。`;
+${DISCLAIMER_CALCULATOR}`;
 }
 
 function riskLabel(level: CalculatorResult['riskLevel']): string {

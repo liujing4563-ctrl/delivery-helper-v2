@@ -22,38 +22,43 @@ const entries: ProblemEntry[] = [
   },
   {
     id: 'deduction',
-    title: '被扣钱',
-    description: '整理扣款通知、订单记录和平台规则',
+    title: '被扣钱了',
+    description: '超时罚款、差评扣款、违规处罚',
     icon: '扣',
     href: '/chat?topic=deduction',
+    colorKey: 'deduction',
   },
   {
     id: 'low-pay',
     title: '工资太低',
-    description: '测算时薪，对比最低工资参考线',
+    description: '想知道时薪是否低于最低工资',
     icon: '薪',
     href: '/calculator',
+    colorKey: 'pay',
   },
   {
     id: 'injury',
     title: '送餐受伤',
-    description: '记录事故经过、医疗票据和平台沟通',
+    description: '交通事故、职业伤害保障',
     icon: '伤',
     href: '/chat?topic=injury',
+    colorKey: 'injury',
   },
   {
     id: 'blocked',
-    title: '被封号',
-    description: '查看退出、申诉和平台规则公示线索',
+    title: '被封号了',
+    description: '账号停用、申诉流程',
     icon: '号',
     href: '/chat?topic=blocked',
+    colorKey: 'blocked',
   },
   {
     id: 'contract',
     title: '没签合同',
-    description: '梳理劳动关系或新就业形态用工关系',
+    description: '劳动关系线索、权益保障',
     icon: '约',
     href: '/chat?topic=contract',
+    colorKey: 'contract',
   },
   {
     id: 'injury-insurance',
@@ -71,53 +76,58 @@ const entries: ProblemEntry[] = [
   },
   {
     id: 'legal-aid',
-    title: '想申请法援',
-    description: '查 12348 和当地法律援助中心入口',
+    title: '申请法援',
+    description: '法律援助中心、咨询渠道',
     icon: '援',
     href: '/legal-aid',
-  },
-  {
-    id: 'regulations',
-    title: '查法规',
-    description: '查看劳动报酬、平台规则、法援等官方来源',
-    icon: '规',
-    href: '/regulations',
+    colorKey: 'aid',
   },
 ];
 
 export default async function Home() {
   return (
     <div className="pb-4 md:pb-8">
-      <section className="bg-blue-700 px-4 pb-5 pt-6 text-white md:mt-6 md:rounded-2xl md:px-8 md:py-8">
-        <p className="text-sm font-medium text-white/90">
-          外卖骑手劳动权益信息平台
-        </p>
-        <h1 className="mt-2 text-2xl font-bold leading-8 md:max-w-2xl md:text-4xl md:leading-tight">
-          先算清时薪，再找到合适的咨询路径
-        </h1>
-        <p className="mt-3 text-sm leading-6 text-blue-50 md:max-w-2xl md:text-base">
-          本站提供薪资测算、法规查询、法援导航和 AI 权益信息问答。内容只作信息参考，不替代律师意见。
-        </p>
+      {/* 顶部品牌区 — 温暖橙色，不是蓝色 */}
+      <section className="px-4 pb-5 pt-6 md:px-8 md:py-8">
+        <div className="flex items-center gap-3">
+          <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-[#FEEBC8]">
+            <span className="text-xl">🛵</span>
+          </div>
+          <div>
+            <p className="text-sm font-medium text-[#6B6560]">公益项目 · 免费使用</p>
+            <h1 className="text-xl font-bold text-[#1A1A1A]">骑手权益助手</h1>
+          </div>
+        </div>
+
+        {/* 免责提示 — 米色温和提示 */}
+        <div className="mt-4 rounded-lg border border-[#F5E6C8] bg-[#FEF9EE] p-3">
+          <p className="text-sm text-[#92650A]">
+            提供法律信息和一般性指引，不构成律师法律意见。具体维权请咨询 12348 或当地法律援助中心。
+          </p>
+        </div>
+
+        {/* 快捷入口 */}
         <div className="mt-5 grid grid-cols-2 gap-3 md:max-w-sm">
           <Link
             href="/calculator"
-            className="rounded-lg bg-white px-4 py-3 text-center text-sm font-semibold text-blue-700"
+            className="rounded-xl border border-[#EDE9E3] bg-white px-4 py-3 text-center text-sm font-semibold text-[#1A1A1A] hover:bg-[#F5F3F0]"
           >
             先算时薪
           </Link>
           <Link
             href="/legal-aid"
-            className="rounded-lg border border-blue-200 px-4 py-3 text-center text-sm font-semibold text-white"
+            className="rounded-xl border border-[#A7F3D0] bg-[#ECFDF5] px-4 py-3 text-center text-sm font-semibold text-[#059669]"
           >
             找法援入口
           </Link>
         </div>
       </section>
 
+      {/* 问题入口 */}
       <section className="px-4 pt-5 md:px-0 md:pt-8">
-        <h2 className="text-lg font-bold text-gray-900">你遇到了什么问题</h2>
-        <p className="mt-1 text-sm text-gray-500">选择你的情况，进入对应工具或引导页</p>
-        <div className="mt-3 grid grid-cols-1 gap-3 md:grid-cols-2 xl:grid-cols-3">
+        <h2 className="text-lg font-bold text-[#1A1A1A]">遇到什么问题？</h2>
+        <p className="mt-1 text-sm text-[#6B6560]">选择你的情况，我们帮你找解决路径</p>
+        <div className="mt-3 grid grid-cols-1 gap-2 md:grid-cols-2 xl:grid-cols-3">
           {entries.map((entry) => (
             <ProblemCard key={entry.id} problem={entry} />
           ))}
@@ -152,9 +162,32 @@ export default async function Home() {
         </div>
       </section>
 
+      {/* 紧急联系 */}
+      <section className="px-4 pt-6 md:px-0 md:pt-8">
+        <h2 className="text-lg font-bold text-[#1A1A1A]">紧急联系</h2>
+        <div className="mt-3 rounded-xl border border-[#A7F3D0] bg-[#ECFDF5] p-4">
+          <div className="flex items-center gap-3">
+            <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-[#D1FAE5]">
+              <span className="text-lg">📞</span>
+            </div>
+            <div className="min-w-0">
+              <p className="font-semibold text-[#059669]">12348 法律援助热线</p>
+              <p className="text-sm text-[#6B6560]">全国统一法律援助咨询热线，免费拨打</p>
+            </div>
+            <a
+              href="tel:12348"
+              className="ml-auto rounded-lg bg-[#059669] px-4 py-2 text-sm font-semibold text-white"
+            >
+              拨打
+            </a>
+          </div>
+        </div>
+      </section>
+
+      {/* 底部 */}
       <section className="px-4 pt-6 md:px-0 md:pt-8">
         <DisclaimerBox />
-        <div className="mt-3 flex justify-center gap-4 text-xs text-gray-500">
+        <div className="mt-3 flex justify-center gap-4 text-xs text-[#6B6560]">
           <Link href="/privacy" className="underline underline-offset-2">
             隐私说明
           </Link>

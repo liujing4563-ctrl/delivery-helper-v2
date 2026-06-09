@@ -51,23 +51,38 @@ export default function RegulationCard({ reg }: { reg: Regulation }) {
 
       {/* 底部：官方链接 + 核验状态 */}
       <div className="mt-2 flex items-center justify-between border-t border-gray-100 pt-2">
-        {hasOfficialUrl ? (
-          <a
-            href={reg.officialUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex items-center gap-1 text-sm font-medium text-blue-600 hover:underline"
-          >
-            查看官方原文
-            <svg className="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2} aria-hidden="true">
-              <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 6H5.25A2.25 2.25 0 003 8.25v10.5A2.25 2.25 0 005.25 21h10.5A2.25 2.25 0 0018 18.75V10.5m-10.5 6L21 3m0 0h-5.25M21 3v5.25" />
-            </svg>
-          </a>
-        ) : (
-          <span className="text-sm font-medium text-gray-500">
-            官方链接待核实
-          </span>
-        )}
+        <div className="flex items-center gap-2">
+          {hasOfficialUrl ? (
+            <a
+              href={reg.officialUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-1 text-sm font-medium text-blue-600 hover:underline"
+            >
+              查看官方原文
+              <svg className="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2} aria-hidden="true">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 6H5.25A2.25 2.25 0 003 8.25v10.5A2.25 2.25 0 005.25 21h10.5A2.25 2.25 0 0018 18.75V10.5m-10.5 6L21 3m0 0h-5.25M21 3v5.25" />
+              </svg>
+            </a>
+          ) : (
+            <span className="text-sm font-medium text-gray-500">
+              官方链接待核实
+            </span>
+          )}
+          {reg.backupUrl && (
+            <>
+              <span className="text-gray-300">|</span>
+              <a
+                href={reg.backupUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-sm text-gray-500 hover:text-blue-600 hover:underline"
+              >
+                备用链接
+              </a>
+            </>
+          )}
+        </div>
         <span className="text-xs text-amber-600">
           {reg.lastVerified === '待核实'
             ? '⚠️ 待核实'

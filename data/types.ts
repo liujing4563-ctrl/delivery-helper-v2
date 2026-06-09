@@ -8,13 +8,15 @@ export interface Regulation {
   category: '劳动报酬' | '劳动关系' | '社会保险' | '工伤职业伤害' | '法律援助' | '平台规则';
   summary: string;
   officialUrl: string;
+  /** 第三方转载链接，供无法访问官方来源的用户使用 */
+  backupUrl?: string;
   tags: string[];
   lastVerified: string;
 }
 
 export interface MinWage {
   city: string;
-  monthly: number | null;
+  monthly?: number;
   hourly: number;
   effectiveDate: string;
   scopeNote?: string;
@@ -44,6 +46,8 @@ export interface NewsItem {
   title: string;
   source: string;
   sourceUrl: string;
+  /** 第三方转载链接，供无法访问官方来源的用户使用 */
+  backupUrl?: string;
   date: string;
   summary: string;
   tags: string[];
@@ -78,11 +82,12 @@ export interface ProblemEntry {
   description: string;
   icon: string;
   href: string;
+  colorKey?: 'deduction' | 'pay' | 'injury' | 'blocked' | 'contract' | 'aid' | 'reg';
 }
 
 // 底部导航项
 export interface NavItem {
   label: string;
   href: string;
-  icon: string;
+  icon: React.ReactNode;
 }

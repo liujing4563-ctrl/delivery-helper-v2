@@ -82,8 +82,9 @@ function cleanupRateLimitStore(currentIp?: string): void {
 }
 
 // OpenAI 兼容 SDK，改 baseURL 即可切换模型
-const deepseek = createOpenAI({
-  baseURL: process.env.AI_API_BASE_URL || 'https://api.deepseek.com',
+// 默认使用阿里云 Qwen（与 .env.example 推荐一致）
+const aiClient = createOpenAI({
+  baseURL: process.env.AI_API_BASE_URL || 'https://dashscope.aliyuncs.com/compatible-mode/v1',
   apiKey: process.env.AI_API_KEY,
 });
 
@@ -178,7 +179,7 @@ export async function POST(request: Request) {
 
     // 使用 Vercel AI SDK 流式输出 + 工具调用
     const result = streamText({
-      model: deepseek(process.env.AI_MODEL || 'qwen-plus'),
+      model: aiClient(process.env.AI_MODEL || 'qwen-plus'),
       system: SYSTEM_PROMPT + '\n\n' + REGULATION_CONTEXT,
       messages,
       tools: {
@@ -280,9 +281,9 @@ function isAllowedOrigin(request: Request): boolean {
     }
   }
 
-  // Origin 和 Referer 都不存在：可能是 curl/script 等非浏览器请求。
-  // MVP 阶段放行，后续应引入 API Key 或 CSRF token 做更严格的鉴权。
-  return true;
+  // Origin 和 Referer 都不存在时拒绝请求，
+  // 防止 curl/脚本等非浏览器调用消耗模型额度。
+  return false;
 }
 
 function appendDisclaimerIfMissing(textStream: AsyncIterable<string>): Response {

@@ -1,14 +1,49 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  /* 暖色背景体系 */
+  --background: #F7F5F2;
+  --foreground: #1A1A1A;
+  --card: #FFFFFF;
+  --card-border: #EDE9E3;
+  --muted: #6B6560;
+  --muted-bg: #F5F3F0;
+
+  /* 功能色 */
+  --primary: #2563EB;
+  --success: #22C55E;
+  --warning: #D97706;
+  --danger: #EF4444;
+
+  /* 问题卡片专属色 */
+  --color-deduction-bg: #FEE2E2;
+  --color-deduction-fg: #DC2626;
+  --color-pay-bg: #FEEBC8;
+  --color-pay-fg: #D97706;
+  --color-injury-bg: #F3E8FF;
+  --color-injury-fg: #9333EA;
+  --color-blocked-bg: #E0F2FE;
+  --color-blocked-fg: #0284C7;
+  --color-contract-bg: #D1FAE5;
+  --color-contract-fg: #059669;
+  --color-aid-bg: #FCE7F3;
+  --color-aid-fg: #DB2777;
+  --color-reg-bg: #E0E7FF;
+  --color-reg-fg: #4338CA;
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+
+  /* 暖色系 */
+  --color-warm-bg: #F7F5F2;
+  --color-warm-card: #FFFFFF;
+  --color-warm-border: #EDE9E3;
+  --color-warm-muted: #6B6560;
+  --color-warm-muted-bg: #F5F3F0;
 }
 
 /* 不使用暗色模式 — 全站浅色设计，面向骑手的简洁界面 */
