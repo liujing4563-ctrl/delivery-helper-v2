@@ -152,7 +152,7 @@ export default async function GuidePage() {
         <p className="text-xs text-orange-600">人社部官方调解平台 · 免费 · 全国通用 · 跨省可办</p>
       </a>
       <p className="mt-1 text-center text-xs text-gray-500">
-        三种入口：网站申请 · 微信/支付宝搜"电子社保卡" → 劳动调解 · 拨打{' '}
+        三种入口：网站申请 · 微信/支付宝搜“电子社保卡” → 劳动调解 · 拨打{' '}
         <a href="tel:12333" className="text-[#047A43] underline" aria-label="拨打 12333">12333</a>
       </p>
 
@@ -197,7 +197,7 @@ export default async function GuidePage() {
         <h2 className="text-sm font-semibold text-teal-900">各平台申诉入口和技巧</h2>
         <div className="mt-2 space-y-2 text-sm text-teal-800">
           <p>
-            <strong>美团骑手：</strong>骑手 APP → 我的 → 申诉中心。超时、取消等异常场景可"一键举证"，非骑手原因（暴雨、高温、商家出餐慢等）可报备免责。申诉时务必截图保存平台回复。
+            <strong>美团骑手：</strong>骑手 APP → 我的 → 申诉中心。超时、取消等异常场景可“一键举证”，非骑手原因（暴雨、高温、商家出餐慢等）可报备免责。申诉时务必截图保存平台回复。
           </p>
           <p>
             <strong>饿了么/蜂鸟众包：</strong>骑手 APP → 消息中心 → 申诉。注意：部分类型仅允许一次申诉机会，提交前确保材料齐全。
@@ -240,7 +240,7 @@ export default async function GuidePage() {
             <strong>拒单权利：</strong>骑手每日有 4 次无条件拒单机会，不影响评分和派单权重。
           </p>
           <p>
-            <strong>多平台就业权：</strong>平台不得以"独家协议""忠诚协议"等名义限制骑手同时在其他平台接单。2026 年 6 月铜陵倡议书将此项写入合规标准，《工人日报》头版报道。
+            <strong>多平台就业权：</strong>平台不得以“独家协议”“忠诚协议”等名义限制骑手同时在其他平台接单。2026 年 6 月铜陵倡议书将此项写入合规标准，《工人日报》头版报道。
           </p>
           <p>
             <strong>算法可协商：</strong>工会或劳动者代表可与平台就派单规则、抽成比例、考核标准进行协商。拨打{' '}
@@ -315,7 +315,7 @@ export default async function GuidePage() {
             <strong>核心权益：</strong>用人单位须签书面协议；报酬不低于当地最低工资标准；合理安排工时和休息；须参加工伤保险；保障职业安全健康。发生争议适用《劳动争议调解仲裁法》。
           </p>
           <p>
-            如果你超过法定退休年龄仍在跑外卖，这份规定就是你的"护身符"。如遭遇不公待遇，拨打{' '}
+            如果你超过法定退休年龄仍在跑外卖，这份规定就是你的“护身符”。如遭遇不公待遇，拨打{' '}
             <a href="tel:12333" className="font-bold underline" aria-label="拨打 12333">12333</a>{' '}
             投诉或{' '}
             <a href="tel:12348" className="font-bold underline" aria-label="拨打 12348">12348</a>{' '}
@@ -338,7 +338,7 @@ export default async function GuidePage() {
           </li>
           <li className="flex items-start gap-2">
             <span className="mt-0.5 block h-1.5 w-1.5 shrink-0 rounded-full bg-amber-400" aria-hidden="true" />
-            平台不能以"你是外包/众包"为由拒绝承担责任
+            平台不能以“你是外包/众包”为由拒绝承担责任
           </li>
           <li className="flex items-start gap-2">
             <span className="mt-0.5 block h-1.5 w-1.5 shrink-0 rounded-full bg-amber-400" aria-hidden="true" />

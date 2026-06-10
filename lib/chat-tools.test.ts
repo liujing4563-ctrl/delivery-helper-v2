@@ -8,7 +8,16 @@ import {
 
 // 工具测试：直接调用 execute 函数
 // execute 在 AI SDK 中类型为可选，但我们的工具始终定义了它
-const exec = async <T extends { execute?: Function }>(
+type ToolExecute = (
+  input: Record<string, unknown>,
+  ctx: {
+    abortSignal: AbortSignal;
+    toolCallId: string;
+    messages: never[];
+  },
+) => unknown | Promise<unknown>;
+
+const exec = async <T extends { execute?: unknown }>(
   tool: T,
   input: Record<string, unknown>,
 ) => {
@@ -17,7 +26,8 @@ const exec = async <T extends { execute?: Function }>(
     toolCallId: `test-${Math.random().toString(36).slice(2)}`,
     messages: [] as never[],
   };
-  const result = await tool.execute!(input, ctx);
+  const execute = tool.execute as ToolExecute;
+  const result = await execute(input, ctx);
   return String(result);
 };
 

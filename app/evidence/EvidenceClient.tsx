@@ -84,25 +84,22 @@ function getStoredNotes(): Record<string, string> {
 
 export default function EvidenceClient() {
   const [problem, setProblem] = useState<ProblemType | null>(null);
-  const [checks, setChecks] = useState<Record<string, boolean>>({});
-  const [notes, setNotes] = useState<Record<string, string>>({});
-  const [ready, setReady] = useState(false);
+  const [checks, setChecks] = useState<Record<string, boolean>>(() =>
+    typeof window === 'undefined' ? {} : getStoredChecks()
+  );
+  const [notes, setNotes] = useState<Record<string, string>>(() =>
+    typeof window === 'undefined' ? {} : getStoredNotes()
+  );
 
   useEffect(() => {
-    setChecks(getStoredChecks());
-    setNotes(getStoredNotes());
-    setReady(true);
-  }, []);
-
-  useEffect(() => {
-    if (!ready) return;
+    if (typeof window === 'undefined') return;
     try { localStorage.setItem('evidence-checks', JSON.stringify(checks)); } catch { /* ignore */ }
-  }, [checks, ready]);
+  }, [checks]);
 
   useEffect(() => {
-    if (!ready) return;
+    if (typeof window === 'undefined') return;
     try { localStorage.setItem('evidence-notes', JSON.stringify(notes)); } catch { /* ignore */ }
-  }, [notes, ready]);
+  }, [notes]);
 
   const toggle = useCallback((id: string) => {
     setChecks((prev) => ({ ...prev, [id]: !prev[id] }));

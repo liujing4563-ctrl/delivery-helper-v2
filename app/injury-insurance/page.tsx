@@ -118,7 +118,7 @@ export default async function InjuryInsurancePage() {
           <div className="mt-2 space-y-3 text-sm text-[#047A43]/90">
             <div>
               <p className="font-semibold">第一步：一键报案</p>
-              <p>在执行平台订单任务期间受伤后，立即通过平台 APP 的"一键报案"功能发送事故报案信息。同时保留好事故现场照片、医院病历和当时的订单截图。</p>
+              <p>在执行平台订单任务期间受伤后，立即通过平台 APP 的“一键报案”功能发送事故报案信息。同时保留好事故现场照片、医院病历和当时的订单截图。</p>
             </div>
             <div>
               <p className="font-semibold">第二步：平台申请待遇</p>
