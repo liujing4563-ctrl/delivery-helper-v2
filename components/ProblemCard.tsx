@@ -19,7 +19,7 @@ export default function ProblemCard({ problem }: { problem: ProblemEntry }) {
   return (
     <Link
       href={problem.href}
-      className="block rounded-xl border border-[#EDE9E3] bg-white p-4 transition-all hover:border-[#D1CDC7] focus-visible:outline focus-visible:outline-2 focus-visible:outline-[#2563EB] active:scale-[0.98]"
+      className="block rounded-xl border border-[#EDE9E3] bg-white p-4 transition-all hover:border-[#D1CDC7] focus-visible:outline focus-visible:outline-2 focus-visible:outline-[#047A43] active:scale-[0.98]"
     >
       <div className="flex items-center gap-3">
         <span

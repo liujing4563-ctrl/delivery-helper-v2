@@ -39,7 +39,7 @@ const platformBenefits = [
 const colorMap = {
   red: { bg: 'bg-red-50', border: 'border-red-200', text: 'text-red-800', title: 'text-red-900' },
   yellow: { bg: 'bg-yellow-50', border: 'border-yellow-200', text: 'text-yellow-800', title: 'text-yellow-900' },
-  blue: { bg: 'bg-blue-50', border: 'border-blue-200', text: 'text-blue-800', title: 'text-blue-900' },
+  blue: { bg: 'bg-[#EAF7EF]', border: 'border-[#047A43]/30', text: 'text-[#047A43]/90', title: 'text-[#047A43]' },
   orange: { bg: 'bg-orange-50', border: 'border-orange-200', text: 'text-orange-800', title: 'text-orange-900' },
 };
 
@@ -175,9 +175,9 @@ export default async function SocialInsurancePage() {
 
       {/* 国务院新政 */}
       <section className="px-4 pt-5 md:px-0 md:pt-8">
-        <div className="rounded-xl border border-blue-200 bg-blue-50 p-4">
-          <p className="text-sm font-semibold text-blue-900">2026 年重磅：户籍限制全面取消，凭居住证享受同城待遇</p>
-          <div className="mt-2 space-y-2 text-sm text-blue-800">
+        <div className="rounded-xl border border-[#047A43]/30 bg-[#EAF7EF] p-4">
+          <p className="text-sm font-semibold text-[#047A43]">2026 年重磅：户籍限制全面取消，凭居住证享受同城待遇</p>
+          <div className="mt-2 space-y-2 text-sm text-[#047A43]/90">
             <p>
               <strong>2026 年 3 月 1 日起</strong>，全国全面放开灵活就业人员在就业地参加职工社保的户籍限制，凭身份证、居住证或就业证明即可在工作地直接参保（国发〔2026〕11 号配套细则）。
             </p>
@@ -190,7 +190,7 @@ export default async function SocialInsurancePage() {
               <li>社保关系转移接续更加便利</li>
               <li>随迁子女可在常住地就读公办学校</li>
             </ul>
-            <p className="text-xs text-blue-600">
+            <p className="text-xs text-[#047A43]">
               覆盖约 2.4 亿灵活就业者，外卖骑手、网约车司机、个体户均适用。
             </p>
           </div>
@@ -223,10 +223,10 @@ export default async function SocialInsurancePage() {
         <div className="grid grid-cols-2 gap-3">
           <a
             href="tel:12333"
-            className="rounded-xl border border-blue-200 bg-blue-50 p-3 text-center"
+            className="rounded-xl border border-[#047A43]/30 bg-[#EAF7EF] p-3 text-center"
           >
-            <p className="text-lg font-bold text-blue-900">12333</p>
-            <p className="text-xs text-blue-600">人社热线 · 咨询参保</p>
+            <p className="text-lg font-bold text-[#047A43]">12333</p>
+            <p className="text-xs text-[#047A43]">人社热线 · 咨询参保</p>
           </a>
           <Link
             href="/injury-insurance"

@@ -113,9 +113,9 @@ export default async function InjuryInsurancePage() {
       })}
 
       <section className="px-4 pt-6 md:px-0 md:pt-8">
-        <div className="rounded-xl border border-blue-200 bg-blue-50 p-4">
-          <p className="text-sm font-semibold text-blue-900">受伤了怎么申请理赔？</p>
-          <div className="mt-2 space-y-3 text-sm text-blue-800">
+        <div className="rounded-xl border border-[#047A43]/30 bg-[#EAF7EF] p-4">
+          <p className="text-sm font-semibold text-[#047A43]">受伤了怎么申请理赔？</p>
+          <div className="mt-2 space-y-3 text-sm text-[#047A43]/90">
             <div>
               <p className="font-semibold">第一步：一键报案</p>
               <p>在执行平台订单任务期间受伤后，立即通过平台 APP 的"一键报案"功能发送事故报案信息。同时保留好事故现场照片、医院病历和当时的订单截图。</p>
@@ -144,7 +144,7 @@ export default async function InjuryInsurancePage() {
           </ul>
           <p className="mt-2 text-xs text-gray-500">
             如有疑问，拨打{' '}
-            <a href="tel:12333" className="font-bold text-blue-600 underline" aria-label="拨打人社咨询热线 12333">
+            <a href="tel:12333" className="font-bold text-[#047A43] underline" aria-label="拨打人社咨询热线 12333">
               12333
             </a>{' '}
             咨询当地人社部门。
@@ -153,7 +153,7 @@ export default async function InjuryInsurancePage() {
         <div className="mt-4 flex justify-center">
           <Link
             href="/guide"
-            className="text-sm text-blue-600 underline underline-offset-2"
+            className="text-sm text-[#047A43] underline underline-offset-2"
           >
             查看完整维权路径指引
           </Link>

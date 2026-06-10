@@ -2,7 +2,7 @@ import type { Regulation } from '@/data/types';
 
 const CATEGORY_COLORS: Record<Regulation['category'], string> = {
   劳动报酬: 'bg-emerald-100 text-emerald-700',
-  劳动关系: 'bg-blue-100 text-blue-700',
+  劳动关系: 'bg-[#EAF7EF] text-[#06643A]',
   社会保险: 'bg-purple-100 text-purple-700',
   工伤职业伤害: 'bg-red-100 text-red-700',
   法律援助: 'bg-amber-100 text-amber-700',
@@ -57,7 +57,7 @@ export default function RegulationCard({ reg }: { reg: Regulation }) {
               href={reg.officialUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-1 text-sm font-medium text-blue-600 hover:underline"
+              className="inline-flex items-center gap-1 text-sm font-medium text-[#047A43] hover:underline"
             >
               查看官方原文
               <svg className="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2} aria-hidden="true">
@@ -76,7 +76,7 @@ export default function RegulationCard({ reg }: { reg: Regulation }) {
                 href={reg.backupUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-sm text-gray-500 hover:text-blue-600 hover:underline"
+                className="text-sm text-gray-500 hover:text-[#047A43] hover:underline"
               >
                 备用链接
               </a>

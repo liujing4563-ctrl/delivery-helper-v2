@@ -120,10 +120,10 @@ export default async function GuidePage() {
         <a
           href="tel:12333"
           aria-label="拨打人社服务热线 12333"
-          className="rounded-xl border border-blue-200 bg-blue-50 p-3 text-center"
+          className="rounded-xl border border-[#047A43]/30 bg-[#EAF7EF] p-3 text-center"
         >
-          <p className="text-lg font-bold text-blue-900">12333</p>
-          <p className="text-xs text-blue-600">人社热线</p>
+          <p className="text-lg font-bold text-[#047A43]">12333</p>
+          <p className="text-xs text-[#047A43]">人社热线</p>
         </a>
         <Link
           href="/legal-aid"
@@ -153,7 +153,7 @@ export default async function GuidePage() {
       </a>
       <p className="mt-1 text-center text-xs text-gray-500">
         三种入口：网站申请 · 微信/支付宝搜"电子社保卡" → 劳动调解 · 拨打{' '}
-        <a href="tel:12333" className="text-blue-600 underline" aria-label="拨打 12333">12333</a>
+        <a href="tel:12333" className="text-[#047A43] underline" aria-label="拨打 12333">12333</a>
       </p>
 
       {/* 五步流程 */}
@@ -213,12 +213,12 @@ export default async function GuidePage() {
         <h2 className="text-sm font-semibold text-gray-900">平台内部解决不了？试试外部渠道</h2>
         <div className="mt-2 space-y-2 text-sm text-gray-700">
           <p>
-            <a href="https://tousu.sina.cn/" target="_blank" rel="noopener noreferrer" className="font-medium text-blue-600 hover:underline" aria-label="访问黑猫投诉平台">
+            <a href="https://tousu.sina.cn/" target="_blank" rel="noopener noreferrer" className="font-medium text-[#047A43] hover:underline" aria-label="访问黑猫投诉平台">
               黑猫投诉
             </a>（新浪旗下消费投诉平台）：骑手被不合理扣款、封号等问题可在线提交投诉，平台通常 72 小时内回复。
           </p>
           <p>
-            <strong>12345 市民热线：</strong>拨打 <a href="tel:12345" className="text-blue-600 underline" aria-label="拨打 12345 市民热线">12345</a>，可转接劳动监察部门。投诉后政府部门会跟进处理。
+            <strong>12345 市民热线：</strong>拨打 <a href="tel:12345" className="text-[#047A43] underline" aria-label="拨打 12345 市民热线">12345</a>，可转接劳动监察部门。投诉后政府部门会跟进处理。
           </p>
         </div>
       </div>
@@ -269,9 +269,9 @@ export default async function GuidePage() {
       </div>
 
       {/* 仲裁详细流程 */}
-      <div className="mt-5 rounded-xl border border-blue-200 bg-blue-50 p-4">
-        <h2 className="text-sm font-semibold text-blue-900">申请仲裁，你需要准备什么？</h2>
-        <div className="mt-2 space-y-2 text-sm text-blue-800">
+      <div className="mt-5 rounded-xl border border-[#047A43]/30 bg-[#EAF7EF] p-4">
+        <h2 className="text-sm font-semibold text-[#047A43]">申请仲裁，你需要准备什么？</h2>
+        <div className="mt-2 space-y-2 text-sm text-[#047A43]/90">
           <p>
             <strong>材料清单：</strong>仲裁申请书（一式两份）、身份证复印件、劳动关系证明（合同/工牌/工资流水/社保记录/平台接单记录）、支持你主张的证据。
           </p>
@@ -351,7 +351,7 @@ export default async function GuidePage() {
       <div className="mt-5 grid grid-cols-3 gap-2">
         <Link
           href="/evidence"
-          className="rounded-xl bg-blue-600 px-3 py-3 text-center text-sm font-semibold text-white hover:bg-blue-700"
+          className="rounded-xl bg-[#047A43] px-3 py-3 text-center text-sm font-semibold text-white hover:bg-[#06643A]"
         >
           准备证据
         </Link>

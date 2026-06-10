@@ -154,7 +154,7 @@ export default function EvidenceClient() {
               onClick={() => setProblem(key)}
               className={`rounded-lg border px-3 py-2 text-sm font-medium transition-colors ${
                 problem === key
-                  ? 'border-blue-500 bg-blue-50 text-blue-700'
+                  ? 'border-[#047A43] bg-[#EAF7EF] text-[#06643A]'
                   : 'border-gray-300 bg-white text-gray-600 hover:bg-gray-50'
               }`}
             >
@@ -165,8 +165,8 @@ export default function EvidenceClient() {
       </div>
 
       {!problem && (
-        <div className="mt-6 rounded-xl border border-blue-100 bg-blue-50 p-4 text-center">
-          <p className="text-sm text-blue-700">
+        <div className="mt-6 rounded-xl border border-[#047A43]/30 bg-[#EAF7EF] p-4 text-center">
+          <p className="text-sm text-[#06643A]">
             先选择你的问题类型，系统会生成对应的证据清单
           </p>
         </div>
@@ -182,7 +182,7 @@ export default function EvidenceClient() {
             </div>
             <div className="mt-1 h-2 rounded-full bg-gray-200">
               <div
-                className="h-2 rounded-full bg-blue-600 transition-all duration-300"
+                className="h-2 rounded-full bg-[#047A43] transition-all duration-300"
                 style={{ width: `${totalCount > 0 ? (checkedCount / totalCount) * 100 : 0}%` }}
               />
             </div>
@@ -229,14 +229,14 @@ export default function EvidenceClient() {
             <button
               type="button"
               onClick={handleExport}
-              className="rounded-xl bg-blue-600 px-4 py-3 text-sm font-semibold text-white hover:bg-blue-700"
+              className="rounded-xl bg-[#047A43] px-4 py-3 text-sm font-semibold text-white hover:bg-[#06643A]"
             >
               复制清单
             </button>
             <button
               type="button"
               onClick={() => window.print()}
-              className="rounded-xl border border-blue-300 bg-white px-4 py-3 text-sm font-semibold text-blue-700 hover:bg-blue-50 no-print"
+              className="rounded-xl border border-[#047A43]/50 bg-white px-4 py-3 text-sm font-semibold text-[#06643A] hover:bg-[#EAF7EF] no-print"
             >
               打印/PDF
             </button>
@@ -253,18 +253,18 @@ export default function EvidenceClient() {
           </div>
 
           {/* 下一步引导 */}
-          <div className="mt-4 rounded-xl border border-blue-200 bg-blue-50 p-4">
-            <p className="text-sm font-semibold text-blue-900">证据准备好了</p>
+          <div className="mt-4 rounded-xl border border-[#047A43]/30 bg-[#EAF7EF] p-4">
+            <p className="text-sm font-semibold text-[#047A43]">证据准备好了</p>
             <div className="mt-2 grid grid-cols-2 gap-2">
               <Link
                 href="/guide"
-                className="rounded-lg bg-blue-600 px-3 py-2.5 text-center text-sm font-semibold text-white hover:bg-blue-700"
+                className="rounded-lg bg-[#047A43] px-3 py-2.5 text-center text-sm font-semibold text-white hover:bg-[#06643A]"
               >
                 查看维权路径
               </Link>
               <Link
                 href="/legal-aid"
-                className="rounded-lg border border-blue-300 bg-white px-3 py-2.5 text-center text-sm font-medium text-blue-700 hover:bg-blue-50"
+                className="rounded-lg border border-[#047A43]/50 bg-white px-3 py-2.5 text-center text-sm font-medium text-[#06643A] hover:bg-[#EAF7EF]"
               >
                 找法援入口
               </Link>
@@ -312,7 +312,7 @@ function EvidenceCheckItem({
           type="checkbox"
           checked={checked}
           onChange={onToggle}
-          className="mt-0.5 h-4 w-4 shrink-0 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+          className="mt-0.5 h-4 w-4 shrink-0 rounded border-gray-300 text-[#047A43] focus:ring-[#047A43]"
         />
         <div className="flex-1">
           <div className="flex items-center gap-2">
@@ -329,7 +329,7 @@ function EvidenceCheckItem({
       <button
         type="button"
         onClick={() => setShowNote(!showNote)}
-        className="mt-1.5 ml-6.5 text-xs text-blue-600 hover:underline"
+        className="mt-1.5 ml-6.5 text-xs text-[#047A43] hover:underline"
       >
         {showNote ? '收起备注' : '添加备注'}
       </button>
@@ -339,7 +339,7 @@ function EvidenceCheckItem({
           value={note}
           onChange={(e) => onNoteChange(e.target.value)}
           placeholder="备注：如拍摄日期、存放位置等"
-          className="mt-1 ml-6.5 w-[calc(100%-1.625rem)] rounded border border-gray-200 px-2 py-1.5 text-xs text-gray-700 focus:border-blue-500 focus:outline-none"
+          className="mt-1 ml-6.5 w-[calc(100%-1.625rem)] rounded border border-gray-200 px-2 py-1.5 text-xs text-gray-700 focus:border-[#047A43] focus:outline-none"
         />
       )}
     </div>

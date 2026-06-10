@@ -2,7 +2,7 @@ import type { LegalAidCenter } from '@/data/types';
 
 const TYPE_COLORS: Record<LegalAidCenter['type'], string> = {
   法律援助中心: 'bg-green-100 text-green-700',
-  公共法律服务中心: 'bg-blue-100 text-blue-700',
+  公共法律服务中心: 'bg-[#EAF7EF] text-[#06643A]',
   法律援助工作站: 'bg-amber-100 text-amber-700',
   法律援助联络点: 'bg-purple-100 text-purple-700',
 };
@@ -45,7 +45,7 @@ export default function LegalAidCard({ center }: { center: LegalAidCenter }) {
             <span className="text-base" aria-hidden="true">📞</span>
             <a
               href={`tel:${telHref}`}
-              className="font-medium text-blue-600 hover:underline"
+              className="font-medium text-[#047A43] hover:underline"
             >
               {center.phone}
             </a>
@@ -67,7 +67,7 @@ export default function LegalAidCard({ center }: { center: LegalAidCenter }) {
             href={center.sourceUrl}
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center gap-1 text-sm font-medium text-blue-600 hover:underline"
+            className="inline-flex items-center gap-1 text-sm font-medium text-[#047A43] hover:underline"
           >
             查看来源
             <svg className="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2} aria-hidden="true">
