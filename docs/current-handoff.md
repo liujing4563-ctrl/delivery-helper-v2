@@ -1,6 +1,58 @@
 # 当前项目交接记录
 
-更新日期：2026-06-06
+更新日期：2026-06-12
+
+## 2026-06-12 切账号即时记录
+
+### 当前真实状态
+
+- 主项目仍是 `C:\Users\Admin\Desktop\Project\delivery-helper`。
+- 工作区已有未提交改动，不全是本轮产生：
+  - `app/chat/ChatClient.tsx`
+  - `app/news/page.tsx`
+  - `app/regulations/RegulationsClient.tsx`
+  - `data/data.test.ts`
+  - `data/legalAidCenters.ts`
+  - `data/regulations.ts`
+  - `data/types.ts`
+  - `tools/validate_data.py`
+- 本轮 Codex 明确修改的是 `app/news/page.tsx` 的新闻分类按钮样式，以及本交接记录。不要默认回滚其它脏文件，它们可能是用户或前序模型的工作。
+
+### 本轮完成
+
+- 用户指出 `/news` 顶部分类小框不好看。
+- 已最小改动 `app/news/page.tsx`：
+  - 分类链接从普通 `h-9 rounded-xl px-5` 改为真正的胶囊控件。
+  - 新样式为 `inline-flex h-10 min-w-[86px] items-center justify-center rounded-full px-4`。
+  - 当前选中项保留绿色主色，并加更明显但克制的投影。
+  - 未选中项增加轻量阴影和 hover 状态。
+- 没改筛选逻辑、URL 参数、文案、数据或其它页面。
+
+### 已验证
+
+- `pnpm.cmd --dir delivery-helper typecheck` 通过。
+- `pnpm.cmd --dir delivery-helper lint` 通过，但仍有一个既有 warning：
+  - `app/news/page.tsx:283` 使用 `<img>`，Next 建议换 `next/image`。
+  - 这不是本轮引入的问题，本轮未处理。
+- `pnpm.cmd --dir delivery-helper build` 已通过：
+  - 19/19 页面生成成功。
+  - 第一次 build 在 `Collecting page data` 阶段出现过一次 Windows worker 退出码 `3221226505`，复跑通过，判断为偶发 worker 崩溃，不是本轮样式改动导致。
+- 本地生产服务验证：
+  - 用 `next start -p 3017` 验证 `/news` 返回 200。
+  - CSS 资源 `/_next/static/chunks/2ud6-rmzhhzte.css` 返回 200。
+  - 截图确认按钮已变成统一胶囊形态，间距和文字居中正常。
+  - 验证截图和临时浏览器 profile 已清理。
+  - 已确认 3015/3017 没有残留监听服务。
+
+### 未完成/不要误报
+
+- `/chat` 线上真实交互还没有最终确认。
+- 已确认 `https://deliveryhelper.zeabur.app/chat` HTTP 200，标题为“权益问答 - 骑手权益助手”，HTML 中有 `加载中` 属于 JS hydrate 前状态。
+- 但浏览器插件和本机 Chrome headless 在该页面验证时不稳定，未完成三项结论：
+  - 是否能看到完整聊天界面。
+  - 是否能输入问题。
+  - 发送后是否能收到 AI 回复。
+- 新账号接手后，如继续查 `/chat`，最短路径是用真实浏览器打开线上页面人工测试；若失败，再查 `app/chat/ChatClient.tsx` 和 `app/api/chat/route.ts`。
 
 ## 项目位置
 

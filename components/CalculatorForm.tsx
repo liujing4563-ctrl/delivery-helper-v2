@@ -309,7 +309,6 @@ export default function CalculatorForm() {
               </h2>
               <p className="mt-1 text-sm text-[#667085]">以下为初步测算结果，仅供参考</p>
             </div>
-            <div className="h-24 w-24 rounded-2xl bg-[#dff4e8]" />
           </div>
           <div className="mt-5 text-[#0b7a3b]">
             <span className="text-2xl font-black">¥ </span>

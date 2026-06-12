@@ -7,6 +7,7 @@ import NativeBridge from '@/components/NativeBridge';
 import OfflineDataNotice from '@/components/OfflineDataNotice';
 import ServiceWorkerRegistrar from '@/components/ServiceWorkerRegistrar';
 import InstallPrompt from '@/components/InstallPrompt';
+import FeedbackButton from '@/components/FeedbackButton';
 import { SITE_URL } from '@/lib/site';
 import './globals.css';
 
@@ -15,7 +16,7 @@ const jsonLd = {
   '@type': 'Organization',
   name: '骑手权益助手',
   url: SITE_URL,
-  description: '面向外卖骑手的工时薪资测算、法规查询、法援导航和AI权益信息问答平台',
+  description: '面向外卖骑手的工时薪资测算、证据清单、法规查询和法援导航工具',
   contactPoint: {
     '@type': 'ContactPoint',
     telephone: '+86-12348',
@@ -109,7 +110,7 @@ export const metadata: Metadata = {
     default: '骑手权益助手',
     template: '%s - 骑手权益助手',
   },
-  description: '面向外卖骑手的工时薪资测算、法规查询、法援导航和 AI 权益信息问答平台，帮助骑手了解自己的劳动权益。',
+  description: '面向外卖骑手的工时薪资测算、证据清单、法规查询和法援导航工具，帮助骑手把流水与情况整理成可咨询、可申请法援的材料。',
   keywords: ['外卖骑手', '劳动权益', '工资计算', '法律援助', '最低工资', '骑手保障', '职业伤害保障', '在线调解', '劳动纠纷', '超龄劳动者', '灵活就业社保', '户籍限制取消'],
   manifest: '/manifest.json',
   appleWebApp: {
@@ -119,7 +120,7 @@ export const metadata: Metadata = {
   },
   openGraph: {
     title: '骑手权益助手',
-    description: '面向外卖骑手的工时薪资测算、法规查询、法援导航和 AI 权益信息问答平台',
+    description: '面向外卖骑手的工时薪资测算、证据清单、法规查询和法援导航工具',
     type: 'website',
     locale: 'zh_CN',
   },
@@ -180,6 +181,7 @@ export default function RootLayout({
           <p className="mt-2">信息仅供参考，不构成法律意见</p>
         </footer>
         <BottomNav />
+        <FeedbackButton />
         <ServiceWorkerRegistrar />
         <InstallPrompt />
       </body>

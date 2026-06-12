@@ -4,7 +4,10 @@ import { useMemo, useState } from 'react';
 import { regulations } from '@/data/regulations';
 import type { Regulation } from '@/data/types';
 
-const categories: (Regulation['category'] | '全部类别')[] = [
+type CategoryFilter = Regulation['category'] | '全部类别';
+type DocumentTypeFilter = Regulation['documentType'];
+
+const categories: CategoryFilter[] = [
   '全部类别',
   '劳动报酬',
   '劳动关系',
@@ -14,7 +17,7 @@ const categories: (Regulation['category'] | '全部类别')[] = [
   '平台规则',
 ];
 
-const levelFilters = [
+const documentTypeFilters: DocumentTypeFilter[] = [
   '国家法律',
   '行政法规',
   '部门规章',
@@ -81,26 +84,6 @@ const interpretations: {
   },
 ];
 
-// 将发布层级映射到 issuer 关键字
-function matchLevel(reg: Regulation, level: string): boolean {
-  const issuer = reg.issuer;
-  switch (level) {
-    case '国家法律':
-      return issuer.includes('全国人民代表大会');
-    case '行政法规':
-      return issuer.includes('国务院');
-    case '部门规章':
-      return issuer.includes('人力资源社会保障部') || issuer.includes('全国总工会') || issuer.includes('市场监管');
-    case '地方性法规':
-      return false; // 当前数据无地方性法规
-    case '政策文件':
-      // 不属于以上任何层级的归入政策文件
-      return !issuer.includes('全国人民代表大会') && !issuer.includes('国务院') && !issuer.includes('人力资源社会保障部') && !issuer.includes('全国总工会') && !issuer.includes('市场监管');
-    default:
-      return true;
-  }
-}
-
 // 将适用场景映射到 category + tags
 function matchScene(reg: Regulation, scene: string): boolean {
   const text = `${reg.category} ${reg.tags.join(' ')} ${reg.title} ${reg.summary}`;
@@ -122,18 +105,42 @@ function matchScene(reg: Regulation, scene: string): boolean {
   }
 }
 
-function countByLevel(level: string): number {
-  return regulations.filter((reg) => matchLevel(reg, level)).length;
-}
+function filterRegulations({
+  category,
+  documentTypes,
+  scenes,
+  keyword,
+}: {
+  category: CategoryFilter;
+  documentTypes: Set<DocumentTypeFilter>;
+  scenes: Set<string>;
+  keyword: string;
+}) {
+  let result = category === '全部类别'
+    ? regulations
+    : regulations.filter((reg) => reg.category === category);
 
-function countByScene(scene: string): number {
-  return regulations.filter((reg) => matchScene(reg, scene)).length;
-}
+  if (documentTypes.size > 0) {
+    result = result.filter((reg) => documentTypes.has(reg.documentType));
+  }
 
-function countByCategory(category: Regulation['category'] | '全部类别'): number {
-  return category === '全部类别'
-    ? regulations.length
-    : regulations.filter((reg) => reg.category === category).length;
+  if (scenes.size > 0) {
+    result = result.filter((reg) =>
+      [...scenes].some((scene) => matchScene(reg, scene))
+    );
+  }
+
+  if (keyword.trim()) {
+    const kw = keyword.trim().toLowerCase();
+    result = result.filter(
+      (reg) =>
+        reg.title.toLowerCase().includes(kw) ||
+        reg.summary.toLowerCase().includes(kw) ||
+        reg.tags.some((tag) => tag.toLowerCase().includes(kw))
+    );
+  }
+
+  return result;
 }
 
 function SearchIcon() {
@@ -167,18 +174,28 @@ function SideCheckbox({
   label,
   count,
   checked,
+  disabled,
   onClick,
 }: {
   label: string;
   count: number;
   checked?: boolean;
+  disabled?: boolean;
   onClick?: () => void;
 }) {
   return (
     <button
       type="button"
+      aria-pressed={checked}
+      disabled={disabled}
       onClick={onClick}
-      className={`flex h-9 w-full items-center justify-between rounded-lg px-3 text-sm transition-colors ${checked ? 'bg-[#e8f6ee] font-bold text-[#0b7a3b]' : 'text-[#344054] hover:bg-gray-50'}`}
+      className={`flex h-9 w-full items-center justify-between rounded-lg px-3 text-sm transition-colors ${
+        checked
+          ? 'bg-[#e8f6ee] font-bold text-[#0b7a3b]'
+          : disabled
+            ? 'cursor-not-allowed text-[#98a2b3] opacity-60'
+            : 'text-[#344054] hover:bg-gray-50'
+      }`}
     >
       <span className="flex items-center gap-2">
         <span className={`flex h-4 w-4 items-center justify-center rounded border ${checked ? 'border-[#0b7a3b] bg-[#0b7a3b] text-white' : 'border-[#cfd8cf]'}`}>
@@ -203,6 +220,7 @@ function Pill({
   return (
     <button
       type="button"
+      aria-pressed={active}
       onClick={onClick}
       className={`h-10 rounded-lg border px-4 text-sm font-bold ${
         active ? 'border-[#0b7a3b] bg-[#0b7a3b] text-white' : 'border-[#eadfce] bg-white text-[#344054]'
@@ -214,26 +232,30 @@ function Pill({
 }
 
 export default function RegulationsClient() {
-  const [selectedCategory, setSelectedCategory] = useState<Regulation['category'] | '全部类别'>('全部类别');
-  const [selectedLevels, setSelectedLevels] = useState<Set<string>>(new Set());
+  const [selectedCategory, setSelectedCategory] = useState<CategoryFilter>('全部类别');
+  const [selectedDocumentTypes, setSelectedDocumentTypes] = useState<Set<DocumentTypeFilter>>(new Set());
   const [selectedScenes, setSelectedScenes] = useState<Set<string>>(new Set());
   const [keyword, setKeyword] = useState('');
   const [expanded, setExpanded] = useState(false);
+  const [showAllResults, setShowAllResults] = useState(false);
   const [showAllPopular, setShowAllPopular] = useState(false);
   const [showAllInterpretations, setShowAllInterpretations] = useState(false);
   const [sortOrder, setSortOrder] = useState<'latest' | 'oldest'>('latest');
 
   function focusRegulations(nextKeyword: string, nextCategory: Regulation['category']) {
     setSelectedCategory(nextCategory);
+    setSelectedDocumentTypes(new Set());
+    setSelectedScenes(new Set());
     setKeyword(nextKeyword);
+    setShowAllResults(false);
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 
-  function toggleLevel(level: string) {
-    setSelectedLevels((prev) => {
+  function toggleDocumentType(documentType: DocumentTypeFilter) {
+    setSelectedDocumentTypes((prev) => {
       const next = new Set(prev);
-      if (next.has(level)) next.delete(level);
-      else next.add(level);
+      if (next.has(documentType)) next.delete(documentType);
+      else next.add(documentType);
       return next;
     });
   }
@@ -249,46 +271,67 @@ export default function RegulationsClient() {
 
   function clearAll() {
     setSelectedCategory('全部类别');
-    setSelectedLevels(new Set());
+    setSelectedDocumentTypes(new Set());
     setSelectedScenes(new Set());
     setKeyword('');
+    setShowAllResults(false);
   }
 
   const filtered = useMemo(() => {
-    let result = selectedCategory === '全部类别'
-      ? regulations
-      : regulations.filter((reg) => reg.category === selectedCategory);
-
-    if (selectedLevels.size > 0) {
-      result = result.filter((reg) =>
-        [...selectedLevels].some((level) => matchLevel(reg, level))
-      );
-    }
-
-    if (selectedScenes.size > 0) {
-      result = result.filter((reg) =>
-        [...selectedScenes].some((scene) => matchScene(reg, scene))
-      );
-    }
-
-    if (keyword.trim()) {
-      const kw = keyword.trim().toLowerCase();
-      result = result.filter(
-        (reg) =>
-          reg.title.toLowerCase().includes(kw) ||
-          reg.summary.toLowerCase().includes(kw) ||
-          reg.tags.some((tag) => tag.toLowerCase().includes(kw))
-      );
-    }
+    const result = filterRegulations({
+      category: selectedCategory,
+      documentTypes: selectedDocumentTypes,
+      scenes: selectedScenes,
+      keyword,
+    });
 
     return [...result].sort((a, b) => {
       const aTime = new Date(a.publishDate).getTime();
       const bTime = new Date(b.publishDate).getTime();
       return sortOrder === 'latest' ? bTime - aTime : aTime - bTime;
     });
-  }, [selectedCategory, selectedLevels, selectedScenes, keyword, sortOrder]);
+  }, [selectedCategory, selectedDocumentTypes, selectedScenes, keyword, sortOrder]);
 
-  const shown = filtered.slice(0, 4);
+  function countForCategory(category: CategoryFilter) {
+    return filterRegulations({
+      category,
+      documentTypes: selectedDocumentTypes,
+      scenes: selectedScenes,
+      keyword,
+    }).length;
+  }
+
+  function countForDocumentType(documentType: DocumentTypeFilter) {
+    return filterRegulations({
+      category: selectedCategory,
+      documentTypes: new Set([documentType]),
+      scenes: selectedScenes,
+      keyword,
+    }).length;
+  }
+
+  function countForScene(scene: string) {
+    return filterRegulations({
+      category: selectedCategory,
+      documentTypes: selectedDocumentTypes,
+      scenes: new Set([scene]),
+      keyword,
+    }).length;
+  }
+
+  const availableDocumentTypes = documentTypeFilters.filter((documentType) =>
+    regulations.some((reg) => reg.documentType === documentType)
+  );
+  const visibleSceneFilters = (expanded ? sceneFilters : sceneFilters.slice(0, 3)).filter((scene) =>
+    selectedScenes.has(scene) || countForScene(scene) > 0
+  );
+  const visibleCategories = categories.filter((category) =>
+    selectedCategory === category || countForCategory(category) > 0
+  );
+  const visibleDocumentTypes = availableDocumentTypes.filter((documentType) =>
+    selectedDocumentTypes.has(documentType) || countForDocumentType(documentType) > 0
+  );
+  const shown = showAllResults ? filtered : filtered.slice(0, 4);
   const visibleInterpretations = showAllInterpretations ? interpretations : interpretations.slice(0, 4);
   const [featuredInterpretation, ...secondaryInterpretations] = visibleInterpretations;
 
@@ -315,49 +358,23 @@ export default function RegulationsClient() {
             </div>
           </div>
 
-          <FilterGroup title="法规类别">
-            {categories.map((category) => (
-              <button
-                key={category}
-                type="button"
-                onClick={() => setSelectedCategory(category)}
-                className={`flex h-9 w-full items-center justify-between rounded-lg px-3 text-sm ${
-                  selectedCategory === category ? 'bg-[#e8f6ee] font-bold text-[#0b7a3b]' : 'text-[#344054]'
-                }`}
-              >
-                <span className="flex items-center gap-2">
-                  <span className={`flex h-4 w-4 items-center justify-center rounded border ${selectedCategory === category ? 'border-[#0b7a3b] bg-[#0b7a3b] text-white' : 'border-[#cfd8cf]'}`}>
-                    {selectedCategory === category ? '✓' : ''}
-                  </span>
-                  {category}
-                </span>
-                <span className="text-[#667085]">{countByCategory(category)}</span>
-              </button>
-            ))}
-          </FilterGroup>
-
-          <FilterGroup title="发布层级">
-            {levelFilters.map((label) => (
-              <SideCheckbox
-                key={label}
-                label={label}
-                count={countByLevel(label)}
-                checked={selectedLevels.has(label)}
-                onClick={() => toggleLevel(label)}
-              />
-            ))}
-          </FilterGroup>
-
           <FilterGroup title="适用场景">
-            {(expanded ? sceneFilters : sceneFilters.slice(0, 3)).map((label) => (
-              <SideCheckbox
-                key={label}
-                label={label}
-                count={countByScene(label)}
-                checked={selectedScenes.has(label)}
-                onClick={() => toggleScene(label)}
-              />
-            ))}
+            {visibleSceneFilters.map((label) => {
+              const count = countForScene(label);
+              return (
+                <SideCheckbox
+                  key={label}
+                  label={label}
+                  count={count}
+                  checked={selectedScenes.has(label)}
+                  disabled={count === 0 && !selectedScenes.has(label)}
+                  onClick={() => {
+                    toggleScene(label);
+                    setShowAllResults(false);
+                  }}
+                />
+              );
+            })}
             <button
               type="button"
               onClick={() => setExpanded(!expanded)}
@@ -365,6 +382,57 @@ export default function RegulationsClient() {
             >
               {expanded ? '收起 ‹' : '展开更多 ›'}
             </button>
+          </FilterGroup>
+
+          <div aria-label="法规分类">
+            <FilterGroup title="权益主题">
+              {visibleCategories.map((category) => (
+                <button
+                  key={category}
+                  type="button"
+                  aria-pressed={selectedCategory === category}
+                  disabled={countForCategory(category) === 0 && selectedCategory !== category}
+                  onClick={() => {
+                    setSelectedCategory(category);
+                    setShowAllResults(false);
+                  }}
+                  className={`flex h-9 w-full items-center justify-between rounded-lg px-3 text-sm ${
+                    selectedCategory === category
+                      ? 'bg-[#e8f6ee] font-bold text-[#0b7a3b]'
+                      : countForCategory(category) === 0
+                        ? 'cursor-not-allowed text-[#98a2b3] opacity-60'
+                        : 'text-[#344054]'
+                  }`}
+                >
+                  <span className="flex items-center gap-2">
+                    <span className={`flex h-4 w-4 items-center justify-center rounded border ${selectedCategory === category ? 'border-[#0b7a3b] bg-[#0b7a3b] text-white' : 'border-[#cfd8cf]'}`}>
+                      {selectedCategory === category ? '✓' : ''}
+                    </span>
+                    {category}
+                  </span>
+                  <span className="text-[#667085]">{countForCategory(category)}</span>
+                </button>
+              ))}
+            </FilterGroup>
+          </div>
+
+          <FilterGroup title="文件类型">
+            {visibleDocumentTypes.map((label) => {
+              const count = countForDocumentType(label);
+              return (
+                <SideCheckbox
+                  key={label}
+                  label={label}
+                  count={count}
+                  checked={selectedDocumentTypes.has(label)}
+                  disabled={count === 0 && !selectedDocumentTypes.has(label)}
+                  onClick={() => {
+                    toggleDocumentType(label);
+                    setShowAllResults(false);
+                  }}
+                />
+              );
+            })}
           </FilterGroup>
         </aside>
 
@@ -390,9 +458,24 @@ export default function RegulationsClient() {
           <div className="mt-6">
             <h2 className="text-base font-bold text-[#111827]">按主题浏览</h2>
             <div className="mt-4 flex flex-wrap gap-3">
-              <Pill active={selectedCategory === '全部类别'} onClick={() => setSelectedCategory('全部类别')}>全部</Pill>
+              <Pill
+                active={selectedCategory === '全部类别'}
+                onClick={() => {
+                  setSelectedCategory('全部类别');
+                  setShowAllResults(false);
+                }}
+              >
+                全部
+              </Pill>
               {categories.slice(1).map((category) => (
-                <Pill key={category} active={selectedCategory === category} onClick={() => setSelectedCategory(category)}>
+                <Pill
+                  key={category}
+                  active={selectedCategory === category}
+                  onClick={() => {
+                    setSelectedCategory(category);
+                    setShowAllResults(false);
+                  }}
+                >
                   {category}
                 </Pill>
               ))}
@@ -414,11 +497,11 @@ export default function RegulationsClient() {
               </span>
             </div>
             <div className="divide-y divide-[#eadfce]">
-              {shown.map((reg, index) => (
+              {shown.map((reg) => (
                 <article key={reg.id} className="grid gap-6 px-5 py-5 md:grid-cols-[84px_minmax(0,1fr)_190px]">
                   <div className="flex h-24 w-20 flex-col items-center justify-center rounded-xl bg-[#e8f6ee] text-[#0b7a3b]">
                     <DocIcon />
-                    <span className="mt-2 text-xs font-bold">{index % 3 === 0 ? '政策文件' : '部门规章'}</span>
+                    <span className="mt-2 px-1 text-center text-xs font-bold leading-tight">{reg.documentType}</span>
                   </div>
                   <div className="min-w-0">
                     <h2 className="line-clamp-2 text-lg font-black leading-snug text-[#111827]">{reg.title}</h2>
@@ -453,6 +536,17 @@ export default function RegulationsClient() {
                 </article>
               ))}
             </div>
+            {filtered.length > 4 && (
+              <div className="border-t border-[#eadfce] px-5 py-4">
+                <button
+                  type="button"
+                  onClick={() => setShowAllResults((current) => !current)}
+                  className="h-10 w-full rounded-lg border border-[#eadfce] text-sm font-bold text-[#0b7a3b] hover:bg-[#f7faf7]"
+                >
+                  {showAllResults ? '收起部分结果 ‹' : `查看全部 ${filtered.length} 条结果 ›`}
+                </button>
+              </div>
+            )}
           </section>
         </main>
 

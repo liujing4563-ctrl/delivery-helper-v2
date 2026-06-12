@@ -132,7 +132,7 @@ export default function EvidenceClient() {
     <div className="px-4 pt-6 pb-4">
       <h1 className="text-xl font-bold text-gray-900">证据收集清单</h1>
       <p className="mt-1 text-sm text-gray-500">
-        维权第一步：把证据准备好
+        维权第一步：把证据准备好。这里不上传文件，只记录哪些材料已准备好。
       </p>
       {problem && (
         <p className="mt-1 hidden print:block text-sm text-gray-700">
@@ -164,7 +164,7 @@ export default function EvidenceClient() {
       {!problem && (
         <div className="mt-6 rounded-xl border border-[#047A43]/30 bg-[#EAF7EF] p-4 text-center">
           <p className="text-sm text-[#06643A]">
-            先选择你的问题类型，系统会生成对应的证据清单
+            先选择你的问题类型，系统会列出对应的证据清单
           </p>
         </div>
       )}
@@ -174,7 +174,7 @@ export default function EvidenceClient() {
           {/* 进度条 */}
           <div className="mt-4 no-print">
             <div className="flex items-center justify-between text-sm">
-              <span className="font-medium text-gray-700">收集进度</span>
+              <span className="font-medium text-gray-700">已勾选进度</span>
               <span className="text-gray-500">{checkedCount}/{totalCount} 项</span>
             </div>
             <div className="mt-1 h-2 rounded-full bg-gray-200">
@@ -184,6 +184,9 @@ export default function EvidenceClient() {
               />
             </div>
           </div>
+          <p className="mt-2 text-xs text-gray-500 no-print">
+            已经拍照、截图或保存到手机/电脑里的材料，就勾选前面的方框；“添加备注”可写存放位置、日期或说明。
+          </p>
 
           {/* 通用证据 */}
           <div className="mt-4">
@@ -328,7 +331,7 @@ function EvidenceCheckItem({
         onClick={() => setShowNote(!showNote)}
         className="mt-1.5 ml-6.5 text-xs text-[#047A43] hover:underline"
       >
-        {showNote ? '收起备注' : '添加备注'}
+        {showNote ? '收起备注' : '添加备注 / 存放位置'}
       </button>
       {showNote && (
         <input

@@ -72,7 +72,7 @@ function CalculatorIcon() {
 
 function HeroRider() {
   return (
-    <div className="relative hidden min-h-[330px] overflow-hidden rounded-r-[18px] bg-[#fffdf7] lg:block">
+    <div className="relative hidden min-h-[360px] overflow-hidden rounded-r-[18px] bg-[#fffdf7] lg:block">
       <Image
         src="/home/hero-rider.png"
         alt="外卖骑手查看手机"
@@ -87,19 +87,27 @@ function HeroRider() {
 }
 
 const problems = [
-  ['被扣钱了', '订单、罚款、保证金等被扣，想要问公道', 'orange', 'money'],
-  ['送餐受伤', '配送途中受伤，想要保障治疗和赔偿', 'blue', 'bandage'],
-  ['没签劳动合同', '没有合同，担心权益得不到保障', 'green', 'contract'],
-  ['被封号了', '账号被封禁，想了解原因并申诉解封', 'orange', 'lock'],
-  ['工资太低', '实际收入与平台说明不符，想重算收入', 'orange', 'yen'],
-  ['申请法援', '经济困难，申请法律援助帮助', 'purple', 'people'],
+  ['被扣钱了', '订单、罚款、保证金等被扣，想要问公道', '/evidence', 'orange', 'money'],
+  ['送餐受伤', '配送途中受伤，想要保障治疗和赔偿', '/injury-insurance', 'blue', 'bandage'],
+  ['没签劳动合同', '没有合同，担心权益得不到保障', '/regulations', 'green', 'contract'],
+  ['被封号了', '账号被封禁，想了解原因并申诉解封', '/guide', 'orange', 'lock'],
+  ['工资太低', '实际收入与平台说明不符，想重算收入', '/calculator', 'orange', 'yen'],
+  ['申请法援', '经济困难，申请法律援助帮助', '/legal-aid', 'purple', 'people'],
 ] as const;
 
 const tools = [
   ['算实际时薪', '计算每小时真实收入，看清自己的劳动价值', '/calculator', '立即测算', 'green', 'yen'],
-  ['整理证据', '拍照上传，按时间线归拢证据材料', '/evidence', '去整理', 'green', 'folder'],
-  ['找法援机构', '查找就近的法律援助机构，获取专业帮助', '/legal-aid', '去查找', 'orange', 'building'],
-  ['查法规依据', '快速查找相关法律法规，了解你的权利', '/regulations', '去查询', 'blue', 'book'],
+  ['整理证据', '勾选已准备材料，记录存放位置和说明', '/evidence', '去整理', 'green', 'folder'],
+  ['找法援机构', '查找就近法律援助机构，获取专业帮助', '/legal-aid', '去查找', 'orange', 'building'],
+  ['查法规依据', '查看官方原文、核验日期和适用场景', '/regulations', '去查询', 'blue', 'book'],
+] as const;
+
+const trustItems = [
+  ['为什么不用直接问 AI?', '人工核验信息，减少误导', 'privacy'],
+  ['官方来源可查', '引用法规和权威渠道', 'link'],
+  ['能变成材料', '账本、证据清单可复制打印', 'folder'],
+  ['本地处理', '核心输入默认不上传', 'lock'],
+  ['适合骑手实际问题', '聚焦扣款、工伤和法援场景', 'scooter'],
 ] as const;
 
 export default async function Home() {
@@ -111,20 +119,20 @@ export default async function Home() {
 
   return (
     <div className="pb-6 md:pb-10">
-      <section className="overflow-hidden rounded-b-[18px] border border-t-0 border-[#eadfce] bg-white md:-mx-12 md:min-h-[330px] 2xl:-mx-[76px]">
+      <section className="mx-4 mt-3 overflow-hidden rounded-[18px] border border-[#eadfce] bg-white md:-mx-12 md:mt-0 md:min-h-[360px] md:rounded-b-[18px] md:rounded-t-none md:border-t-0 2xl:-mx-[76px]">
         <div className="grid md:grid-cols-[46%_54%]">
-          <div className="px-5 py-8 md:px-32 md:py-11">
-            <h1 className="max-w-xl text-4xl font-black leading-[1.06] text-[#0b301b] md:text-[56px]">
+          <div className="px-5 py-8 md:px-12 md:py-12 xl:px-16 2xl:px-20">
+            <h1 className="max-w-[560px] text-4xl font-black leading-[1.06] text-[#0b301b] md:text-[56px]">
               先算清收入，<br />
               再决定怎么维权
             </h1>
             <p className="mt-5 max-w-md text-lg leading-8 text-[#344054]">
               帮助你测算真实时薪、整理证据，并找到合适的法律援助渠道。
             </p>
-            <div className="mt-7 flex flex-wrap gap-9">
+            <div className="mt-7 flex flex-col gap-4 sm:flex-row sm:flex-wrap 2xl:gap-6">
               <Link
                 href="/calculator"
-                className="inline-flex h-[72px] min-w-[270px] items-center justify-center gap-4 rounded-2xl bg-[#0b7a3b] px-8 text-xl font-bold text-white shadow-lg shadow-[#0b7a3b]/20"
+                className="inline-flex h-[72px] w-full items-center justify-center gap-4 rounded-2xl bg-[#0b7a3b] px-6 text-xl font-bold text-white shadow-lg shadow-[#0b7a3b]/20 sm:w-auto sm:min-w-[215px] 2xl:min-w-[250px] 2xl:px-8"
               >
                 <CalculatorIcon />
                 <span>
@@ -134,7 +142,7 @@ export default async function Home() {
               </Link>
               <a
                 href="tel:12348"
-                className="inline-flex h-[72px] min-w-[270px] items-center justify-center gap-4 rounded-2xl border border-[#0b7a3b] bg-white px-8 text-xl font-bold text-[#0b7a3b]"
+                className="inline-flex h-[72px] w-full items-center justify-center gap-4 rounded-2xl border border-[#0b7a3b] bg-white px-6 text-xl font-bold text-[#0b7a3b] sm:w-auto sm:min-w-[215px] 2xl:min-w-[250px] 2xl:px-8"
               >
                 <svg className="h-7 w-7" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}>
                   <path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1 1 .4 1.9.7 2.8a2 2 0 0 1-.5 2.1L8.1 9.9a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.5c.9.3 1.8.6 2.8.7A2 2 0 0 1 22 16.9z" />
@@ -150,17 +158,11 @@ export default async function Home() {
         </div>
       </section>
 
-      <section className="mx-auto mt-5 grid max-w-[1344px] gap-5 rounded-2xl border border-[#dfe8df] bg-white px-6 py-5 md:grid-cols-[1.2fr_1fr_1fr_1fr_1fr]">
-        {[
-          ['为什么不用直接问通用 AI?', '专业团队人工核验信息', 'privacy'],
-          ['官方来源可查', '引用法律法规与权威渠道', 'link'],
-          ['人工核验信息', '减少误导与错漏', 'user'],
-          ['本地处理 · 默认不保存', '数据仅在本地处理', 'lock'],
-          ['适合骑手实际问题', '聚焦骑手高频权益场景', 'scooter'],
-        ].map(([title, desc, icon]) => (
+      <section className="mx-4 mt-5 grid gap-5 rounded-2xl border border-[#dfe8df] bg-white px-5 py-5 md:-mx-12 md:grid-cols-[1.25fr_1fr_1fr_1fr_1fr] md:px-6 2xl:-mx-[76px]">
+        {trustItems.map(([title, desc, icon], index) => (
           <div key={title} className="flex items-center gap-4">
-            <Icon>
-              <GlyphIcon name={icon as GlyphName} className="h-6 w-6" />
+            <Icon tone={index === 0 ? 'green' : index === 2 ? 'orange' : index === 4 ? 'blue' : 'green'}>
+              <GlyphIcon name={icon} className="h-6 w-6" />
             </Icon>
             <div>
               <h2 className="text-base font-bold text-[#111827]">{title}</h2>
@@ -170,11 +172,11 @@ export default async function Home() {
         ))}
       </section>
 
-      <section className="mx-auto mt-5 max-w-[1344px]">
+      <section className="mx-4 mt-5 md:-mx-12 2xl:-mx-[76px]">
         <h2 className="text-2xl font-bold text-[#111827]">你现在遇到什么？</h2>
         <div className="mt-4 grid gap-4 md:grid-cols-3 xl:grid-cols-6">
-          {problems.map(([title, desc, tone, icon]) => (
-            <Link key={title} href={title === '工资太低' ? '/calculator' : title === '申请法援' ? '/legal-aid' : '/chat'} className="flex min-h-[96px] items-center gap-4 rounded-2xl border border-[#eadfce] bg-white px-4 transition hover:border-[#0b7a3b]">
+          {problems.map(([title, desc, href, tone, icon]) => (
+            <Link key={title} href={href} className="flex min-h-[112px] items-center gap-4 rounded-2xl border border-[#eadfce] bg-white px-4 transition hover:border-[#0b7a3b]">
               <Icon tone={tone}>
                 <GlyphIcon name={icon} className="h-7 w-7" />
               </Icon>
@@ -187,7 +189,7 @@ export default async function Home() {
         </div>
       </section>
 
-      <section className="mx-auto mt-5 max-w-[1344px]">
+      <section className="mx-4 mt-5 md:-mx-12 2xl:-mx-[76px]">
         <h2 className="text-2xl font-bold text-[#111827]">常用工具</h2>
         <div className="mt-4 grid gap-5 md:grid-cols-4">
           {tools.map(([title, desc, href, action, tone, icon]) => (
@@ -205,18 +207,31 @@ export default async function Home() {
         </div>
       </section>
 
-      <section className="mx-auto mt-5 grid max-w-[1344px] gap-5 md:grid-cols-[1fr_1fr_1.2fr]">
+      <section className="mx-4 mt-5 grid gap-5 md:-mx-12 md:grid-cols-[1fr_1fr_1.2fr] 2xl:-mx-[76px]">
         <div className="rounded-2xl border border-[#eadfce] bg-white p-5">
           <div className="flex items-center justify-between">
-            <h2 className="text-lg font-bold text-[#111827]">最新资讯</h2>
+            <h2 className="text-lg font-bold text-[#111827]">新闻资讯</h2>
             <Link href="/news" className="text-sm font-semibold text-[#0b7a3b]">更多 ›</Link>
           </div>
-          <div className="mt-4 space-y-3">
-            {newsItems.slice(0, 4).map((item) => (
-              <Link key={item.id} href="/news" className="flex items-center justify-between gap-4 text-sm">
-                <span className="min-w-0 truncate text-[#344054]">{item.title}</span>
-                <span className="shrink-0 text-[#667085]">{item.date.slice(5)}</span>
-              </Link>
+          <div className="mt-4 space-y-4">
+            {newsItems.slice(0, 3).map((item) => (
+              <div key={item.id} className="text-sm">
+                <Link href="/news" className="block font-semibold leading-6 text-[#344054] hover:text-[#0b7a3b]">
+                  {item.title}
+                </Link>
+                <div className="mt-1 flex flex-wrap gap-x-3 gap-y-1 text-xs text-[#667085]">
+                  <span>{item.date}</span>
+                  <span>核验：{item.lastVerified}</span>
+                  <a
+                    href={item.sourceUrl}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="font-semibold text-[#0b7a3b] underline underline-offset-2"
+                  >
+                    来源：{item.source}
+                  </a>
+                </div>
+              </div>
             ))}
           </div>
         </div>
@@ -226,15 +241,27 @@ export default async function Home() {
             <h2 className="text-lg font-bold text-[#111827]">各地最低工资参考（小时）</h2>
             <Link href="/calculator" className="text-sm font-semibold text-[#0b7a3b]">更多 ›</Link>
           </div>
-          <div className="mt-4 grid grid-cols-2 gap-x-8 gap-y-3">
+          <div className="mt-4 grid grid-cols-1 gap-3 sm:grid-cols-2">
             {wageRows.map((item) => item && (
-              <div key={item.city} className="flex justify-between text-sm">
-                <span className="text-[#344054]">{item.city}</span>
-                <span className="font-bold text-[#0b7a3b]">{item.hourly.toFixed(1)} 元/小时</span>
+              <div key={item.city} className="rounded-xl border border-[#edf1ea] bg-[#fffdf7] p-3 text-sm">
+                <div className="flex justify-between gap-3">
+                  <span className="text-[#344054]">{item.city}</span>
+                  <span className="font-bold text-[#0b7a3b]">{item.hourly.toFixed(1)} 元/小时</span>
+                </div>
+                <p className="mt-1 text-xs leading-5 text-[#667085]">
+                  核验：{item.lastVerified} ·{' '}
+                  <a
+                    href={item.sourceUrl}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="font-semibold text-[#0b7a3b] underline underline-offset-2"
+                  >
+                    {item.sourceName}
+                  </a>
+                </p>
               </div>
             ))}
           </div>
-          <p className="mt-4 text-xs text-[#98a2b3]">数据来源：各地人社局公示标准</p>
         </div>
 
         <div className="rounded-2xl border border-[#fed7aa] bg-[#fff7ed] p-5">
@@ -248,11 +275,11 @@ export default async function Home() {
         </div>
       </section>
 
-      <section className="mx-auto mt-5 grid max-w-[1344px] gap-5 rounded-2xl border border-[#eadfce] bg-white px-8 py-5 md:grid-cols-4">
+      <section className="mx-4 mt-5 grid gap-5 rounded-2xl border border-[#eadfce] bg-white px-5 py-5 md:-mx-12 md:grid-cols-4 md:px-8 2xl:-mx-[76px]">
         {[
           ['信息人工核实', '专业团队人工核验信息'],
-          ['不强制注册', '部分功能可匿名使用'],
-          ['默认本地处理', '数据仅在本地处理，不上传'],
+          ['不强制注册', '核心工具可匿名使用'],
+          ['默认本地处理', '数据只在本地处理，不上传'],
           ['隐私保护', '严格保护用户隐私安全'],
         ].map(([title, desc]) => (
           <div key={title} className="flex items-center gap-4">

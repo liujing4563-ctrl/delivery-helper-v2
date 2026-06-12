@@ -5,11 +5,12 @@ import { usePathname } from 'next/navigation';
 
 const navItems = [
   { label: '首页', href: '/' },
-  { label: '薪资测算', href: '/calculator' },
-  { label: '权益问答', href: '/chat' },
+  { label: '权益账本', href: '/calculator' },
   { label: '法援目录', href: '/legal-aid' },
   { label: '法规库', href: '/regulations' },
-  { label: '新闻资讯', href: '/news' },
+  { label: '证据清单', href: '/evidence' },
+  { label: 'AI 辅助', href: '/chat' },
+  { label: '权益动态', href: '/news' },
 ] as const;
 
 function ShieldLogo() {
@@ -42,11 +43,11 @@ export default function DesktopNav() {
           <ShieldLogo />
           <span>
             <span className="block text-xl font-bold leading-tight text-[#111827]">骑手权益助手</span>
-            <span className="mt-1 block text-xs text-[#667085]">人工核验 · 官方来源 · 默认不保存</span>
+            <span className="mt-1 block text-xs text-[#667085]">核验数据 · 维权材料 · 默认不保存</span>
           </span>
         </Link>
 
-        <nav className="flex min-w-0 flex-1 items-center justify-center gap-8" aria-label="桌面主导航">
+        <nav className="flex min-w-0 flex-1 items-center justify-center gap-6" aria-label="桌面主导航">
           {navItems.map((item) => {
             const isActive = item.href === '/' ? pathname === '/' : pathname.startsWith(item.href);
             return (
@@ -73,7 +74,7 @@ export default function DesktopNav() {
               name="q"
               type="search"
               placeholder="搜索问题、法规或关键词"
-              className="h-11 w-72 rounded-xl border border-[#d8dee8] bg-white pl-4 pr-11 text-sm outline-none transition focus:border-[#0b7a3b] focus:ring-2 focus:ring-[#dff4e8]"
+              className="h-11 w-64 rounded-xl border border-[#d8dee8] bg-white pl-4 pr-11 text-sm outline-none transition focus:border-[#0b7a3b] focus:ring-2 focus:ring-[#dff4e8]"
             />
             <button
               type="submit"
@@ -83,18 +84,12 @@ export default function DesktopNav() {
               <SearchIcon />
             </button>
           </form>
-          <button
-            type="button"
-            className="inline-flex h-11 items-center rounded-xl border border-[#0b7a3b] px-6 text-sm font-bold text-[#0b7a3b]"
+          <a
+            href="tel:12348"
+            className="inline-flex h-11 items-center rounded-xl bg-[#0b7a3b] px-5 text-sm font-bold text-white shadow-lg shadow-[#0b7a3b]/20"
           >
-            登录
-          </button>
-          <button
-            type="button"
-            className="inline-flex h-11 items-center rounded-xl bg-[#0b7a3b] px-6 text-sm font-bold text-white shadow-lg shadow-[#0b7a3b]/20"
-          >
-            注册
-          </button>
+            拨打 12348
+          </a>
         </div>
       </div>
     </header>

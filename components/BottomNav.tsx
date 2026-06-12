@@ -6,9 +6,9 @@ import { usePathname } from 'next/navigation';
 const navItems = [
   { label: '首页', href: '/', icon: 'home' },
   { label: '算薪', href: '/calculator', icon: 'calc' },
-  { label: '问答', href: '/chat', icon: 'chat' },
-  { label: '法规', href: '/regulations', icon: 'book' },
   { label: '法援', href: '/legal-aid', icon: 'phone' },
+  { label: '法规', href: '/regulations', icon: 'book' },
+  { label: '证据', href: '/evidence', icon: 'folder' },
 ] as const;
 
 function NavIcon({ icon }: { icon: (typeof navItems)[number]['icon'] }) {
@@ -27,10 +27,11 @@ function NavIcon({ icon }: { icon: (typeof navItems)[number]['icon'] }) {
       </svg>
     );
   }
-  if (icon === 'chat') {
+  if (icon === 'folder') {
     return (
       <svg className="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}>
-        <path d="M21 15a4 4 0 0 1-4 4H8l-5 3V7a4 4 0 0 1 4-4h10a4 4 0 0 1 4 4z" />
+        <path d="M3 7h6l2 2h10v9a3 3 0 0 1-3 3H6a3 3 0 0 1-3-3z" />
+        <path d="M7 13h10" strokeLinecap="round" />
       </svg>
     );
   }

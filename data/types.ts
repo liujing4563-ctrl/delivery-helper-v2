@@ -1,10 +1,18 @@
 // ===== 核心数据类型 =====
 
+export type RegulationDocumentType =
+  | '国家法律'
+  | '行政法规'
+  | '部门规章'
+  | '地方性法规'
+  | '政策文件';
+
 export interface Regulation {
   id: string;
   title: string;
   issuer: string;
   publishDate: string;
+  documentType: RegulationDocumentType;
   category: '劳动报酬' | '劳动关系' | '社会保险' | '工伤职业伤害' | '法律援助' | '平台规则';
   summary: string;
   officialUrl: string;

@@ -67,6 +67,13 @@ SEO_PUBLIC_ROUTES = [
     "/privacy",
 ]
 SEO_PRIVATE_ROUTES = ["/api/", "/offline"]
+REGULATION_DOCUMENT_TYPES = {
+    "国家法律",
+    "行政法规",
+    "部门规章",
+    "地方性法规",
+    "政策文件",
+}
 
 
 class Report:
@@ -194,12 +201,15 @@ def validate_regulations(report: Report) -> None:
         label = f"regulations[{item.get('id', 'unknown')}]"
         title = require_string(report, item, "title", label)
         require_string(report, item, "issuer", label)
+        document_type = require_string(report, item, "documentType", label)
         require_string(report, item, "category", label)
         require_string(report, item, "summary", label)
         official_url = require_string(report, item, "officialUrl", label)
         last_verified = require_string(report, item, "lastVerified", label)
         validate_date(report, last_verified, label, "lastVerified")
         validate_url(report, official_url, label, "officialUrl")
+        if document_type and document_type not in REGULATION_DOCUMENT_TYPES:
+            report.error(f"{label}: documentType 不在允许范围内")
         if len(str(item.get("summary", ""))) > 260:
             report.warn(f"{label}: 摘要较长，确认没有转载大段原文：{title}")
 

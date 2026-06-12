@@ -1,0 +1,108 @@
+name: Link Monitor
+
+on:
+  schedule:
+    # 每周一早上 9:00 (UTC+8) = UTC 01:00
+    - cron: '0 1 * * 1'
+  workflow_dispatch: # 支持手动触发
+
+permissions:
+  issues: write
+  contents: read
+
+jobs:
+  verify-links:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install dependencies
+        run: pip install requests
+
+      - name: Run link verification
+        id: verify
+        run: |
+          python tools/verify_links.py 2>&1 | tee tools/verify_output.txt
+          # 检查是否有 FAIL
+          if grep -q "\[FAIL\]" tools/verify_output.txt; then
+            echo "has_failures=true" >> $GITHUB_OUTPUT
+          else
+            echo "has_failures=false" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Upload report
+        uses: actions/upload-artifact@v4
+        with:
+          name: link-report
+          path: tools/link_report.csv
+
+      - name: Create issue for broken links
+        if: steps.verify.outputs.has_failures == 'true'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            const output = fs.readFileSync('tools/verify_output.txt', 'utf-8');
+
+            // 提取失败链接
+            const failLines = output.split('\n').filter(line =>
+              line.includes('[FAIL]') || (line.trim().startsWith('[') && line.includes('状态:'))
+            );
+
+            // 构建 issue body
+            const body = [
+              '## 🔗 链接监控报告',
+              '',
+              `**检测时间：** ${new Date().toISOString().slice(0, 10)}`,
+              `**触发方式：** 定时任务（每周一）`,
+              '',
+              '### 异常链接',
+              '',
+              '```',
+              failLines.join('\n'),
+              '```',
+              '',
+              '### 处理步骤',
+              '',
+              '1. 检查上述链接是否确实失效',
+              '2. 查找官方最新链接替换',
+              '3. 更新对应的 `data/*.ts` 文件',
+              '4. 运行 `python tools/verify_links.py` 确认修复',
+              '5. 提交 PR 并关闭此 Issue',
+              '',
+              '---',
+              '*此 Issue 由 GitHub Actions 自动创建*',
+            ].join('\n');
+
+            // 检查是否已有未关闭的同类 issue
+            const { data: existingIssues } = await github.rest.issues.listForRepo({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              state: 'open',
+              labels: 'link-monitor',
+            });
+
+            if (existingIssues.length > 0) {
+              // 在已有 issue 下添加评论
+              await github.rest.issues.createComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: existingIssues[0].number,
+                body: `## 🔄 本周复检结果\n\n\`\`\`\n${failLines.join('\n')}\n\`\`\``,
+              });
+              console.log(`Updated existing issue #${existingIssues[0].number}`);
+            } else {
+              // 创建新 issue
+              await github.rest.issues.create({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                title: `🔗 链接监控: 发现异常链接 (${new Date().toISOString().slice(0, 10)})`,
+                body: body,
+                labels: ['link-monitor'],
+              });
+              console.log('Created new issue');
+            }

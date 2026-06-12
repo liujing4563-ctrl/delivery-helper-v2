@@ -1,5 +1,3 @@
-'use cache';
-
 export default async function DisclaimerPage() {
   return (
     <div className="px-4 pt-6 pb-4">

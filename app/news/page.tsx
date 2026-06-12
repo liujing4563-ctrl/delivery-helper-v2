@@ -156,12 +156,11 @@ function externalLinkProps(href: string) {
   };
 }
 
-async function NewsPageContent({
-  searchParams,
+function NewsPageView({
+  params = {},
 }: {
-  searchParams?: Promise<SearchParams>;
+  params?: SearchParams;
 }) {
-  const params = (await searchParams) ?? {};
   const selectedCategory = parseCategory(firstParam(params.category));
   const keyword = firstParam(params.q).trim();
   const showAllSources = firstParam(params.sources) === 'all';
@@ -249,16 +248,16 @@ async function NewsPageContent({
               </form>
             </div>
 
-            <div className="mt-6 flex flex-wrap gap-3">
+            <div className="mt-6 flex flex-wrap items-center gap-2.5">
               {categories.map((category) => (
                 <a
                   key={category}
                   href={hrefFor({ category, page: 1 })}
                   aria-current={selectedCategory === category ? 'page' : undefined}
-                  className={`h-9 rounded-xl px-5 text-sm font-bold ${
+                  className={`inline-flex h-10 min-w-[86px] items-center justify-center rounded-full px-4 text-sm font-bold shadow-[0_1px_2px_rgba(15,23,42,0.04)] transition ${
                     selectedCategory === category
-                      ? 'bg-[#0b7a3b] text-white shadow-sm'
-                      : 'border border-[#eadfce] bg-white text-[#111827]'
+                      ? 'bg-[#0b7a3b] text-white shadow-[0_8px_18px_rgba(11,122,59,0.20)]'
+                      : 'border border-[#eadfce] bg-white text-[#111827] hover:border-[#0b7a3b] hover:bg-[#f5fbf7] hover:text-[#0b7a3b]'
                   }`}
                 >
                   {category}
@@ -443,11 +442,24 @@ async function NewsPageContent({
   );
 }
 
+async function NewsPageContent({
+  searchParams,
+}: {
+  searchParams?: Promise<SearchParams>;
+}) {
+  const params = (await searchParams) ?? {};
+  return <NewsPageView params={params} />;
+}
+
 export default function NewsPage({
   searchParams,
 }: {
   searchParams?: Promise<SearchParams>;
 }) {
+  if (process.env.BUILD_MODE === 'static') {
+    return <NewsPageView />;
+  }
+
   return (
     <Suspense fallback={<div className="py-12 text-center text-sm text-[#667085]">加载新闻资讯...</div>}>
       <NewsPageContent searchParams={searchParams} />

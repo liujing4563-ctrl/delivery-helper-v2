@@ -152,7 +152,7 @@ export default function CalculatorResultDisplay({ result, input }: Props) {
           <section className="rounded-2xl border border-[#dfe8df] bg-[#f7faf7] p-6">
             <p className="text-sm text-[#667085]">整理证据更有力</p>
             <h2 className="mt-2 text-2xl font-black text-[#111827]">整理证据清单</h2>
-            <p className="mt-2 text-sm leading-6 text-[#667085]">根据你的情况，生成个性化证据清单，一键下载保存。</p>
+            <p className="mt-2 text-sm leading-6 text-[#667085]">根据你的情况列出证据清单，勾选已准备材料，并可复制或打印保存。</p>
             <Link href="/evidence" className="mt-5 inline-flex h-11 items-center rounded-xl border border-[#0b7a3b] px-6 text-sm font-bold text-[#0b7a3b]">
               生成证据清单
             </Link>

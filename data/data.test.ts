@@ -17,6 +17,7 @@ describe('regulations', () => {
       expect(reg.title).toBeTruthy();
       expect(reg.issuer).toBeTruthy();
       expect(reg.publishDate).toMatch(/^\d{4}-\d{2}-\d{2}$/);
+      expect(reg.documentType).toBeTruthy();
       expect(reg.summary.length).toBeGreaterThan(20);
       expect(reg.tags.length).toBeGreaterThanOrEqual(1);
       expect(reg.lastVerified).toBeTruthy();
@@ -47,6 +48,19 @@ describe('regulations', () => {
     ];
     for (const reg of regulations) {
       expect(allowed).toContain(reg.category);
+    }
+  });
+
+  it('documentType在允许值范围内', () => {
+    const allowed = [
+      '国家法律',
+      '行政法规',
+      '部门规章',
+      '地方性法规',
+      '政策文件',
+    ];
+    for (const reg of regulations) {
+      expect(allowed).toContain(reg.documentType);
     }
   });
 });
