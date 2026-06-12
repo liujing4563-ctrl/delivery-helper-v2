@@ -1,5 +1,7 @@
 import type { Metadata } from 'next';
+import { Suspense } from 'react';
 import { newsItems } from '@/data/news';
+import type { NewsItem } from '@/data/types';
 
 export const metadata: Metadata = {
   title: '新闻资讯',
@@ -7,6 +9,15 @@ export const metadata: Metadata = {
 };
 
 const categories = ['全部', '政策法规', '行业动态', '权益保障', '社会关注', '典型案例'] as const;
+type NewsCategory = (typeof categories)[number];
+type SearchParams = Record<string, string | string[] | undefined>;
+type SourceEntry = {
+  label: string;
+  type: '官方' | '媒体';
+  href: string;
+};
+
+const PAGE_SIZE = 5;
 
 const covers = [
   '/news/mhrss-building.svg',
@@ -16,15 +27,15 @@ const covers = [
   '/news/shanghai-skyline.svg',
 ];
 
-const sourceList = [
-  ['人力资源和社会保障部官网', '官方'],
-  ['各地人社局官网', '官方'],
-  ['最高人民法院官网', '官方'],
-  ['中国新闻网', '媒体'],
-  ['法治日报', '媒体'],
+const sourceList: SourceEntry[] = [
+  { label: '人力资源和社会保障部官网', type: '官方', href: 'https://www.mohrss.gov.cn/' },
+  { label: '各地人社局官网', type: '官方', href: 'https://www.mohrss.gov.cn/SYrlzyhshbzb/zwgk/dfdt/' },
+  { label: '最高人民法院官网', type: '官方', href: 'https://www.court.gov.cn/' },
+  { label: '中国新闻网', type: '媒体', href: 'https://www.chinanews.com.cn/' },
+  { label: '法治日报', type: '媒体', href: 'https://www.legaldaily.com.cn/' },
 ];
 
-function categoryOf(item: (typeof newsItems)[number], index: number) {
+function categoryOf(item: NewsItem, index: number): Exclude<NewsCategory, '全部'> {
   if (item.tags.some((tag) => tag.includes('职业伤害') || tag.includes('维权'))) return '权益保障';
   if (item.tags.some((tag) => tag.includes('算法') || tag.includes('平台'))) return '行业动态';
   if (item.tags.some((tag) => tag.includes('社保') || tag.includes('公共服务'))) return '社会关注';
@@ -45,20 +56,147 @@ function SearchIcon() {
   );
 }
 
-function CardShell({ children, className = '' }: { children: React.ReactNode; className?: string }) {
-  return <section className={`rounded-2xl border border-[#eadfce] bg-white ${className}`}>{children}</section>;
+function CardShell({ children, className = '', id }: { children: React.ReactNode; className?: string; id?: string }) {
+  return <section id={id} className={`rounded-2xl border border-[#eadfce] bg-white ${className}`}>{children}</section>;
 }
 
-export default async function NewsPage() {
-  const visibleNews = newsItems.slice(2, 7);
-  const hotNews = visibleNews.slice(0, 5);
+function firstParam(value: string | string[] | undefined) {
+  return Array.isArray(value) ? value[0] ?? '' : value ?? '';
+}
+
+function parseCategory(value: string): NewsCategory {
+  return categories.includes(value as NewsCategory) ? value as NewsCategory : '全部';
+}
+
+function clampPage(value: string, totalPages: number) {
+  const page = Number.parseInt(value, 10);
+  if (!Number.isFinite(page) || page < 1) return 1;
+  return Math.min(page, totalPages);
+}
+
+function newsMatchesKeyword(item: NewsItem, keyword: string) {
+  if (!keyword) return true;
+  const normalized = keyword.toLowerCase();
+  return (
+    item.title.toLowerCase().includes(normalized) ||
+    item.summary.toLowerCase().includes(normalized) ||
+    item.source.toLowerCase().includes(normalized) ||
+    item.tags.some((tag) => tag.toLowerCase().includes(normalized))
+  );
+}
+
+function getPaginationItems(currentPage: number, totalPages: number): Array<number | '…'> {
+  if (totalPages <= 5) {
+    return Array.from({ length: totalPages }, (_, index) => index + 1);
+  }
+
+  const pages = new Set([1, totalPages, currentPage - 1, currentPage, currentPage + 1]);
+  const sortedPages = [...pages]
+    .filter((page) => page >= 1 && page <= totalPages)
+    .sort((a, b) => a - b);
+
+  return sortedPages.flatMap((page, index) => {
+    const previous = sortedPages[index - 1];
+    return previous && page - previous > 1 ? ['…', page] : [page];
+  });
+}
+
+function sourceTypeOf(source: string): SourceEntry['type'] {
+  return /政府|人力资源|人社|法院|工会|部|局/.test(source) ? '官方' : '媒体';
+}
+
+function getAllSources(): SourceEntry[] {
+  const byHref = new Map<string, SourceEntry>();
+
+  for (const source of sourceList) {
+    byHref.set(source.href, source);
+  }
+
+  for (const item of newsItems) {
+    byHref.set(item.sourceUrl, {
+      label: item.source,
+      type: sourceTypeOf(item.source),
+      href: item.sourceUrl,
+    });
+  }
+
+  return [...byHref.values()];
+}
+
+function buildNewsHref({
+  category,
+  q,
+  page,
+  sources,
+  hash,
+}: {
+  category: NewsCategory;
+  q: string;
+  page: number;
+  sources?: 'all';
+  hash?: string;
+}) {
+  const params = new URLSearchParams();
+  const keyword = q.trim();
+
+  if (category !== '全部') params.set('category', category);
+  if (keyword) params.set('q', keyword);
+  if (page > 1) params.set('page', String(page));
+  if (sources === 'all') params.set('sources', 'all');
+
+  const query = params.toString();
+  return `/news${query ? `?${query}` : ''}${hash ? `#${hash}` : ''}`;
+}
+
+async function NewsPageContent({
+  searchParams,
+}: {
+  searchParams?: Promise<SearchParams>;
+}) {
+  const params = (await searchParams) ?? {};
+  const selectedCategory = parseCategory(firstParam(params.category));
+  const keyword = firstParam(params.q).trim();
+  const showAllSources = firstParam(params.sources) === 'all';
+
+  const preparedNews = newsItems.map((item, index) => ({
+    item,
+    category: categoryOf(item, index),
+    originalIndex: index,
+  }));
+  const filteredNews = preparedNews.filter(({ item, category }) => (
+    (selectedCategory === '全部' || category === selectedCategory) &&
+    newsMatchesKeyword(item, keyword)
+  ));
+  const totalPages = Math.max(1, Math.ceil(filteredNews.length / PAGE_SIZE));
+  const currentPage = clampPage(firstParam(params.page), totalPages);
+  const visibleNews = filteredNews.slice(
+    (currentPage - 1) * PAGE_SIZE,
+    currentPage * PAGE_SIZE,
+  );
+  const hotNews = preparedNews.slice(0, 5);
+  const visibleSources = showAllSources ? getAllSources() : sourceList;
+  const hrefFor = (overrides: Partial<{
+    category: NewsCategory;
+    q: string;
+    page: number;
+    sources?: 'all';
+    hash: string;
+  }> = {}) => buildNewsHref({
+    category: overrides.category ?? selectedCategory,
+    q: overrides.q ?? keyword,
+    page: overrides.page ?? currentPage,
+    sources: Object.prototype.hasOwnProperty.call(overrides, 'sources')
+      ? overrides.sources
+      : showAllSources ? 'all' : undefined,
+    hash: overrides.hash,
+  });
 
   const newsArticleJsonLd = {
     '@context': 'https://schema.org',
     '@type': 'ItemList',
-    itemListElement: visibleNews.map((item, index) => ({
+    itemListElement: visibleNews.map(({ item }, index) => ({
       '@type': 'ListItem',
-      position: index + 1,
+      position: (currentPage - 1) * PAGE_SIZE + index + 1,
       item: {
         '@type': 'NewsArticle',
         headline: item.title,
@@ -87,10 +225,16 @@ export default async function NewsPage() {
                   关注外卖骑手权益相关的最新政策、行业动态与社会新闻，每条动态保留来源原文链接。
                 </p>
               </div>
-              <form className="hidden h-12 w-64 items-center gap-3 rounded-xl border border-[#d8dee8] bg-white px-4 md:flex">
-                <SearchIcon />
+              <form action="/news" className="hidden h-12 w-64 items-center gap-3 rounded-xl border border-[#d8dee8] bg-white px-4 md:flex">
+                {selectedCategory !== '全部' && <input type="hidden" name="category" value={selectedCategory} />}
+                {showAllSources && <input type="hidden" name="sources" value="all" />}
+                <button type="submit" aria-label="搜索新闻" className="text-[#344054]">
+                  <SearchIcon />
+                </button>
                 <input
+                  name="q"
                   type="search"
+                  defaultValue={keyword}
                   placeholder="搜索新闻标题、关键词"
                   className="min-w-0 flex-1 text-sm outline-none placeholder:text-[#98a2b3]"
                 />
@@ -98,31 +242,38 @@ export default async function NewsPage() {
             </div>
 
             <div className="mt-6 flex flex-wrap gap-3">
-              {categories.map((category, index) => (
-                <button
+              {categories.map((category) => (
+                <a
                   key={category}
+                  href={hrefFor({ category, page: 1 })}
+                  aria-current={selectedCategory === category ? 'page' : undefined}
                   className={`h-9 rounded-xl px-5 text-sm font-bold ${
-                    index === 0
+                    selectedCategory === category
                       ? 'bg-[#0b7a3b] text-white shadow-sm'
                       : 'border border-[#eadfce] bg-white text-[#111827]'
                   }`}
                 >
                   {category}
-                </button>
+                </a>
               ))}
             </div>
 
-            <CardShell className="mt-5 overflow-hidden">
-              {visibleNews.map((item, index) => {
-                const category = categoryOf(item, index);
-                const extraTag = secondTag(index);
+            <CardShell id="news-list" className="mt-5 overflow-hidden">
+              {visibleNews.length === 0 && (
+                <div className="px-5 py-12 text-center text-sm text-[#667085]">
+                  没有找到匹配的新闻资讯。
+                </div>
+              )}
+
+              {visibleNews.map(({ item, category, originalIndex }) => {
+                const extraTag = secondTag(originalIndex);
                 return (
                   <article
                     key={item.id}
                     className="grid grid-cols-[220px_minmax(0,1fr)_96px] gap-6 border-b border-[#eadfce] px-5 py-5 last:border-b-0"
                   >
                     <img
-                      src={covers[index % covers.length]}
+                      src={covers[originalIndex % covers.length]}
                       alt=""
                       className="h-[120px] w-[220px] rounded-xl object-cover"
                     />
@@ -137,16 +288,16 @@ export default async function NewsPage() {
                           </span>
                         )}
                       </div>
-                      <h2 className="mt-3 line-clamp-2 text-xl font-black leading-snug text-[#111827]">
+                      <a href={item.sourceUrl} className="mt-3 block hover:text-[#0b7a3b]">
+                        <h2 className="line-clamp-2 text-xl font-black leading-snug text-[#111827]">
                         {item.title}
-                      </h2>
+                        </h2>
+                      </a>
                       <p className="mt-2 line-clamp-2 text-sm leading-6 text-[#667085]">{item.summary}</p>
                       <div className="mt-3 flex items-center gap-4 text-sm">
                         <span className="font-bold text-[#111827]">{item.source}</span>
                         <a
                           href={item.sourceUrl}
-                          target="_blank"
-                          rel="noopener noreferrer"
                           className="font-bold text-[#0b7a3b]"
                         >
                           查看来源
@@ -159,34 +310,53 @@ export default async function NewsPage() {
               })}
 
               <div className="flex items-center justify-center gap-3 px-5 py-5 text-sm">
-                <button className="flex h-8 w-8 items-center justify-center rounded-lg border border-[#eadfce] text-[#98a2b3]">‹</button>
-                <button className="flex h-8 w-8 items-center justify-center rounded-lg bg-[#0b7a3b] font-bold text-white">1</button>
-                <button className="flex h-8 w-8 items-center justify-center rounded-lg border border-[#eadfce]">2</button>
-                <button className="flex h-8 w-8 items-center justify-center rounded-lg border border-[#eadfce]">3</button>
-                <span className="px-1 text-[#667085]">…</span>
-                <button className="flex h-8 w-8 items-center justify-center rounded-lg border border-[#eadfce]">12</button>
-                <button className="flex h-8 w-8 items-center justify-center rounded-lg border border-[#eadfce]">›</button>
-                <span className="ml-3 text-[#667085]">共 58 条</span>
+                {currentPage > 1 ? (
+                  <a href={hrefFor({ page: currentPage - 1, hash: 'news-list' })} className="flex h-8 w-8 items-center justify-center rounded-lg border border-[#eadfce]">‹</a>
+                ) : (
+                  <span aria-disabled="true" className="flex h-8 w-8 items-center justify-center rounded-lg border border-[#eadfce] text-[#98a2b3]">‹</span>
+                )}
+                {getPaginationItems(currentPage, totalPages).map((page, index) => (
+                  page === '…' ? (
+                    <span key={`ellipsis-${index}`} className="px-1 text-[#667085]">…</span>
+                  ) : page === currentPage ? (
+                    <span key={page} aria-current="page" className="flex h-8 w-8 items-center justify-center rounded-lg bg-[#0b7a3b] font-bold text-white">{page}</span>
+                  ) : (
+                    <a key={page} href={hrefFor({ page, hash: 'news-list' })} className="flex h-8 w-8 items-center justify-center rounded-lg border border-[#eadfce]">{page}</a>
+                  )
+                ))}
+                {currentPage < totalPages ? (
+                  <a href={hrefFor({ page: currentPage + 1, hash: 'news-list' })} className="flex h-8 w-8 items-center justify-center rounded-lg border border-[#eadfce]">›</a>
+                ) : (
+                  <span aria-disabled="true" className="flex h-8 w-8 items-center justify-center rounded-lg border border-[#eadfce] text-[#98a2b3]">›</span>
+                )}
+                <span className="ml-3 text-[#667085]">共 {filteredNews.length} 条</span>
               </div>
             </CardShell>
           </main>
 
           <aside className="space-y-4">
-            <form className="h-11 rounded-full border border-[#eadfce] bg-white px-4">
+            <form action="/news" className="flex h-11 items-center gap-3 rounded-full border border-[#eadfce] bg-white px-4">
+              {selectedCategory !== '全部' && <input type="hidden" name="category" value={selectedCategory} />}
+              {showAllSources && <input type="hidden" name="sources" value="all" />}
+              <button type="submit" aria-label="搜索新闻" className="text-[#344054]">
+                <SearchIcon />
+              </button>
               <input
+                name="q"
                 type="search"
+                defaultValue={keyword}
                 placeholder="搜索新闻标题、关键词"
-                className="h-full w-full bg-transparent text-sm outline-none placeholder:text-[#98a2b3]"
+                className="h-full min-w-0 flex-1 bg-transparent text-sm outline-none placeholder:text-[#98a2b3]"
               />
             </form>
 
             <CardShell className="p-5">
               <div className="flex items-center justify-between">
                 <h2 className="text-lg font-black text-[#111827]">热门资讯</h2>
-                <button className="text-sm text-[#667085]">更多 ›</button>
+                <a href={hrefFor({ category: '全部', q: '', page: 1, hash: 'news-list' })} className="text-sm text-[#667085]">更多 ›</a>
               </div>
               <div className="mt-4 space-y-4 rounded-xl bg-white">
-                {hotNews.map((item, index) => (
+                {hotNews.map(({ item }, index) => (
                   <div key={item.id} className="grid grid-cols-[24px_1fr] gap-3 border-b border-[#eadfce] pb-3 last:border-b-0 last:pb-0">
                     <span
                       className={`flex h-6 w-6 items-center justify-center rounded-md text-xs font-black ${
@@ -195,13 +365,13 @@ export default async function NewsPage() {
                     >
                       {index + 1}
                     </span>
-                    <div>
-                      <p className="line-clamp-2 text-sm font-bold leading-5 text-[#111827]">
+                    <a href={item.sourceUrl}>
+                      <p className="line-clamp-2 text-sm font-bold leading-5 text-[#111827] hover:text-[#0b7a3b]">
                         {item.title}
                         {index === 0 && <span className="ml-2 text-[#f97316]">●</span>}
                       </p>
                       <time className="mt-1 block text-xs text-[#667085]">{item.date}</time>
-                    </div>
+                    </a>
                   </div>
                 ))}
               </div>
@@ -221,24 +391,27 @@ export default async function NewsPage() {
               <p className="mt-3 text-xs text-[#667085]">演示版本暂未开通邮件订阅，我们不会保存您的邮箱。</p>
             </CardShell>
 
-            <CardShell className="p-5">
+            <CardShell id="source-list" className="p-5">
               <h2 className="text-lg font-black text-[#111827]">资讯来源</h2>
               <div className="mt-4 space-y-3">
-                {sourceList.map(([source, type]) => (
-                  <div key={source} className="flex items-center justify-between gap-3 text-sm">
+                {visibleSources.map((source) => (
+                  <a key={source.href} href={source.href} className="flex items-center justify-between gap-3 text-sm">
                     <span className="flex min-w-0 items-center gap-2 text-[#344054]">
                       <span className="h-5 w-5 rounded-full bg-[#0b7a3b]" />
-                      <span className="truncate">{source}</span>
+                      <span className="truncate hover:text-[#0b7a3b]">{source.label}</span>
                     </span>
-                    <span className={`rounded-md px-2 py-0.5 text-xs font-bold ${type === '官方' ? 'bg-[#dff4e8] text-[#0b7a3b]' : 'bg-[#efe7ff] text-[#6941c6]'}`}>
-                      {type}
+                    <span className={`rounded-md px-2 py-0.5 text-xs font-bold ${source.type === '官方' ? 'bg-[#dff4e8] text-[#0b7a3b]' : 'bg-[#efe7ff] text-[#6941c6]'}`}>
+                      {source.type}
                     </span>
-                  </div>
+                  </a>
                 ))}
               </div>
-              <button className="mt-5 h-10 w-full rounded-lg border border-[#eadfce] text-sm font-bold text-[#0b7a3b]">
-                查看全部来源  ›
-              </button>
+              <a
+                href={hrefFor({ sources: showAllSources ? undefined : 'all', hash: 'source-list' })}
+                className="mt-5 flex h-10 w-full items-center justify-center rounded-lg border border-[#eadfce] text-sm font-bold text-[#0b7a3b]"
+              >
+                {showAllSources ? '收起来源' : '查看全部来源'}  ›
+              </a>
             </CardShell>
 
             <section className="rounded-2xl border border-[#fed7aa] bg-[#fff7ed] p-5">
@@ -251,5 +424,17 @@ export default async function NewsPage() {
         </div>
       </div>
     </div>
+  );
+}
+
+export default function NewsPage({
+  searchParams,
+}: {
+  searchParams?: Promise<SearchParams>;
+}) {
+  return (
+    <Suspense fallback={<div className="py-12 text-center text-sm text-[#667085]">加载新闻资讯...</div>}>
+      <NewsPageContent searchParams={searchParams} />
+    </Suspense>
   );
 }
