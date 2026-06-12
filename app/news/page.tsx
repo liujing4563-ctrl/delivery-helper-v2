@@ -29,8 +29,8 @@ const covers = [
 
 const sourceList: SourceEntry[] = [
   { label: '人力资源和社会保障部官网', type: '官方', href: 'https://www.mohrss.gov.cn/' },
-  { label: '各地人社局官网', type: '官方', href: 'https://www.mohrss.gov.cn/SYrlzyhshbzb/zwgk/dfdt/' },
-  { label: '最高人民法院官网', type: '官方', href: 'https://www.court.gov.cn/' },
+  { label: '中国政府网', type: '官方', href: 'https://www.gov.cn/' },
+  { label: '新华社', type: '媒体', href: 'https://www.news.cn/' },
   { label: '中国新闻网', type: '媒体', href: 'https://www.chinanews.com.cn/' },
   { label: '法治日报', type: '媒体', href: 'https://www.legaldaily.com.cn/' },
 ];
@@ -146,6 +146,14 @@ function buildNewsHref({
 
   const query = params.toString();
   return `/news${query ? `?${query}` : ''}${hash ? `#${hash}` : ''}`;
+}
+
+function externalLinkProps(href: string) {
+  return {
+    href,
+    target: '_blank',
+    rel: 'noopener noreferrer',
+  };
 }
 
 async function NewsPageContent({
@@ -288,7 +296,7 @@ async function NewsPageContent({
                           </span>
                         )}
                       </div>
-                      <a href={item.sourceUrl} className="mt-3 block hover:text-[#0b7a3b]">
+                      <a {...externalLinkProps(item.sourceUrl)} className="mt-3 block hover:text-[#0b7a3b]">
                         <h2 className="line-clamp-2 text-xl font-black leading-snug text-[#111827]">
                         {item.title}
                         </h2>
@@ -297,11 +305,19 @@ async function NewsPageContent({
                       <div className="mt-3 flex items-center gap-4 text-sm">
                         <span className="font-bold text-[#111827]">{item.source}</span>
                         <a
-                          href={item.sourceUrl}
+                          {...externalLinkProps(item.sourceUrl)}
                           className="font-bold text-[#0b7a3b]"
                         >
                           查看来源
                         </a>
+                        {item.backupUrl && (
+                          <a
+                            {...externalLinkProps(item.backupUrl)}
+                            className="font-bold text-[#667085]"
+                          >
+                            备用来源
+                          </a>
+                        )}
                       </div>
                     </div>
                     <time className="pt-4 text-right text-sm text-[#667085]">{item.date}</time>
@@ -365,7 +381,7 @@ async function NewsPageContent({
                     >
                       {index + 1}
                     </span>
-                    <a href={item.sourceUrl}>
+                    <a {...externalLinkProps(item.sourceUrl)}>
                       <p className="line-clamp-2 text-sm font-bold leading-5 text-[#111827] hover:text-[#0b7a3b]">
                         {item.title}
                         {index === 0 && <span className="ml-2 text-[#f97316]">●</span>}
@@ -395,7 +411,7 @@ async function NewsPageContent({
               <h2 className="text-lg font-black text-[#111827]">资讯来源</h2>
               <div className="mt-4 space-y-3">
                 {visibleSources.map((source) => (
-                  <a key={source.href} href={source.href} className="flex items-center justify-between gap-3 text-sm">
+                  <a key={source.href} {...externalLinkProps(source.href)} className="flex items-center justify-between gap-3 text-sm">
                     <span className="flex min-w-0 items-center gap-2 text-[#344054]">
                       <span className="h-5 w-5 rounded-full bg-[#0b7a3b]" />
                       <span className="truncate hover:text-[#0b7a3b]">{source.label}</span>
